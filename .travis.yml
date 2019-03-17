@@ -3,6 +3,10 @@ jdk:
   - openjdk8
 services:
   - mysql
+addons:
+  apt:
+    packages:
+    - sshpass
 before_install:
   - chmod +x scripts/
   - sudo mysql -uroot -e "SET PASSWORD FOR '${CI_DB_USERNAME}'@'localhost' = PASSWORD('${CI_DB_PASSWORD}');FLUSH PRIVILEGES;"
