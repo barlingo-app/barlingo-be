@@ -11,13 +11,8 @@ import com.barlingo.backend.models.entities.Language;
 
 import lombok.Data;
 
-<<<<<<< HEAD
-@Entity
+
 @Data
-@Access(AccessType.PROPERTY)
-=======
-@Data
->>>>>>> TS101
 public class LanguageExchangeGenericDTO {
 	
 	private String title;
