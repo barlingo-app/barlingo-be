@@ -50,3 +50,6 @@ HELP.md
 /nbdist/
 /.nb-gradle/
 /build/
+
+# Others
+.attach*

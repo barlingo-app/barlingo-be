@@ -1,30 +1,32 @@
 package com.barlingo.backend.models.entities;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
+@Access(AccessType.PROPERTY)
 @Data
-public class Language {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
+@EqualsAndHashCode(callSuper=false)
+public class Language extends DomainEntity {
+
 	@NotBlank
+	@SafeHtml
 	private String name;
-	
+
 	@NotBlank
+	@SafeHtml
 	private String code;
-	
+
 	@URL
 	@NotBlank
+	@SafeHtml
 	private String image;
 }

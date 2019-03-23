@@ -1,12 +1,15 @@
 package com.barlingo.backend.models.entities;
 
+import java.util.Date;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.SafeHtml;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,21 +18,24 @@ import lombok.EqualsAndHashCode;
 @Data
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
-public class UserDiscount extends DomainEntity {
+public class SubscriptionData extends DomainEntity {
 
 	////////////////
 	// Attributes //
 	////////////////
-	@SafeHtml
-	private String code;
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date initMoment;
 
 	@NotNull
-	private Boolean exchanged;
+	private SubscriptionType subscriptionType;
+
+	@NotNull
+	@DecimalMin("0.0")
+	private Double price;
 
 	///////////////
 	// Relations //
 	///////////////
-	@ManyToOne(optional = false)
-	private User user;
 
 }
