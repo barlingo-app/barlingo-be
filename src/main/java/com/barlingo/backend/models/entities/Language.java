@@ -14,9 +14,12 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Access(AccessType.PROPERTY)
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class Language extends DomainEntity {
 
+	////////////////
+	// Attributes //
+	////////////////
 	@NotBlank
 	@SafeHtml
 	private String name;
@@ -29,4 +32,9 @@ public class Language extends DomainEntity {
 	@NotBlank
 	@SafeHtml
 	private String image;
+
+	///////////////
+	// Relations //
+	///////////////
+
 }

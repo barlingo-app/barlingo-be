@@ -7,7 +7,9 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,22 +49,24 @@ public class User extends Actor {
 	@Temporal(TemporalType.DATE)
 	private Date birthDay;
 
-	@NotNull
-	private Language motherTongue;
-
 	@SafeHtml
 	private String location;
 
 	///////////////
 	// Relations //
 	///////////////
+	@ManyToMany
+	private Collection<LanguageExchange> langsExchange;
 
 	// fetch = FetchType.LAZY ->
 	// no se trae esta collection cuando se llama al user,solo cuando es necesario
-	@OneToMany(mappedBy = "speakLangs", fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	private Collection<Language> speakLangs;
 
-	@OneToMany(mappedBy = "langsToLearn", fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	private Collection<Language> langsToLearn;
+
+	@OneToOne
+	private Language motherTongue;
 
 }

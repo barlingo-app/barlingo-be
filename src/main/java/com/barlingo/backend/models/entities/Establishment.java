@@ -52,6 +52,6 @@ public class Establishment extends Actor {
 	///////////////
 	// Relations //
 	///////////////
-	@OneToOne
+	@OneToOne(mappedBy = "establishment")
 	private SubscriptionData subscription;
 }

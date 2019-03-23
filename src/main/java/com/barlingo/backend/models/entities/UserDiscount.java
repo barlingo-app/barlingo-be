@@ -32,4 +32,7 @@ public class UserDiscount extends DomainEntity {
 	@ManyToOne(optional = false)
 	private User user;
 
+	@ManyToOne(optional = false)
+	private LanguageExchange langExchange;
+
 }

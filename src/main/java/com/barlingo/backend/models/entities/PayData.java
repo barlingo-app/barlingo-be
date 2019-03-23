@@ -2,10 +2,7 @@ package com.barlingo.backend.models.entities;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
@@ -34,8 +31,6 @@ public class PayData extends DomainEntity {
 	///////////////
 	// Relations //
 	///////////////
-
-	@OneToOne(mappedBy = "subscriptionData", optional = false, cascade = CascadeType.ALL)
-	private User user;
+	
 
 }
