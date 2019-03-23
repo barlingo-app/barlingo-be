@@ -3,7 +3,6 @@ package com.barlingo.backend.models.entities;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
@@ -15,24 +14,23 @@ import lombok.EqualsAndHashCode;
 @Data
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
-public class UserDiscount extends DomainEntity {
+public class PayData extends DomainEntity {
+	// TODO: revisar esta clase con los métodos de pago
 
 	////////////////
 	// Attributes //
 	////////////////
+	@NotNull
 	@SafeHtml
-	private String code;
+	private String title;
 
 	@NotNull
-	private Boolean exchanged;
+	@SafeHtml
+	private String payType;
 
 	///////////////
 	// Relations //
 	///////////////
-	@ManyToOne(optional = false)
-	private User user;
-
-	@ManyToOne(optional = false)
-	private LanguageExchange langExchange;
+	
 
 }

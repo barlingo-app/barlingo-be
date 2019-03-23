@@ -3,8 +3,8 @@ package com.barlingo.backend.models.entities;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -12,27 +12,33 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Data
 @Access(AccessType.FIELD)
+@Data
 @EqualsAndHashCode(callSuper = false)
-public class UserDiscount extends DomainEntity {
+public abstract class Actor extends DomainEntity {
 
 	////////////////
 	// Attributes //
 	////////////////
+	@NotBlank
 	@SafeHtml
-	private String code;
-
-	@NotNull
-	private Boolean exchanged;
+	private String name;
+	@NotBlank
+	@SafeHtml
+	private String surname;
+	@NotBlank
+	@SafeHtml
+	private String country;
+	@NotBlank
+	@SafeHtml
+	private String city;
+	@Email
+	@NotBlank
+	@SafeHtml
+	private String email;
 
 	///////////////
 	// Relations //
 	///////////////
-	@ManyToOne(optional = false)
-	private User user;
-
-	@ManyToOne(optional = false)
-	private LanguageExchange langExchange;
-
+	// TODO: add userAccount
 }
