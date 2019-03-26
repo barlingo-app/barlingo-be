@@ -1,6 +1,7 @@
 package com.barlingo.backend.models.services;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,10 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 	private EstablishmentRepository establishmentRepository;
 	
 	@Override
-	public Collection<Establishment> findAll() {
+	public List<Establishment> findAll() {
 		// TODO Auto-generated method stub
-		return IterToCollection.getCollectionFromIteralbe(this.establishmentRepository.findAll());
+		//return IterToCollection.getCollectionFromIteralbe(this.establishmentRepository.findAll());
+		return (List<Establishment>) this.establishmentRepository.findAll();
 	}
 
 	@Override

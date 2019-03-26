@@ -1,7 +1,16 @@
 /* Populate tabla clientes */
 
 /* Insert users */
-INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (1, 0,'Kelvin', 'Raraty', 'Spain', 'Madrid', 'kraraty0@deliciousdays.com', 'http://zdnet.com', 'http://si.edu', 'Suspendisse potenti.', '2019/02/04', 'Phasellus in felis. Donec semper sapien a libero.');
+
+-- LANGUAGES
+insert into language (id, version, code, image, name) values (1, 0, 'ES', 'http://dummyimage.com/116x168.png/dddddd/000000', 'Spanish');
+insert into language (id, version, code, image, name) values (2, 0, 'EN', 'http://dummyimage.com/108x153.bmp/dddddd/000000', 'English');
+insert into language (id, version, code, image, name) values (3, 0, 'IT', 'http://dummyimage.com/106x105.png/5fa2dd/ffffff', 'Italian');
+insert into language (id, version, code, image, name) values (4, 0, 'FR', 'http://dummyimage.com/111x154.png/ff4444/ffffff', 'French');
+insert into language (id, version, code, image, name) values (5, 0, 'DE', 'http://dummyimage.com/195x109.jpg/5fa2dd/ffffff', 'Deutsch');
+
+-- USERS
+INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location, mother_tongue_id) VALUES (1, 0,'Kelvin', 'Raraty', 'Spain', 'Madrid', 'kraraty0@deliciousdays.com', 'http://zdnet.com', 'http://si.edu', 'Suspendisse potenti.', '2019/02/04', 'Phasellus in felis. Donec semper sapien a libero.', 1);
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (2, 0,'Dorie', 'Tarquini', 'Spain', 'Valladolid', 'dtarquini1@bloglines.com', 'http://reference.com', 'http://zimbio.com', 'Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', '2019/02/26', 'Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy.');
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (3, 0,'Leslie', 'Yanshinov', 'Spain', 'Valencia', 'lyanshinov2@blog.com', 'http://timesonline.co.uk', 'https://forbes.com', 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique.', '2018/08/12', 'Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis.');
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (4, 0,'Hedwig', 'Vandenhoff', 'Spain', 'Telde', 'hvandenhoff3@umn.edu', 'https://engadget.com', 'https://tinyurl.com', 'Cras pellentesque volutpat dui.', '2018/10/25', 'Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.');
@@ -11,6 +20,7 @@ INSERT INTO users (id, version, name, surname, country, city, email, personal_pi
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (8, 0,'Cindra', 'Coventry', 'Spain', 'Sant Cugat Del Valles', 'ccoventry7@pen.io', 'https://deviantart.com', 'http://theguardian.com', 'Nulla mollis molestie lorem.', '2018/08/06', 'Ut tellus. Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.');
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (9, 0,'Shae', 'Schole', 'Spain', 'Barcelona', 'sschole8@dion.ne.jp', 'http://domainmarket.com', 'https://phoca.cz', 'Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.', '2018/08/01', 'Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis.');
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (10, 0, 'Eva', 'Winfred', 'Spain', 'Pamplona/Iruña', 'ewinfred9@apache.org', 'http://wikia.com', 'http://netscape.com', 'Nullam varius.', '2018/07/21', 'Proin risus. Praesent lectus. Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.');
+
 
 -- PAY_DATA
 insert into pay_data (id, version, pay_type, title) values (1, 0, 'maestro', 'quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed');

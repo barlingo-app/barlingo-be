@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
 import org.javatuples.Pair;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,11 +48,11 @@ public class Establishment extends Actor {
 	private String imageProfile;
 
 	@ElementCollection
-	private Collection<Pair<LocalTime, LocalTime>> workingHours;
+	private Collection<Pair<String, String>> workingHours;
 	
 	///////////////
 	// Relations //
 	///////////////
-	@OneToOne(mappedBy = "establishment")
+	@OneToOne
 	private SubscriptionData subscription;
 }

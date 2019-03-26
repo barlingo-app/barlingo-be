@@ -8,6 +8,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -66,7 +67,7 @@ public class User extends Actor {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Collection<Language> langsToLearn;
 
-	@OneToOne
+	@ManyToOne
 	private Language motherTongue;
 
 }
