@@ -26,7 +26,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 	@Autowired
 	private ActorService actorService;
 	@Autowired
-	private UserService userService;
+	private IUserService userService;
 //	@Autowired
 //	private LanguageExchangeService languageExchangeService;
 
