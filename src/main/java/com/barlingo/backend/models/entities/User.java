@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "users")
-public class User extends Actor {
+public class User  extends Actor {
 
 	////////////////
 	// Attributes //

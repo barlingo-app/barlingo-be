@@ -1,14 +1,15 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.entities.LanguageExchange;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
-import com.barlingo.backend.models.repositories.UserRepository;
+
+import java.util.List;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.barlingo.backend.models.entities.LanguageExchange;
+import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
 
 @Service
 @Transactional

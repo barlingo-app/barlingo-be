@@ -2,6 +2,7 @@ package com.barlingo.backend.models.entities;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
@@ -20,11 +21,15 @@ public class UserDiscount extends DomainEntity {
 	////////////////
 	// Attributes //
 	////////////////
+	@Column(unique = true)
 	@SafeHtml
 	private String code;
 
 	@NotNull
 	private Boolean exchanged;
+	
+	@NotNull
+	private Boolean isVisible;
 
 	///////////////
 	// Relations //

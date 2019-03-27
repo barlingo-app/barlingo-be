@@ -1,5 +1,6 @@
 /* Populate tabla clientes */
 
+
 /* Update sequence, insert last id value  */
 UPDATE hibernate_sequences SET next_val=45 WHERE sequence_name="default";
 
@@ -58,4 +59,3 @@ insert into establishment (id, version, name, surname, country, city, email, est
 insert into establishment (id, version, name, surname, country, city, email, establishment_name, description, address, image_profile, subscription_id) values (33, 0, 'Fitz', 'MacMeeking', 'China', 'Badaogu', 'fmacmeeking7@reverbnation.com', 'Skiles LLC', 'vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus', '18371 John Wall Alley', 'http://dummyimage.com/175x246.jpg/ff4444/ffffff', 33);
 insert into establishment (id, version, name, surname, country, city, email, establishment_name, description, address, image_profile, subscription_id) values (34, 0, 'Kendra', 'Giovannini', 'Brazil', 'Cataguases', 'kgiovannini8@businessinsider.com', 'Champlin, Hansen and Crona', 'faucibus accumsan odio curabitur convallis duis consequat dui nec nisi', '2 Badeau Lane', 'http://dummyimage.com/139x120.png/cc0000/ffffff', 34);
 insert into establishment (id, version, name, surname, country, city, email, establishment_name, description, address, image_profile, subscription_id) values (35, 0, 'Berget', 'Knagges', 'Thailand', 'Phayuha Khiri', 'bknagges9@hud.gov', 'Schmidt, Hagenes and Graham', 'eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim', '49 Holmberg Hill', 'http://dummyimage.com/239x235.bmp/ff4444/ffffff', 35);
-

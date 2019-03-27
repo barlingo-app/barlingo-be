@@ -3,10 +3,6 @@ package com.barlingo.backend.models.dtos;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Entity;
-
 import com.barlingo.backend.models.entities.Language;
 
 import lombok.Data;
