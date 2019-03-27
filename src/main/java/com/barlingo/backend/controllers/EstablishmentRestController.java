@@ -15,13 +15,12 @@ import com.barlingo.backend.models.services.EstablishmentServiceImpl;
 
 //@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
-@RequestMapping("/establishments")
 public class EstablishmentRestController {
 	
 	@Autowired
 	private EstablishmentServiceImpl establishmentService;
 	
-	@GetMapping("/list")
+	@GetMapping("/establishments")
 	private List<Establishment> findAllEstablishments(){
 		return new ArrayList<Establishment>(this.establishmentService.findAll());
 	}

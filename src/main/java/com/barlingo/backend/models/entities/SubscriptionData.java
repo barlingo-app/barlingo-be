@@ -41,7 +41,4 @@ public class SubscriptionData extends DomainEntity {
 	@OneToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
 			CascadeType.REFRESH })
 	private PayData paydata;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Establishment establishment;
 }

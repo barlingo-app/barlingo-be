@@ -20,7 +20,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 	
 	@Override
 	public List<Establishment> findAll() {
-		// TODO Auto-generated method stub
 		//return IterToCollection.getCollectionFromIteralbe(this.establishmentRepository.findAll());
 		return (List<Establishment>) this.establishmentRepository.findAll();
 	}
