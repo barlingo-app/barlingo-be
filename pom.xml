@@ -169,14 +169,7 @@
 							<version>1.18.4</version>
 						</path>
 					</annotationProcessorPaths>
-					<compilerArgs>
-						<compilerArg>
-							-Amapstruct.suppressGeneratorTimestamp=true
-						</compilerArg>
-						<compilerArg>
-							-Amapstruct.suppressGeneratorVersionInfoComment=true
-						</compilerArg>
-					</compilerArgs>
+					<generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

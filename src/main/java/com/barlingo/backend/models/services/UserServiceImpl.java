@@ -35,4 +35,18 @@ public class UserServiceImpl implements IUserService {
 	public void delete(User user) {
 		this.userRepository.delete(user);
 	}
+	
+//	public User findByPrincipal() {
+//	User result;
+//	UserAccount userAccount;
+//
+//	userAccount = LoginService.getPrincipal();
+//	Assert.notNull(userAccount);
+//	final Actor actor = this.actorService.findByUserAccount(userAccount);
+//	Assert.isTrue(actor instanceof User, "");
+//	result = (User) actor;
+//	Assert.notNull(result, "");
+//
+//	return result;
+//}
 }
