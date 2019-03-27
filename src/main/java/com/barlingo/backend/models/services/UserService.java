@@ -11,42 +11,26 @@ import com.barlingo.backend.models.repositories.UserRepository;
 
 @Service
 @Transactional
-public class UserServiceImpl implements IUserService {
+public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
 
-	@Override
 	public List<User> findAll() {
-		return (List<User>) this.userRepository.findAll();
+		return this.userRepository.findAll();
 	}
 
-	@Override
 	public void save(User user) {
 		this.userRepository.save(user);
 	}
 
-	@Override
 	public User findById(Integer id) {
 		return this.userRepository.findById(id).orElse(null);
 	}
 
-	@Override
 	public void delete(User user) {
 		this.userRepository.delete(user);
 	}
-	
-//	public User findByPrincipal() {
-//	User result;
-//	UserAccount userAccount;
-//
-//	userAccount = LoginService.getPrincipal();
-//	Assert.notNull(userAccount);
-//	final Actor actor = this.actorService.findByUserAccount(userAccount);
-//	Assert.isTrue(actor instanceof User, "");
-//	result = (User) actor;
-//	Assert.notNull(result, "");
-//
-//	return result;
-//}
+
+
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +28,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class LanguageExchange extends DomainEntity {
 
+	////////////////
+	// Attributes //
+	////////////////
 	@NotBlank
 	@SafeHtml
 	private String title;
@@ -34,16 +39,17 @@ public class LanguageExchange extends DomainEntity {
 	@SafeHtml
 	private String description;
 
-	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date moment;
-
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	@NotNull
-	private ExchangeState exchangeState;
+	@Basic
+	private Date moment;
 
 	///////////////
 	// Relations //
 	///////////////
+	@ManyToOne(optional = false)
+	private ExchangeState exchangeState;
 
 	@ManyToOne(optional = false)
 	private Establishment establishment;
@@ -57,6 +63,6 @@ public class LanguageExchange extends DomainEntity {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Collection<Language> targetLangs;
 
-	@OneToMany(mappedBy = "langExchange", fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	private Collection<UserDiscount> userDiscount;
 }

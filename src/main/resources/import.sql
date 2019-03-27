@@ -1,7 +1,7 @@
 /* Populate tabla clientes */
 
 /* Update sequence, insert last id value  */                             
-UPDATE hibernate_sequences SET next_val=60 WHERE sequence_name="default";
+UPDATE hibernate_sequences SET next_val=82 WHERE sequence_name="default";
 
 /* Insert language */
 INSERT INTO language (id, version, code, image, name) VALUES (1, 0, 'ES', 'http://dummyimage.com/209x163.bmp/ff4444/ffffff', 'Aymara');
@@ -38,28 +38,3 @@ INSERT INTO establishment (id, version, city, country, email, name, surname, add
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (28, 0, 'Getafe', 'Spain', 'hcushworth7@ucsd.edu', 'Geneviève', 'Cushworth', '36040 Southridge Avenue', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 'Wehner, Maggio and Mayer', 'Thompson, Gislason and Paucek');
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (29, 0, 'Ceuta', 'Spain', 'coleshunin8@theatlantic.com', 'Naëlle', 'Oleshunin', '55300 Bartelt Alley', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 'Crist Group', 'Flatley, Stark and Nader');
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (30, 0, 'Dos Hermanas', 'Spain', 'dreisenstein9@phpbb.com', 'Gösta', 'Reisenstein', '28 Talmadge Crossing', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', 'Torphy Group', 'Lemke-Fay');
-
-/* Insert payData */
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (41, 0, 'jcb', 'thinkins0');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (42, 0, 'china-unionpay', 'iellse1');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (43, 0, 'visa', 'ktorry2');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (44, 0, 'mastercard', 'cmatthius3');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (45, 0, 'jcb', 'truddle4');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (46, 0, 'switch', 'wmcmenamin5');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (47, 0, 'diners-club-carte-blanche', 'bklauer6');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (48, 0, 'diners-club-carte-blanche', 'hmcclurg7');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (49, 0, 'jcb', 'gcrockatt8');
-INSERT INTO pay_data (id, version, pay_type, title) VALUES (50, 0, 'china-unionpay', 'wtwinn9');
-
-/* Insert subscriptionData */
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (51, 0, '2019-01-01 5:02', '6.99', 1, 21, 41);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (52, 0, '2019-01-01 15:03', '6.99', 1, 22, 42);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (53, 0, '2019-01-01 22:41', '18.99', 2, 23, 43);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (54, 0, '2019-01-01 18:42', '18.99', 2, 24, 44);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (55, 0, '2019-01-01 12:51', '62.99', 3, 25, 45);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (56, 0, '2019-01-01 21:57', '62.99', 3, 26, 46);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (57, 0, '2019-01-01 17:37', '6.99', 1, 27, 47);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (58, 0, '2019-01-01 3:57', '6.99', 1, 28, 48);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (59, 0, '2019-01-01 20:53', '18.99', 2, 29, 49);
-INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (60, 0, '2019-01-01 14:44', '18.99', 2, 30, 50);
-

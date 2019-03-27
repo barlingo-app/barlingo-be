@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.services.UserServiceImpl;
+import com.barlingo.backend.models.services.UserService;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class UserRestController {
 
 	@Autowired
-	private UserServiceImpl userService;
+	private UserService userService;
 
 	@GetMapping("/users")
 	public List<User> findUser() {
