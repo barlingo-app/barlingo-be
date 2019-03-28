@@ -3,11 +3,7 @@ package com.barlingo.backend.models.entities;
 import java.time.LocalTime;
 import java.util.Collection;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.SafeHtml;
@@ -54,4 +50,7 @@ public class Establishment extends Actor {
 	///////////////
 	@OneToOne(mappedBy = "establishment")
 	private SubscriptionData subscription;
+
+	@OneToMany(mappedBy = "establishment")
+	private Collection<LanguageExchange> langsExchange;
 }
