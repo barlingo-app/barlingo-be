@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.entities;
 
-import java.time.LocalTime;
 import java.util.Collection;
 
 import javax.persistence.Access;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
 import org.javatuples.Pair;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
