@@ -14,8 +14,8 @@ public class ActorService {
 	// TODO: Realizar la clase de UserAccountService
 //	@Autowired
 //	private UserAccountService userAccountService;
-	@Autowired
-	private ActorRepository actorRepository;
+//	@Autowired
+//	private ActorRepository actorRepository;
 
 	public Actor findByPrincipal() {
 		Actor result = null;
