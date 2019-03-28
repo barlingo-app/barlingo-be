@@ -56,7 +56,7 @@ public class User extends Actor {
 	///////////////
 	// Relations //
 	///////////////
-	@ManyToMany
+	/*@ManyToMany
 	private Collection<LanguageExchange> langsExchange;
 
 	// fetch = FetchType.LAZY ->
@@ -65,7 +65,7 @@ public class User extends Actor {
 	private Collection<Language> speakLangs;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	private Collection<Language> langsToLearn;
+	private Collection<Language> langsToLearn;*/
 
 	@ManyToOne
 	private Language motherTongue;
