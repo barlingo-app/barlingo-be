@@ -1,9 +1,12 @@
 package com.barlingo.backend.models.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.repositories.ActorRepository;
 
 @Service
 @Transactional
@@ -11,8 +14,8 @@ public class ActorService {
 	// TODO: Realizar la clase de UserAccountService
 //	@Autowired
 //	private UserAccountService userAccountService;
-//	@Autowired
-//	private ActorRepository actorRepository;
+	@Autowired
+	private ActorRepository actorRepository;
 
 	public Actor findByPrincipal() {
 		Actor result = null;
