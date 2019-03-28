@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.barlingo.backend.models.dtos.UserDiscountGenericDTO;
 import com.barlingo.backend.models.mapper.UserDiscountMapper;
-import com.barlingo.backend.models.services.IUserDiscountService;
+import com.barlingo.backend.models.services.UserDiscountServiceImpl;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
@@ -20,7 +20,7 @@ import com.barlingo.backend.models.services.IUserDiscountService;
 public class UserDiscountRestController {
 
 	@Autowired
-	private IUserDiscountService userDiscountService;
+	private UserDiscountServiceImpl userDiscountService;
 	@Autowired
 	private UserDiscountMapper userDiscountMapper;
 
