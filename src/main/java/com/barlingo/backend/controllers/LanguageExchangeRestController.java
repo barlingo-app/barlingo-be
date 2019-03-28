@@ -1,70 +1,55 @@
 package com.barlingo.backend.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
+import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.entities.LanguageExchange;
-import com.barlingo.backend.models.services.ILanguageExchangeService;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
+import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
+import com.barlingo.backend.models.services.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class LanguageExchangeRestController {
 
 	@Autowired
-	private ILanguageExchangeService langExchangeService;
+	private LanguageExchangeServiceImpl langExchangeService;
+	@Autowired
+	private LanguageExchangeMapper langExchangeMapper;
 
 	@GetMapping("/exchanges")
-	public List<LanguageExchangeGenericDTO> findUser() {
-		/*
-		 * List<LanguageExchange> langExchanges = langExchangeService.findAll(); return
-		 * langExchanges;
-		 */
+	public List<LanguageExchangeDetailsDTO> findExchange() {
+		List<LanguageExchangeDetailsDTO> list = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll());
 
-		return new ArrayList<>();
-
+		return list;
 	}
 
 	@GetMapping("/exchanges/{id}")
 	public LanguageExchangeDetailsDTO show(@PathVariable Integer id) {
+		LanguageExchange langExchEntity = langExchangeService.findById(id);
+		LanguageExchangeDetailsDTO langExch = langExchangeMapper.entityToDto(langExchEntity);
+		return langExch;
 
-//		return this.langExchangeService.findById(id);
-
-		return new LanguageExchangeDetailsDTO();
 	}
 
 	@PostMapping("/exchanges")
 	@ResponseStatus(HttpStatus.CREATED)
 	public LanguageExchangeDetailsDTO create(@RequestBody LanguageExchangeDetailsDTO langExchangeDTO) {
-		/*
-		 * this.langExchangeService.save(langExchange); return langExchange;
-		 */
 
 		return new LanguageExchangeDetailsDTO();
 	}
 
 	@PutMapping("/exchanges/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public LanguageExchangeDetailsDTO update(@RequestBody LanguageExchangeDetailsDTO langExchangeDTO,
-			@PathVariable Integer id) {
-		/*
-		 * LanguageExchange currentLangExchange = this.langExchangeService.findById(id);
-		 * this.langExchangeService.save(currentLangExchange); return
-		 * currentLangExchange;
-		 */
+	public LanguageExchangeDetailsDTO update(@RequestBody LanguageExchangeDetailsDTO langExchangeDTO, @PathVariable Integer id) {
 
 		return new LanguageExchangeDetailsDTO();
 	}

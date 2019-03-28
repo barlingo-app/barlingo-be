@@ -3,16 +3,7 @@ package com.barlingo.backend.models.entities;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -52,6 +43,7 @@ public class LanguageExchange extends DomainEntity {
 	private ExchangeState exchangeState;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name="establishment_id")
 	private Establishment establishment;
 
 	@ManyToOne(optional = false)
@@ -60,7 +52,7 @@ public class LanguageExchange extends DomainEntity {
 	@ManyToMany(mappedBy = "langsExchange", fetch = FetchType.LAZY)
 	private Collection<User> participants;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany()
 	private Collection<Language> targetLangs;
 
 	@OneToMany(fetch = FetchType.LAZY)

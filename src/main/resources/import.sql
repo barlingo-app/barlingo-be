@@ -38,3 +38,15 @@ INSERT INTO establishment (id, version, city, country, email, name, surname, add
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (28, 0, 'Getafe', 'Spain', 'hcushworth7@ucsd.edu', 'Geneviève', 'Cushworth', '36040 Southridge Avenue', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 'Wehner, Maggio and Mayer', 'Thompson, Gislason and Paucek');
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (29, 0, 'Ceuta', 'Spain', 'coleshunin8@theatlantic.com', 'Naëlle', 'Oleshunin', '55300 Bartelt Alley', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 'Crist Group', 'Flatley, Stark and Nader');
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (30, 0, 'Dos Hermanas', 'Spain', 'dreisenstein9@phpbb.com', 'Gösta', 'Reisenstein', '28 Talmadge Crossing', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', 'Torphy Group', 'Lemke-Fay');
+
+/* Insert exchange states */
+INSERT INTO `barlingo_db`.`exchange_state` (`id`, `version`, `name`) VALUES ('31', '0', 'OPEN');
+INSERT INTO `barlingo_db`.`exchange_state` (`id`, `version`, `name`) VALUES ('32', '0', 'CLOSED');
+
+
+/* Insert language exchanges */
+INSERT INTO language_exchange (`id`, `version`, `description`, `moment`, `title`, `creator_id`, `establishment_id`, `exchange_state_id`) VALUES ('33', '0', 'lang exchange 1', '2019-01-01 5:02', 'lang exchange 1', '11', '21', 31);
+INSERT INTO language_exchange_target_langs (`language_exchange_id`, `target_langs_id`) VALUES ('33', '2');
+
+INSERT INTO `barlingo_db`.`users_langs_exchange` (`participants_id`,`langs_exchange_id`) VALUES (11,33);
+INSERT INTO `barlingo_db`.`users_langs_exchange` (`participants_id`,`langs_exchange_id`) VALUES (12,33);
