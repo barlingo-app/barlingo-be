@@ -1,7 +1,9 @@
 package com.barlingo.backend.models.dtos;
+import java.time.LocalTime;
 import java.util.Collection;
 
 import lombok.Data;
+import org.javatuples.Pair;
 
 @Data
 public class EstablishmentDetailsDTO {

@@ -2,7 +2,7 @@
 
 
 /* Update sequence, insert last id value  */
-UPDATE hibernate_sequences SET next_val=45 WHERE sequence_name="default";
+UPDATE hibernate_sequences SET next_val=80 WHERE sequence_name="default";
 
 -- LANGUAGES
 insert into language (id, version, code, image, name) values (1, 0, 'ES', 'http://dummyimage.com/116x168.png/dddddd/000000', 'Spanish');
@@ -23,6 +23,29 @@ INSERT INTO users (id, version, name, surname, country, city, email, personal_pi
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (14, 0,'Shae', 'Schole', 'Spain', 'Barcelona', 'sschole8@dion.ne.jp', 'http://domainmarket.com', 'https://phoca.cz', 'Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla.', '2018/08/01', 'Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem. Sed sagittis.');
 INSERT INTO users (id, version, name, surname, country, city, email, personal_pic, profile_back_pic, about_me, birth_day, location) VALUES (15, 0, 'Eva', 'Winfred', 'Spain', 'Pamplona/Iruña', 'ewinfred9@apache.org', 'http://wikia.com', 'http://netscape.com', 'Nullam varius.', '2018/07/21', 'Proin risus. Praesent lectus. Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.');
 
+/* Insert languageExchange */
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (61, 0, 'dolor in reprehenderit', '1989-09-24 17:57:51.000','dolore eu fugiat nulla pariatur. Excepteur ', 18, 23, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (62, 0, 'dolor sit ame', '1981-10-27 18:48:28.000', 'in voluptate velit esse cillum dolore eu fugiat nulla pariat', 15, 23, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (63, 0, 'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis ', '2004-08-02 02:10:16.000', 'occaecat cupidatat non proident, sunt in culpa qui offic', 11, 25, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (64, 0, 'sed do eiusmod temp', '1992-08-30 13:36:54.000', 'incididunt ut labore et dolore magna aliqua. Ut enim ad minim ven', 17, 25, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (65, 0, 'Duis aute irure ', '1996-05-14 06:48:50.000', 'pariatur. Excepteur sint occaecat cu', 20, 27, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (66, 0, 'tempor incididunt ut la', '2018-05-31 06:20:12.000', 'veniam, quis nostrud exercitation ull', 16, 27, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (67, 0, 'quis nostrud exercitation ullamco laboris ', '2008-01-05 02:51:43.000', 'aute irure dolor in reprehenderit in vol', 18, 22, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (68, 0, 'ullamco laboris nisi ut aliquip ex ea commodo consequat', '2015-08-09 09:00:37.000', 'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupida', 13, 26, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (69, 0, 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exerci','2012-08-10 13:12:28.000', 'ullamco laboris ', 17, 29, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (70, 0, 'officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur a', '1992-06-26 03:09:59.000', 'sit amet, consectetur adipiscing elit, sed do eius', 11, 29, 81);
+
+/* Insert userDiscount */
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (71, 0, 'e', 0, 0, 61, 15);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (72, 0, 'aute ', 0, 0, 62, 17);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (73, 0, 'c', 0, 0, 63, 18);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (74, 0, 'es', 0, 0, 64, 11);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (75, 0, 'ame', 0, 0, 65, 18);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (76, 0, 'utal', 0, 0, 66, 19);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (77, 0, 'inci', 0, 0, 67, 12);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (78, 0, 'dolor', 0, 0, 68, 15);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (79, 0, 'enim ', 0, 0, 69, 16);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (80, 0, 'au', 0, 0, 70, 11);
 
 -- PAY_DATA
 insert into pay_data (id, version, pay_type, title) values (16, 0, 'maestro', 'quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed');
@@ -60,3 +83,7 @@ insert into establishment (id, version, name, surname, country, city, email, est
 insert into establishment (id, version, name, surname, country, city, email, establishment_name, description, address, image_profile, working_hours, subscription_id) values (33, 0, 'Angel', 'Huller', 'Indonesia', 'Panayagan', 'ahuller7@huffingtonpost.com', 'Greenfelder-Aufderhar', 'felis sed interdum venenatis turpis enim blandit mi in porttitor pede justo eu massa donec dapibus', '3031 Everett Trail', 'http://dummyimage.com/130x162.png/ff4444/ffffff','M - F: 10:00AM - 23:00PM, S - U: 08:00AM - 02:00AM',43);
 insert into establishment (id, version, name, surname, country, city, email, establishment_name, description, address, image_profile, working_hours, subscription_id) values (34, 0, 'Filberto', 'Ivashin', 'Philippines', 'Abangay', 'fivashin8@1und1.de', 'Lowe, Wolf and Graham', 'nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem', '24001 Harbort Place', 'http://dummyimage.com/207x172.png/dddddd/000000','M - F: 10:00AM - 23:00PM, S - U: 08:00AM - 02:00AM',44);
 insert into establishment (id, version, name, surname, country, city, email, establishment_name, description, address, image_profile, working_hours, subscription_id) values (35, 0, 'Ernest', 'Condit', 'Indonesia', 'Sindang', 'econdit9@biblegateway.com', 'Predovic and Sons', 'sit amet cursus id turpis integer aliquet massa id lobortis convallis tortor', '39 Briar Crest Trail', 'http://dummyimage.com/112x181.png/ff4444/ffffff','M - F: 10:00AM - 23:00PM, S - U: 08:00AM - 02:00AM',45);
+
+/* Insert exchange states */
+INSERT INTO exchange_state (id, version, name) VALUES(81, 0, 'OPEN');
+INSERT INTO exchange_state (id, version, name) VALUES(82, 0, 'CLOSED');

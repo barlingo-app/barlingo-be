@@ -3,8 +3,8 @@ package com.barlingo.backend.models.dtos;
 import java.util.Collection;
 import java.util.Date;
 
+import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.Language;
-import com.barlingo.backend.models.entities.User;
 
 import lombok.Data;
 
@@ -14,7 +14,12 @@ public class LanguageExchangeDetailsDTO {
 	private String title;
 	private String description;
 	private Date moment;
-	private Collection<Language> targetLanguages;
-	private Collection<User> participants;
+	private UserDetailsDTO creator;
+	private EstablishmentDetailsDTO establishment;
+	private ExchangeState exchangeState;
+	private Collection<Language> targetLangs;
+	private Collection<ParticipantDTO> participants;
+
+
 
 }
