@@ -16,7 +16,7 @@ import com.barlingo.backend.models.services.IEstablishmentService;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
-@RequestMapping("/establishments/user")
+@RequestMapping("/establishment/user")
 public class EstablishmentRestController {
 
 	@Autowired

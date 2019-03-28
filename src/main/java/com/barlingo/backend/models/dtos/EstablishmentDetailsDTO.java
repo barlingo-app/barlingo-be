@@ -14,6 +14,6 @@ public class EstablishmentDetailsDTO {
 	private Collection<String> images;
 	
 	//TODO Find the way to note the tuple contains two Date objects
-	private Collection<Collection<Tuple>> workingHours;
+	//private Collection<Collection<Tuple>> workingHours;
 
 }

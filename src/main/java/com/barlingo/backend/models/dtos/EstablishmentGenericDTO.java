@@ -12,6 +12,6 @@ public class EstablishmentGenericDTO {
 	private String establishmentName;
 	private String address;
 	private String imageProfile;
-	private Collection<Pair<String, String>> workingHours;
+	//private Collection<Pair<String, String>> workingHours;
 
 }
