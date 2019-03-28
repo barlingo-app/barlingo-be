@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
-import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
 
@@ -30,8 +30,8 @@ public class EstablishmentRestController {
 	}
 
 	@GetMapping("/show/{estId}")
-	public Establishment show(@PathVariable int estId) {
-		return this.establishmentService.findById(estId);
+	public EstablishmentDetailsDTO show(@PathVariable int estId) {
+		return this.establishmentMapper.establishmentToDto(this.establishmentService.findById(estId));
 	}
 
 }

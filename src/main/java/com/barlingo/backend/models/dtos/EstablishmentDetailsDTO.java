@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.dtos;
 import java.util.Collection;
-import javax.persistence.Tuple;
 
 import lombok.Data;
 
@@ -14,6 +13,6 @@ public class EstablishmentDetailsDTO {
 	private Collection<String> images;
 	
 	//TODO Find the way to note the tuple contains two Date objects
-	//private Collection<Collection<Tuple>> workingHours;
+	private String workingHours;
 
 }
