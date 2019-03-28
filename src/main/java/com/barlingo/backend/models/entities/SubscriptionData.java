@@ -44,6 +44,4 @@ public class SubscriptionData extends DomainEntity {
 			CascadeType.REFRESH })
 	private PayData paydata;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private Establishment establishment;
 }

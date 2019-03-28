@@ -1,15 +1,12 @@
 package com.barlingo.backend.models.entities;
 
-import java.util.Collection;
+
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -55,7 +52,7 @@ public class User  extends Actor {
 	///////////////
 	// Relations //
 	///////////////
-	@ManyToMany
+	/*@ManyToMany
 	private Collection<LanguageExchange> langsExchange;
 
 	// fetch = FetchType.LAZY ->
@@ -64,9 +61,9 @@ public class User  extends Actor {
 	private Collection<Language> speakLangs;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	private Collection<Language> langsToLearn;
+	private Collection<Language> langsToLearn;*/
 
-	@OneToOne
+	@ManyToOne
 	private Language motherTongue;
 
 }

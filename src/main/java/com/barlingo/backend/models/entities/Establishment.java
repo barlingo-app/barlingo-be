@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.entities;
 
-import java.time.LocalTime;
 import java.util.Collection;
 
 import javax.persistence.*;
@@ -8,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
-import org.javatuples.Pair;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,13 +40,14 @@ public class Establishment extends Actor {
 	@SafeHtml
 	private String imageProfile;
 
-	@ElementCollection
-	private Collection<Pair<LocalTime, LocalTime>> workingHours;
+	@NotBlank
+	@SafeHtml
+	private String workingHours;
 	
 	///////////////
 	// Relations //
 	///////////////
-	@OneToOne(mappedBy = "establishment")
+	@OneToOne
 	private SubscriptionData subscription;
 
 	@OneToMany(mappedBy = "establishment")

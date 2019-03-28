@@ -49,8 +49,8 @@ public class LanguageExchange extends DomainEntity {
 	@ManyToOne(optional = false)
 	private User creator;
 
-	@ManyToMany(mappedBy = "langsExchange", fetch = FetchType.LAZY)
-	private Collection<User> participants;
+	/*@ManyToMany(mappedBy = "langsExchange", fetch = FetchType.LAZY)
+	private Collection<User> participants;*/
 
 	@OneToMany()
 	private Collection<Language> targetLangs;
