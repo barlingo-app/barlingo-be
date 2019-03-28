@@ -60,16 +60,16 @@ insert into establishment (id, version, name, surname, country, city, email, est
 
 
 -- ESTABLISHMENT_WORKING_HOUR
---insert into establishment_working_hours (establishment_id, working_hours) values (26, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (27, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (28, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (29, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (30, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (31, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (32, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (33, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (34, null);
---insert into establishment_working_hours (establishment_id, working_hours) values (35, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (26, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (27, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (28, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (29, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (30, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (31, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (32, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (33, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (34, null);
+insert into establishment_working_hours (establishment_id, working_hours) values (35, null);
 
 
 /* Update sequence, insert last id value  */
