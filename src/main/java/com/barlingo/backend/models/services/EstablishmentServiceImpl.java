@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.services;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
-import com.barlingo.backend.utilities.IterToCollection;
+
 
 @Service
 @Transactional
@@ -20,7 +19,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 	
 	@Override
 	public List<Establishment> findAll() {
-		//return IterToCollection.getCollectionFromIteralbe(this.establishmentRepository.findAll());
 		return (List<Establishment>) this.establishmentRepository.findAll();
 	}
 
