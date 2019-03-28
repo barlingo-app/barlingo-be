@@ -39,14 +39,54 @@ INSERT INTO establishment (id, version, city, country, email, name, surname, add
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (29, 0, 'Ceuta', 'Spain', 'coleshunin8@theatlantic.com', 'Naëlle', 'Oleshunin', '55300 Bartelt Alley', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 'Crist Group', 'Flatley, Stark and Nader');
 INSERT INTO establishment (id, version, city, country, email, name, surname, address, description, establishment_name, image_profile) VALUES (30, 0, 'Dos Hermanas', 'Spain', 'dreisenstein9@phpbb.com', 'Gösta', 'Reisenstein', '28 Talmadge Crossing', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', 'Torphy Group', 'Lemke-Fay');
 
+/* Insert payData */
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (41, 0, 'jcb', 'thinkins0');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (42, 0, 'china-unionpay', 'iellse1');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (43, 0, 'visa', 'ktorry2');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (44, 0, 'mastercard', 'cmatthius3');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (45, 0, 'jcb', 'truddle4');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (46, 0, 'switch', 'wmcmenamin5');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (47, 0, 'diners-club-carte-blanche', 'bklauer6');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (48, 0, 'diners-club-carte-blanche', 'hmcclurg7');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (49, 0, 'jcb', 'gcrockatt8');
+INSERT INTO pay_data (id, version, pay_type, title) VALUES (50, 0, 'china-unionpay', 'wtwinn9');
+
+/* Insert subscriptionData */
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (51, 0, '2019-01-01 5:02', '6.99', 'MONTHLY', 21, 41);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (52, 0, '2019-01-01 15:03', '6.99', 'MONTHLY', 22, 42);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (53, 0, '2019-01-01 22:41', '18.99', 'QUARTERLY', 23, 43);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (54, 0, '2019-01-01 18:42', '18.99', 'QUARTERLY', 24, 44);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (55, 0, '2019-01-01 12:51', '62.99', 'ANNUAL', 25, 45);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (56, 0, '2019-01-01 21:57', '62.99', 'ANNUAL', 26, 46);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (57, 0, '2019-01-01 17:37', '6.99', 'MONTHLY', 27, 47);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (58, 0, '2019-01-01 3:57', '6.99', 'MONTHLY', 28, 48);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (59, 0, '2019-01-01 20:53', '18.99', 'QUARTERLY', 29, 49);
+INSERT INTO subscription_data (id, version, init_moment, price, subscription_type, establishment_id, paydata_id) VALUES (60, 0, '2019-01-01 14:44', '18.99', 'QUARTERLY', 30, 50);
+
 /* Insert exchange states */
-INSERT INTO `barlingo_db`.`exchange_state` (`id`, `version`, `name`) VALUES ('31', '0', 'OPEN');
-INSERT INTO `barlingo_db`.`exchange_state` (`id`, `version`, `name`) VALUES ('32', '0', 'CLOSED');
+INSERT INTO exchange_state (id, version, name) VALUES(81, 0, 'OPEN');
+INSERT INTO exchange_state (id, version, name) VALUES(82, 0, 'CLOSED');
 
+/* Insert languageExchange */
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (61, 0, 'dolor in reprehenderit', '1989-09-24 17:57:51.000','dolore eu fugiat nulla pariatur. Excepteur ', 18, 23, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (62, 0, 'dolor sit ame', '1981-10-27 18:48:28.000', 'in voluptate velit esse cillum dolore eu fugiat nulla pariat', 15, 23, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (63, 0, 'exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis ', '2004-08-02 02:10:16.000', 'occaecat cupidatat non proident, sunt in culpa qui offic', 11, 25, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (64, 0, 'sed do eiusmod temp', '1992-08-30 13:36:54.000', 'incididunt ut labore et dolore magna aliqua. Ut enim ad minim ven', 17, 25, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (65, 0, 'Duis aute irure ', '1996-05-14 06:48:50.000', 'pariatur. Excepteur sint occaecat cu', 20, 27, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (66, 0, 'tempor incididunt ut la', '2018-05-31 06:20:12.000', 'veniam, quis nostrud exercitation ull', 16, 27, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (67, 0, 'quis nostrud exercitation ullamco laboris ', '2008-01-05 02:51:43.000', 'aute irure dolor in reprehenderit in vol', 18, 22, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (68, 0, 'ullamco laboris nisi ut aliquip ex ea commodo consequat', '2015-08-09 09:00:37.000', 'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupida', 13, 26, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (69, 0, 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exerci','2012-08-10 13:12:28.000', 'ullamco laboris ', 17, 29, 81);
+INSERT INTO language_exchange (id, version, description, moment, title, creator_id, establishment_id, exchange_state_id) VALUES (70, 0, 'officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur a', '1992-06-26 03:09:59.000', 'sit amet, consectetur adipiscing elit, sed do eius', 11, 29, 81);
 
-/* Insert language exchanges */
-INSERT INTO language_exchange (`id`, `version`, `description`, `moment`, `title`, `creator_id`, `establishment_id`, `exchange_state_id`) VALUES ('33', '0', 'lang exchange 1', '2019-01-01 5:02', 'lang exchange 1', '11', '21', 31);
-INSERT INTO language_exchange_target_langs (`language_exchange_id`, `target_langs_id`) VALUES ('33', '2');
-
-INSERT INTO `barlingo_db`.`users_langs_exchange` (`participants_id`,`langs_exchange_id`) VALUES (11,33);
-INSERT INTO `barlingo_db`.`users_langs_exchange` (`participants_id`,`langs_exchange_id`) VALUES (12,33);
+/* Insert userDiscount */
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (71, 0, 'e', 0, 0, 61, 15);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (72, 0, 'aute ', 0, 0, 62, 17);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (73, 0, 'c', 0, 0, 63, 18);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (74, 0, 'es', 0, 0, 64, 11);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (75, 0, 'ame', 0, 0, 65, 18);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (76, 0, 'utal', 0, 0, 66, 19);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (77, 0, 'inci', 0, 0, 67, 12);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (78, 0, 'dolor', 0, 0, 68, 15);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (79, 0, 'enim ', 0, 0, 69, 16);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (80, 0, 'au', 0, 0, 70, 11);
