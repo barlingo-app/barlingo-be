@@ -44,7 +44,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 		userDiscount.setCode(this.generateUniqueCode());
 		userDiscount.setIsVisible(false);
 		userDiscount.setExchanged(false);
-//		userDiscount.setLangExchange(this.languageExchangeService.findById(langExchangeId));
+		userDiscount.setLangExchange(this.languageExchangeService.findById(langExchangeId));
 		userDiscount.setUser(user);
 
 		udSaved = this.userDiscountRepository.save(userDiscount);
@@ -69,13 +69,12 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 //		Assert.isTrue(this.userService.findById(1).getLangsExchange().contains(
 //				this.languageExchangeService.findById(langExchangeId)), USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 
-		UserDiscount ud = this.userDiscountRepository.findByLangExchangeId(langExchangeId);
-		LanguageExchange langExchange = this.languageExchangeService.findById(langExchangeId);
+		UserDiscount ud = this.userDiscountRepository.findByUserId(langExchangeId);
 
 		// Restrictions dates
 		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
 		// Refresh isVisible
-		if (langExchange.getMoment().toInstant().isBefore(Instant.now())) {
+		if (ud.getLangExchange().getMoment().toInstant().isBefore(Instant.now())) {
 			ud.setIsVisible(true);
 			this.userDiscountRepository.save(ud);
 		}

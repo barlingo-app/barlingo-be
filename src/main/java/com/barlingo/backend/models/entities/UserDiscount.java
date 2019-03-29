@@ -40,4 +40,9 @@ public class UserDiscount extends DomainEntity {
 	@NotNull
 	private User user;
 
+	@ManyToOne(optional = false)
+	@Valid
+	@NotNull
+	private LanguageExchange langExchange;
+
 }

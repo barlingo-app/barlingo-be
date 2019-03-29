@@ -8,5 +8,5 @@ public interface UserDiscountRepository extends JpaRepository<UserDiscount, Inte
 	
 	UserDiscount findByCode(String code);
 
-	UserDiscount findByLangExchangeId(Integer langExchangeId);
+	UserDiscount findByUserId(Integer userId);
 }
