@@ -60,12 +60,12 @@ public class LanguageExchange extends DomainEntity {
 	@Valid
 	private Collection<User> participants;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@Valid
 	@NotNull
 	private Collection<Language> targetLangs;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "langExchange")
 	@Valid
 	@NotNull
 	private Collection<UserDiscount> userDiscounts;
