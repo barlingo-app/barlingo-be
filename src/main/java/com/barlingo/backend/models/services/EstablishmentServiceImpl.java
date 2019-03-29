@@ -2,13 +2,8 @@ package com.barlingo.backend.models.services;
 
 import java.util.List;
 
-import com.barlingo.backend.exception.CustomException;
-import com.barlingo.backend.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +22,8 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+//	@Autowired
+//	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -58,13 +53,13 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 		this.establishmentRepository.delete(establishment);
 	}
 
-	public String signin(String username, String password) {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-			return jwtTokenProvider.createToken(username, establishmentRepository.findByUsername(username).getRoles());
-		} catch (AuthenticationException e) {
-			throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
-		}
-	}
+//	public String signin(String username, String password) {
+//		try {
+//			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+//			return jwtTokenProvider.createToken(username, establishmentRepository.findByUsername(username).getRoles());
+//		} catch (AuthenticationException e) {
+//			throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+//		}
+//	}
 
 }

@@ -16,5 +16,5 @@ public interface IEstablishmentService {
 	
 	void delete(Establishment establishment);
 
-	String signin(String username, String password);
+//	String signin(String username, String password);
 }
