@@ -18,12 +18,12 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public List<User> findAll() {
-		return (List<User>) this.userRepository.findAll();
+		return this.userRepository.findAll();
 	}
 
 	@Override
-	public void save(User user) {
-		this.userRepository.save(user);
+	public User save(User user) {
+		return this.userRepository.save(user);
 	}
 
 	@Override
