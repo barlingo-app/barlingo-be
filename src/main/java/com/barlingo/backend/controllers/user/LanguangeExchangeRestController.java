@@ -27,10 +27,11 @@ public class LanguangeExchangeRestController {
 	@Autowired
 	private LanguageExchangeMapper languangeExchangeMapper;
 
-	@GetMapping("/join/{languageExchangeId}")
-	public LanguageExchangeDetailsDTO joinUser(@PathVariable Integer languageExchangeId) {
-		return this.languangeExchangeMapper.entityToDto(this.languageExchangeService.joinUser(languageExchangeId));
-	}
+	@PostMapping("/join/{languageExchangeId}")
+    public LanguageExchangeDetailsDTO joinUser(@RequestParam Integer userId, @PathVariable Integer languageExchangeId) {
+        return this.languangeExchangeMapper
+                .entityToDto(this.languageExchangeService.joinUser(userId, languageExchangeId));
+    }
 	
 	@PostMapping(path="/create", consumes="application/json")
 	@ResponseStatus(HttpStatus.CREATED)
