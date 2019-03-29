@@ -19,12 +19,12 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 	
 	@Override
 	public List<Establishment> findAll() {
-		return (List<Establishment>) this.establishmentRepository.findAll();
+		return this.establishmentRepository.findAll();
 	}
 
 	@Override
-	public void save(Establishment establishment) {
-		this.establishmentRepository.save(establishment);
+	public Establishment save(Establishment establishment) {
+		return this.establishmentRepository.save(establishment);
 	}
 
 	@Override

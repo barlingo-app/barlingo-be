@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,13 +27,14 @@ public class UserDiscountRestController {
 
 	@PostMapping("/create/{languageExchangeId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createAndSave(@PathVariable Integer languageExchangeId) {
-		this.userDiscountService.createAndSave(languageExchangeId);
+	public void createAndSave(@RequestParam Integer userId, @PathVariable Integer languageExchangeId) {
+		this.userDiscountService.createAndSave(userId, languageExchangeId);
 	}
 
-	@GetMapping("/show/{languageExchangeId}")
-	public UserDiscountGenericDTO show(@PathVariable Integer languageExchangeId) {
-		return this.userDiscountMapper.entityToDto(this.userDiscountService.findByLangExchangeId(languageExchangeId));
+	@GetMapping("/show/{langExchangeId}")
+	public UserDiscountGenericDTO show(@RequestParam Integer userId, @PathVariable Integer langExchangeId) {
+		return this.userDiscountMapper
+				.entityToDto(this.userDiscountService.findByLangExchangeId(userId, langExchangeId));
 	}
 
 //	@GetMapping("/show/{code}")

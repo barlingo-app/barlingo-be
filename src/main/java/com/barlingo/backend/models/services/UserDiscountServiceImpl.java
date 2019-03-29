@@ -31,12 +31,12 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 	private ILanguageExchangeService languageExchangeService;
 
 	@Override
-	public UserDiscount createAndSave(Integer langExchangeId) {
+	public UserDiscount createAndSave(Integer userId, Integer langExchangeId) {
 		UserDiscount udSaved;
 
 		// TODO: Catch principal
 //		User user = this.userService.findByPrincipal();
-		User user = this.userService.findById(11);
+		User user = this.userService.findById(userId);
 		Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 
 		UserDiscount userDiscount = new UserDiscount();
@@ -61,23 +61,24 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 	}
 
 	@Override
-	public UserDiscount findByLangExchangeId(Integer langExchangeId) {
+	public UserDiscount findByLangExchangeId(Integer userId, Integer langExchangeId) {
 		UserDiscount udSaved = null;
 		// TODO: Catch principal
 //		User user = this.userService.findByPrincipal();
-//		Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+		User user = this.userService.findById(userId);
+		Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 //		Assert.isTrue(this.userService.findById(1).getLangsExchange().contains(
 //				this.languageExchangeService.findById(langExchangeId)), USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 
-		UserDiscount ud = this.userDiscountRepository.findByUserId(langExchangeId);
-		// Restrictions dates
-		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
-		// Refresh isVisible
-		if (ud.getLangExchange().getMoment().toInstant().isBefore(Instant.now())) {
+		UserDiscount ud = this.userDiscountRepository.findByUserIdAndLangExchangeId(userId, langExchangeId);
+		// Refresh isVisible 4hours before that languageExchange
+		if (ud.getLangExchange().getMoment().toInstant().minusSeconds(14400).isBefore(Instant.now())) {
 			ud.setIsVisible(true);
 			udSaved = this.userDiscountRepository.save(ud);
 		}
 		// TODO: confirmar que el intercambio no ha sido canjeado ya.
+		// Restrictions dates
+		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
 		Assert.isTrue(!ud.getExchanged(), "User discount alredy exchaged");
 
 		return udSaved;

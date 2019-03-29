@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class EstablishmentDetailsDTO {
 
+	private Integer id;
 	private String establishmentName;
 	private String description;
 	private String address;
