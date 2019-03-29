@@ -13,7 +13,6 @@ public interface UserDiscountMapper {
 	UserDiscountMapper INSTANCE = Mappers.getMapper(UserDiscountMapper.class);
 
 	@Mapping(target = "userId", source = "entity.user.id")
-	@Mapping(target = "langExchangeId", source = "entity.langExchange.id")
 	UserDiscountGenericDTO entityToDto(UserDiscount entity);
 
 	UserDiscount dtoToEntity(UserDiscountGenericDTO dto);

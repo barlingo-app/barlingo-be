@@ -68,5 +68,5 @@ public class LanguageExchange extends DomainEntity {
 	@OneToMany(fetch = FetchType.LAZY)
 	@Valid
 	@NotNull
-	private Collection<UserDiscount> userDiscount;
+	private Collection<UserDiscount> userDiscounts;
 }
