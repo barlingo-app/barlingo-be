@@ -15,7 +15,7 @@ public interface ILanguageExchangeService {
 
 	void delete(LanguageExchange exchange);
 
-	LanguageExchange joinUser(Integer languageExchangeId);
+	LanguageExchange joinUser(Integer userId, Integer languageExchangeId);
 	
 	List<LanguageExchange> findByEstId(Integer estId);
 }

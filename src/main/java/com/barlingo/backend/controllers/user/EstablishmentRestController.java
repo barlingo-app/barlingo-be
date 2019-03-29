@@ -1,4 +1,4 @@
-package com.barlingo.backend.controllers;
+package com.barlingo.backend.controllers.user;
 
 import java.util.List;
 

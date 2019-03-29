@@ -8,7 +8,7 @@ public interface IEstablishmentService {
 
 	Collection<Establishment> findAll();
 	
-	void save(Establishment establishment);
+	Establishment save(Establishment establishment);
 	
 	Establishment findById(Integer id);
 	

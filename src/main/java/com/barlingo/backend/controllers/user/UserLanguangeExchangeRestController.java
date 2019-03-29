@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
@@ -23,9 +25,10 @@ public class UserLanguangeExchangeRestController {
 	@Autowired
 	private LanguageExchangeMapper languageExchangeMapper;
 
-	@GetMapping("/join/{languageExchangeId}")
-	public LanguageExchangeDetailsDTO joinUser(@PathVariable Integer languageExchangeId) {
-		return this.languageExchangeMapper.entityToDto(this.languageExchangeService.joinUser(languageExchangeId));
+	@PostMapping("/join/{languageExchangeId}")
+	public LanguageExchangeDetailsDTO joinUser(@RequestParam Integer userId, @PathVariable Integer languageExchangeId) {
+		return this.languangeExchangeMapper
+				.entityToDto(this.languageExchangeService.joinUser(userId, languageExchangeId));
 	}
 	
 	@GetMapping("/details/{exId}")
