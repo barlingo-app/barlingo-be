@@ -46,26 +46,32 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
 	@Override
 	public LanguageExchange joinUser(Integer languageExchangeId) {
-		LanguageExchange langExchangeSaved = null;
+		LanguageExchange langExchangeSaved;
 		LanguageExchange langExchange = this.findById(languageExchangeId);
 		Assert.notNull(langExchange, "Invalid language exchange");
 		// Si el evento ha tenido lugar en más de un día salta excepción
 //		Assert.isTrue(langExchange.getMoment().toInstant().plusSeconds(86400).isAfter(Instant.now()), "Event has already taken place");
-
+		// TODO
 //		User user = this.userService.findByPrincipal();
 		User user = this.userService.findById(11);
 
 		if (langExchange.getMoment().toInstant().isBefore(Instant.now())) {
-			
+			Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
+			Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You already register");
+
+			userExchanges.add(langExchange);
+			user.setLangsExchanges(userExchanges);
+
 			Collection<User> participants = langExchange.getParticipants();
-			participants.add(user);
+			Assert.isTrue(!langExchange.getParticipants().contains(user), "You already register");
+
+			participants.add(this.userService.save(user));
 			langExchange.setParticipants(participants);
 
 			// Generate new code to new participant
 			this.userDiscountService.createAndSave(languageExchangeId);
-
-			langExchangeSaved = this.save(langExchange);
 		}
+		langExchangeSaved = this.save(langExchange);
 
 		return langExchangeSaved;
 	}

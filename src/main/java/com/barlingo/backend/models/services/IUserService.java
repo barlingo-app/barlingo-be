@@ -8,7 +8,7 @@ public interface IUserService {
 
 	List<User> findAll();
 
-	void save(User user);
+	User save(User user);
 
 	User findById(Integer id);
 
