@@ -1,15 +1,19 @@
 package com.barlingo.backend.models.entities;
 
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -52,18 +56,26 @@ public class User  extends Actor {
 	///////////////
 	// Relations //
 	///////////////
-	/*@ManyToMany
-	private Collection<LanguageExchange> langsExchange;
-
+	@OneToMany(fetch = FetchType.LAZY)
+	@Valid
+	@NotNull
+	private Collection<LanguageExchange> langsExchanges;
+	
 	// fetch = FetchType.LAZY ->
 	// no se trae esta collection cuando se llama al user,solo cuando es necesario
 	@OneToMany(fetch = FetchType.LAZY)
+	@NotNull
+	@Valid
 	private Collection<Language> speakLangs;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	private Collection<Language> langsToLearn;*/
+	@NotNull
+	@Valid
+	private Collection<Language> langsToLearn;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@Valid
+	@NotNull
 	private Language motherTongue;
 
 }

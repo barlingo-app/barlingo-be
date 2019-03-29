@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -40,21 +41,32 @@ public class LanguageExchange extends DomainEntity {
 	// Relations //
 	///////////////
 	@ManyToOne(optional = false)
+	@Valid
 	private ExchangeState exchangeState;
 
 	@ManyToOne(optional = false)
-	@JoinColumn(name="establishment_id")
+	@JoinColumn(name = "establishment_id")
+	@NotNull
+	@Valid
 	private Establishment establishment;
 
 	@ManyToOne(optional = false)
+	@NotNull
+	@Valid
 	private User creator;
 
-	/*@ManyToMany(mappedBy = "langsExchange", fetch = FetchType.LAZY)
-	private Collection<User> participants;*/
+	@ManyToMany(mappedBy = "langsExchanges", fetch = FetchType.LAZY)
+	@NotNull
+	@Valid
+	private Collection<User> participants;
 
-	@OneToMany()
+	@OneToMany(fetch = FetchType.LAZY)
+	@Valid
+	@NotNull
 	private Collection<Language> targetLangs;
 
 	@OneToMany(fetch = FetchType.LAZY)
+	@Valid
+	@NotNull
 	private Collection<UserDiscount> userDiscount;
 }
