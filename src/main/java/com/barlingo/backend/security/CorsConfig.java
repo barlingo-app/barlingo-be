@@ -10,9 +10,8 @@ public class CorsConfig implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 
-		registry.addMapping("*/**").allowedOrigins("http://localhost:3000", "https://app-uat.barlingo.es",
+		registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://app-uat.barlingo.es",
 				"https://app.barlingo.es", "https://rc1.barlingo.es").allowCredentials(true);
-
 	}
 
 }
