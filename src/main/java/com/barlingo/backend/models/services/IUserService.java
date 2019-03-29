@@ -16,6 +16,6 @@ public interface IUserService {
 
 	void delete(User user);
 
-	String signin(String username, String password);
+//	String signin(String username, String password);
 
 }

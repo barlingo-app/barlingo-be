@@ -36,13 +36,13 @@ public class UserRestController {
 	public User findByUsername(@PathVariable String username) {
 		return this.userService.findByUsername(username);
 	}
-
-	@PostMapping("/signin")
-	public String login(//
-						@RequestParam String username, //
-						@RequestParam String password) {
-		return userService.signin(username, password);
-	}
+//
+//	@PostMapping("/signin")
+//	public String login(//
+//						@RequestParam String username, //
+//						@RequestParam String password) {
+//		return userService.signin(username, password);
+//	}
 
 	/*@PostMapping("/users")
 	@ResponseStatus(HttpStatus.CREATED)
