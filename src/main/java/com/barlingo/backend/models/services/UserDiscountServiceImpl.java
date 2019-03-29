@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
@@ -27,8 +28,8 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 	private ActorService actorService;
 	@Autowired
 	private IUserService userService;
-//	@Autowired
-//	private LanguageExchangeService languageExchangeService;
+	@Autowired
+	private ILanguageExchangeService languageExchangeService;
 
 	@Override
 	public UserDiscount createAndSave(Integer langExchangeId) {
@@ -43,7 +44,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 		userDiscount.setCode(this.generateUniqueCode());
 		userDiscount.setIsVisible(false);
 		userDiscount.setExchanged(false);
-//		userDiscount.setLangExchange(this.languageExchangeService.findById(langExchangeId));
+		userDiscount.setLangExchange(this.languageExchangeService.findById(langExchangeId));
 		userDiscount.setUser(user);
 
 		udSaved = this.userDiscountRepository.save(userDiscount);
@@ -64,22 +65,21 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 	public UserDiscount findByLangExchangeId(Integer langExchangeId) {
 		// TODO: Catch principal
 //		User user = this.userService.findByPrincipal();
-		Assert.notNull(this.userService.findById(11), USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+//		Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 //		Assert.isTrue(this.userService.findById(1).getLangsExchange().contains(
 //				this.languageExchangeService.findById(langExchangeId)), USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 
-		UserDiscount ud = this.userDiscountRepository.findByLangExchangeId(langExchangeId);
+		UserDiscount ud = this.userDiscountRepository.findByUserId(langExchangeId);
 
 		// Restrictions dates
-		Assert.isTrue(ud.getLangExchange().getMoment().toInstant().isBefore(Instant.now()),
-				"User discount not enable yet");
+		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
 		// Refresh isVisible
 		if (ud.getLangExchange().getMoment().toInstant().isBefore(Instant.now())) {
 			ud.setIsVisible(true);
 			this.userDiscountRepository.save(ud);
 		}
-		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
-		Assert.isTrue(ud.getExchanged(), "User discount alredy exchaged");
+		// TODO: confirmar que el intercambio no ha sido canjeado ya.
+		Assert.isTrue(!ud.getExchanged(), "User discount alredy exchaged");
 
 		return ud;
 	}

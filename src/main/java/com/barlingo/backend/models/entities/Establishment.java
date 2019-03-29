@@ -3,7 +3,9 @@ package com.barlingo.backend.models.entities;
 import java.util.Collection;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
@@ -48,8 +50,11 @@ public class Establishment extends Actor {
 	// Relations //
 	///////////////
 	@OneToOne
+	@Valid
+	@NotNull
 	private SubscriptionData subscription;
 
 	@OneToMany(mappedBy = "establishment")
+	@Valid
 	private Collection<LanguageExchange> langsExchange;
 }

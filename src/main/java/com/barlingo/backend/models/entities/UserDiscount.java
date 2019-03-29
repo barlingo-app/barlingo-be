@@ -5,6 +5,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
@@ -27,7 +28,7 @@ public class UserDiscount extends DomainEntity {
 
 	@NotNull
 	private Boolean exchanged;
-	
+
 	@NotNull
 	private Boolean isVisible;
 
@@ -35,9 +36,13 @@ public class UserDiscount extends DomainEntity {
 	// Relations //
 	///////////////
 	@ManyToOne(optional = false)
+	@Valid
+	@NotNull
 	private User user;
 
 	@ManyToOne(optional = false)
+	@Valid
+	@NotNull
 	private LanguageExchange langExchange;
 
 }
