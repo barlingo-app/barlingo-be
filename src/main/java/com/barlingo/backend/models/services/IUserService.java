@@ -12,5 +12,10 @@ public interface IUserService {
 
 	User findById(Integer id);
 
+	User findByUsername(String username);
+
 	void delete(User user);
+
+	String signin(String username, String password);
+
 }

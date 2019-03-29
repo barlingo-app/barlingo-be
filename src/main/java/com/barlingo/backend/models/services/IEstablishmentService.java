@@ -11,6 +11,10 @@ public interface IEstablishmentService {
 	Establishment save(Establishment establishment);
 	
 	Establishment findById(Integer id);
+
+	Establishment findByUsername(String username);
 	
 	void delete(Establishment establishment);
+
+	String signin(String username, String password);
 }

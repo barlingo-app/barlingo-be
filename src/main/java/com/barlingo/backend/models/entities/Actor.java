@@ -1,8 +1,6 @@
 package com.barlingo.backend.models.entities;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -10,6 +8,8 @@ import org.hibernate.validator.constraints.SafeHtml;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -36,6 +36,13 @@ public abstract class Actor extends DomainEntity {
 	@NotBlank
 	@SafeHtml
 	private String email;
+
+	private String password;
+
+	private String username;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	List<Role> roles;
 
 	///////////////
 	// Relations //

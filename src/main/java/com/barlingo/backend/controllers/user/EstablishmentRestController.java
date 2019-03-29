@@ -2,12 +2,9 @@ package com.barlingo.backend.controllers.user;
 
 import java.util.List;
 
+import com.barlingo.backend.models.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
@@ -32,6 +29,11 @@ public class EstablishmentRestController {
 	@GetMapping("/show/{estId}")
 	public EstablishmentDetailsDTO show(@PathVariable int estId) {
 		return this.establishmentMapper.establishmentToDto(this.establishmentService.findById(estId));
+	}
+
+	@GetMapping("/show/{username}")
+	public EstablishmentDetailsDTO findByUsername(@PathVariable String username) {
+		return this.establishmentMapper.establishmentToDto(this.establishmentService.findByUsername(username));
 	}
 
 }
