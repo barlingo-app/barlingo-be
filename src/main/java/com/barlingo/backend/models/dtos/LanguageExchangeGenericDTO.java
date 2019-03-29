@@ -14,10 +14,8 @@ public class LanguageExchangeGenericDTO {
 	private String title;
 	private String description;
 	private Date moment;
-	private Collection<Language> targetLanguages;
-	
+	private Collection<Language> targetLangs;
 	private int numberOfParticipants;
-	//Collection with the URLs of the participants profile picture
-	private Collection<String> participants;
+
 	
 }

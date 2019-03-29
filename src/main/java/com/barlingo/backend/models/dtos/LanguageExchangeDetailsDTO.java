@@ -20,6 +20,4 @@ public class LanguageExchangeDetailsDTO {
 	private Collection<Language> targetLangs;
 	private Collection<ParticipantDTO> participants;
 
-
-
 }
