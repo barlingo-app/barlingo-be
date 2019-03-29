@@ -13,6 +13,7 @@ import com.barlingo.backend.models.services.IUserService;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
+@RequestMapping("/user")
 public class UserRestController {
 
 	@Autowired
@@ -31,12 +32,12 @@ public class UserRestController {
 		return this.userMapper.entityToDto(this.userService.findById(id));
 	}
 
-	@GetMapping("/users/username/{username}")
+	@GetMapping("/username/{username}")
 	public User findByUsername(@PathVariable String username) {
 		return this.userService.findByUsername(username);
 	}
 
-	@PostMapping("/users/signin")
+	@PostMapping("/signin")
 	public String login(//
 						@RequestParam String username, //
 						@RequestParam String password) {
