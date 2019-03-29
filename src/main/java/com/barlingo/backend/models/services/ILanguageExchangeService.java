@@ -18,4 +18,6 @@ public interface ILanguageExchangeService {
 	LanguageExchange joinUser(Integer userId, Integer languageExchangeId);
 	
 	List<LanguageExchange> findByEstId(Integer estId);
+
+	LanguageExchange createAndSave(int creatorId, int exchangeStateId, int establishmentId, LanguageExchange langExchange);
 }
