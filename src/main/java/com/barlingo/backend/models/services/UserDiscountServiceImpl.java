@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.barlingo.backend.models.entities.Actor;
-import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
@@ -63,6 +62,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
 	@Override
 	public UserDiscount findByLangExchangeId(Integer langExchangeId) {
+		UserDiscount udSaved = null;
 		// TODO: Catch principal
 //		User user = this.userService.findByPrincipal();
 //		Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
@@ -70,18 +70,17 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 //				this.languageExchangeService.findById(langExchangeId)), USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 
 		UserDiscount ud = this.userDiscountRepository.findByUserId(langExchangeId);
-
 		// Restrictions dates
 		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
 		// Refresh isVisible
 		if (ud.getLangExchange().getMoment().toInstant().isBefore(Instant.now())) {
 			ud.setIsVisible(true);
-			this.userDiscountRepository.save(ud);
+			udSaved = this.userDiscountRepository.save(ud);
 		}
 		// TODO: confirmar que el intercambio no ha sido canjeado ya.
 		Assert.isTrue(!ud.getExchanged(), "User discount alredy exchaged");
 
-		return ud;
+		return udSaved;
 	}
 
 	///////////////////////
@@ -112,7 +111,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 		String reference = "";
 
 		while (this.checkReference(reference) || reference.equals("")) {
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 4; i++)
 				randomLetter.append(String.valueOf((char) (r.nextInt(26) + 'A')));
 
 			reference = dt.format(new Date()) + "-" + randomLetter;

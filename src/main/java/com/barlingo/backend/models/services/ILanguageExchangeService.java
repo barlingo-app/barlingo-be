@@ -8,9 +8,11 @@ public interface ILanguageExchangeService {
 
 	List<LanguageExchange> findAll();
 
-	void save(LanguageExchange exchange);
+	LanguageExchange save(LanguageExchange exchange);
 
 	LanguageExchange findById(Integer id);
 
 	void delete(LanguageExchange exchange);
+
+	LanguageExchange joinUser(Integer languageExchangeId);
 }
