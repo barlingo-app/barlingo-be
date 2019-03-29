@@ -27,7 +27,7 @@ public class UserLanguangeExchangeRestController {
 
 	@PostMapping("/join/{languageExchangeId}")
 	public LanguageExchangeDetailsDTO joinUser(@RequestParam Integer userId, @PathVariable Integer languageExchangeId) {
-		return this.languangeExchangeMapper
+		return this.languageExchangeMapper
 				.entityToDto(this.languageExchangeService.joinUser(userId, languageExchangeId));
 	}
 	
