@@ -42,6 +42,7 @@ public class LanguageExchangeRestController {
 		return new LanguageExchangeDetailsDTO();
 	}
 
+	
 	@PutMapping("/exchanges/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public LanguageExchangeDetailsDTO update(@RequestBody LanguageExchangeDetailsDTO langExchangeDTO, @PathVariable Integer id) {
