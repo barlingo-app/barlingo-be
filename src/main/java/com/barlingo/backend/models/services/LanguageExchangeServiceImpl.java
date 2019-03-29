@@ -75,4 +75,9 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
 		return langExchangeSaved;
 	}
+
+	@Override
+	public List<LanguageExchange> findByEstId(Integer estId) {
+		return (List<LanguageExchange>) this.langExchangeRepository.findByEstId(estId);
+	}
 }

@@ -1,5 +1,7 @@
 package com.barlingo.backend.controllers.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,17 +15,27 @@ import com.barlingo.backend.models.services.ILanguageExchangeService;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
-@RequestMapping("/laguageExchange/user")
-public class LanguangeExchangeRestController {
+@RequestMapping("/languageExchange/user")
+public class UserLanguangeExchangeRestController {
 
 	@Autowired
 	private ILanguageExchangeService languageExchangeService;
 	@Autowired
-	private LanguageExchangeMapper languangeExchangeMapper;
+	private LanguageExchangeMapper languageExchangeMapper;
 
 	@GetMapping("/join/{languageExchangeId}")
 	public LanguageExchangeDetailsDTO joinUser(@PathVariable Integer languageExchangeId) {
-		return this.languangeExchangeMapper.entityToDto(this.languageExchangeService.joinUser(languageExchangeId));
+		return this.languageExchangeMapper.entityToDto(this.languageExchangeService.joinUser(languageExchangeId));
+	}
+	
+	@GetMapping("/details/{exId}")
+	public LanguageExchangeDetailsDTO findExchange(@PathVariable Integer exId) {
+		return this.languageExchangeMapper.entityToDto(languageExchangeService.findById(exId));
+	}
+	
+	@GetMapping("/list")
+	public List<LanguageExchangeDetailsDTO> findExchange() {
+		return this.languageExchangeMapper.entitysToDtos(languageExchangeService.findAll());
 	}
 
 }
