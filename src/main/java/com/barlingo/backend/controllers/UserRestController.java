@@ -33,8 +33,8 @@ public class UserRestController {
 	}
 
 	@GetMapping("/username/{username}")
-	public User findByUsername(@PathVariable String username) {
-		return this.userService.findByUsername(username);
+	public UserDetailsDTO findByUsername(@PathVariable String username) {
+		return this.userMapper.entityToDto(this.userService.findByUsername(username));
 	}
 
 	@PostMapping("/signin")

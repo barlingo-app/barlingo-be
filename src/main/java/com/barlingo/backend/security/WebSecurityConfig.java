@@ -19,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -31,23 +32,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Entry points
 		http.authorizeRequests()//
-				.antMatchers("/**").permitAll();//
-//				.antMatchers("/users/signin").permitAll()//
-//				.antMatchers("/users/signup").permitAll()//
-//				.antMatchers("/establisment/**").permitAll()//
-//				.antMatchers("/exchanges/**").permitAll()//
-//				.antMatchers("/user/**").permitAll()//
+				.antMatchers("/establisment/**").permitAll()//
+				.antMatchers("/exchanges/**").permitAll()//
+				.antMatchers("/user/**").permitAll()//
 				// Disallow everything else..
-//				.anyRequest().authenticated();
+				.anyRequest().authenticated();
 
 		// If a user try to access a resource without having enough permissions
-//		http.exceptionHandling().accessDeniedPage("/login");
+		http.exceptionHandling().accessDeniedPage("/login");
 
 		// Apply JWT
-//		http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
+		http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 
 		// Optional, if you want to test the API from a browser
-		// http.httpBasic();
+		 http.httpBasic();
 	}
 
 	@Override
