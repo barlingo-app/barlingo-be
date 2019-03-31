@@ -129,11 +129,11 @@ INSERT INTO users_langs_exchanges(participants_id,langs_exchanges_id) VALUES (17
 INSERT INTO users_langs_exchanges(participants_id,langs_exchanges_id) VALUES (11,70);
 
 /* Insert userDiscount */
-INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (71, 0, 'e', 0, 0, 61, 15);
-INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (72, 0, 'aute ', 0, 0, 62, 17);
-INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (73, 0, 'c', 0, 0, 63, 18);
-INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (74, 0, 'es', 0, 0, 64, 11);
-INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (75, 0, 'ame', 0, 0, 65, 18);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (71, 0, 'e', 0, 1, 61, 15);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (72, 0, 'aute ', 0, 1, 62, 17);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (73, 0, 'c', 0, 1, 63, 18);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (74, 0, 'es', 0, 1, 64, 11);
+INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (75, 0, 'ame', 0, 1, 65, 18);
 INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (76, 0, 'utal', 0, 0, 66, 19);
 INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (77, 0, 'inci', 0, 0, 67, 12);
 INSERT INTO user_discount (id, version, code, exchanged, is_visible, lang_exchange_id, user_id) VALUES (78, 0, 'dolor', 0, 0, 68, 15);

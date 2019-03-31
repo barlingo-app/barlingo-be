@@ -9,5 +9,9 @@ public interface IUserDiscountService {
 	UserDiscount findByCode(String code);
 
 	UserDiscount findByLangExchangeId(Integer userId, Integer langExchangeId);
-
+	
+	UserDiscount save(UserDiscount userDiscount);
+	
+	UserDiscount validate(UserDiscount userDiscount);
+	
 }
