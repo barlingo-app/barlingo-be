@@ -101,18 +101,18 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 		//				this.languageExchangeService.findById(langExchangeId)), USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
 
 		UserDiscount ud = this.userDiscountRepository.findByUserIdAndLangExchangeId(userId, langExchangeId);
-		// Refresh isVisible 4hours before the languageExchange and 24h after
-		if (ud.getLangExchange().getMoment().toInstant().minusSeconds(14400).isBefore(Instant.now()) 
-				&& ud.getLangExchange().getMoment().toInstant().plusSeconds(86400).isBefore(Instant.now()) ) {
-			if(!ud.getIsVisible()) {
-				ud.setIsVisible(true);
-				udSaved = this.userDiscountRepository.save(ud);
-			}
+		// Refresh isVisible 4hours before that languageExchange
+		if (ud.getLangExchange().getMoment().toInstant().minusSeconds(14400).isBefore(Instant.now()) &&
+				ud.getLangExchange().getMoment().toInstant().plusSeconds(86400).isAfter(Instant.now())) {
+			ud.setIsVisible(true);
+			udSaved = this.userDiscountRepository.save(ud);
+		} else if(ud.getIsVisible()){
+			ud.setIsVisible(false);
+			udSaved = this.userDiscountRepository.save(ud);
 		}
 
 		// TODO: confirmar que el intercambio no ha sido canjeado ya.
-
-		// Restrictions dates
+		// Restrictions
 		Assert.isTrue(ud.getIsVisible(), "User discount not enable yet");
 		Assert.isTrue(!ud.getExchanged(), "User discount already exchaged");
 

@@ -8,7 +8,8 @@ import lombok.Data;
 
 @Data
 public class UserGenericDTO {
-
+	
+	private Integer id;
 	private String name;
 	private String surname;
 	private String personalPic;

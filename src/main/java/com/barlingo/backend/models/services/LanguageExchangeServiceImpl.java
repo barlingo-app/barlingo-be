@@ -1,6 +1,7 @@
 package com.barlingo.backend.models.services;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.Language;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
@@ -22,9 +21,8 @@ import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
 @Transactional
 public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
-	
 	private static final String USER_NOT_NULL_IN_CREATE_USER_DISCOUNT = "User not null in create UserDiscount";
-	private static final String LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT = "language Exchange can not be null";
+	private static final String LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT = "Language Exchange can not be null";
 	@Autowired
 	private LanguageExchangeRepository langExchangeRepository;
 	@Autowired
@@ -35,36 +33,31 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 	private IExchangeStateService exchangeStateService;
 	@Autowired
 	private IEstablishmentService establishmentService;
-	
-	
+
 	@Override
-	public LanguageExchange createAndSave(int creatorId, int exchangeStateId, int establishmentId, LanguageExchange langExchange) {
-		Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+	public LanguageExchange createAndSave(Integer creatorId, Integer establishmentId, LanguageExchange langExchange) {
 		User user = this.userService.findById(creatorId);
+
 		Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+		Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+
 		LanguageExchange langExch = new LanguageExchange();
+
 		langExch.setCreator(user);
 		langExch.setTitle(langExchange.getTitle());
 		langExch.setDescription(langExchange.getDescription());
 		langExch.setMoment(langExchange.getMoment());
-		Collection<User> participants = new LinkedList<User>();
-		participants.add(user);
-		langExch.setParticipants(participants);
-		ExchangeState open = new ExchangeState();
-		open = this.exchangeStateService.findById(exchangeStateId);
-		langExch.setExchangeState(open);
-		Establishment establish = new Establishment();
-		establish = this.establishmentService.findById(establishmentId);
-		langExch.setEstablishment(establish);
-		Collection<UserDiscount> userDiscounts = new LinkedList<UserDiscount>();
-		Collection<Language> targetLangs = new LinkedList<Language>();
-		
-		langExch.setTargetLangs(targetLangs);
-		langExch.setUserDiscounts(userDiscounts);
-		
-		
+		langExch.setParticipants(new LinkedList<User>());
+		// ExchangeState 81 is open
+		langExch.setExchangeState(this.exchangeStateService.findById(81));
+		langExch.setEstablishment(this.establishmentService.findById(establishmentId));
+		langExch.setTargetLangs(new LinkedList<Language>());
+		langExch.setUserDiscounts(new LinkedList<UserDiscount>());
+
 		LanguageExchange saved = this.langExchangeRepository.save(langExch);
-		
+		// Creator join as a participant
+		this.joinUser(user.getId(), saved.getId());
+
 		return saved;
 	}
 
