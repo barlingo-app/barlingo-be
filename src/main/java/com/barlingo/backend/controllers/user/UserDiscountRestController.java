@@ -28,11 +28,11 @@ public class UserDiscountRestController {
 	@Autowired
 	private UserDiscountMapper userDiscountMapper;
 
-	@PostMapping("/create/{languageExchangeId}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void createAndSave(@RequestParam Integer userId, @PathVariable Integer languageExchangeId) {
-		this.userDiscountService.createAndSave(userId, languageExchangeId);
-	}
+//	@PostMapping("/create/{languageExchangeId}")
+//	@ResponseStatus(HttpStatus.CREATED)
+//	public void createAndSave(@RequestParam Integer userId, @PathVariable Integer languageExchangeId) {
+//		this.userDiscountService.createAndSave(userId, languageExchangeId);
+//	}
 
 	@GetMapping("/show/{langExchangeId}")
 	public UserDiscountGenericDTO show(@RequestParam Integer userId, @PathVariable Integer langExchangeId) {
