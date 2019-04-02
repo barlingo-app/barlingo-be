@@ -1,8 +1,9 @@
 package com.barlingo.backend.security;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
+	
+	@Value("${security.cors.domains}")
+	private List<String> corsDomains;
+	
+	@Value("${security.cors.methods}")
+	private List<String> corsMethods;
+	
+	@Value("${security.cors.headers}")
+	private List<String> corsHeaders;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -84,9 +94,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://app-uat.barlingo.es",
-				"https://app.barlingo.es", "https://rc1.barlingo.es"));
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedOrigins(this.corsDomains);
+		configuration.setAllowedMethods(this.corsMethods);
+		configuration.setAllowedHeaders(this.corsHeaders);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;

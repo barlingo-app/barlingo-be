@@ -32,7 +32,7 @@ public class LanguageExchange extends DomainEntity {
 	private String description;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	@NotNull
 	@Basic
 	private Date moment;

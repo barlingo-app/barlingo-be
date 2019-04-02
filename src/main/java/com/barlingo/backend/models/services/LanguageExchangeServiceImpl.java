@@ -87,12 +87,12 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 		LanguageExchange langExchange = this.findById(languageExchangeId);
 		Assert.notNull(langExchange, "Invalid language exchange");
 		// Si el evento ha tenido lugar en más de un día salta excepción
-		Assert.isTrue(langExchange.getMoment().toInstant().isBefore(Instant.now()), "Event has already taken place");
+		Assert.isTrue(langExchange.getMoment().toInstant().isAfter(Instant.now()), "Event has already taken place");
 		// TODO
 //		User user = this.userService.findByPrincipal();
 		User user = this.userService.findById(userId);
 
-		if (langExchange.getMoment().toInstant().isBefore(Instant.now())) {
+		if (langExchange.getMoment().toInstant().isAfter(Instant.now())) {
 			Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
 			Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You already register");
 
