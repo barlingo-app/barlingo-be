@@ -1,6 +1,8 @@
 package com.barlingo.backend.controllers.user;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +50,19 @@ public class UserLanguangeExchangeRestController {
 	@PostMapping(path = "/create", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	public LanguageExchangeDetailsDTO create(@RequestParam Integer creatorId, @RequestParam Integer establishmentId,
-			@RequestBody LanguageExchange langExchange) {
+			@RequestBody Map<String,String> langExchangeData) {
+		LanguageExchange langExchange = new LanguageExchange();
+		langExchange.setTitle(langExchangeData.get("title"));
+		langExchange.setDescription(langExchangeData.get("description"));
+		
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+			formatter.setLenient(false);
+			langExchange.setMoment(formatter.parse(langExchangeData.get("moment")));
+		} catch (Exception e) {
+			langExchange.setMoment(null);
+		}
+		
 		return this.languageExchangeMapper
 				.entityToDto(this.languageExchangeService.createAndSave(creatorId, establishmentId, langExchange));
 	}

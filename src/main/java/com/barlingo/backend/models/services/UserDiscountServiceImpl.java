@@ -181,7 +181,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 		
 		//Check code has not expired
 		Assert.isTrue(
-				userDiscount.getLangExchange().getMoment().toInstant().plusSeconds(86400).isBefore(Instant.now())
+				userDiscount.getLangExchange().getMoment().toInstant().plusSeconds(86400).isAfter(Instant.now())
 				,"discount code has expired");
 			userDiscount.setExchanged(true);
 			saved = this.save(userDiscount);
