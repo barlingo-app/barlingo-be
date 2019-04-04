@@ -2,7 +2,11 @@ package com.barlingo.backend.models.services;
 
 import com.barlingo.backend.models.entities.UserDiscount;
 
+import java.util.List;
+
 public interface IUserDiscountService {
+
+	List<UserDiscount> findAll();
 
 	UserDiscount createAndSave(Integer userId, Integer langExchangeId);
 
@@ -13,5 +17,5 @@ public interface IUserDiscountService {
 	UserDiscount save(UserDiscount userDiscount);
 	
 	UserDiscount validate(UserDiscount userDiscount);
-	
+
 }
