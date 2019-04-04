@@ -1,31 +1,30 @@
-package com.barlingo.backend.controllers.establishment;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+package com.barlingo.backend.controllers;
 
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
-@RequestMapping("/establishment/establishment")
-public class EstablishmentEstablishmentRestController {
+@RequestMapping("/establishments")
+public class EstablishmentRestController {
 
 	@Autowired
 	private IEstablishmentService establishmentService;
 	@Autowired
 	private EstablishmentMapper establishmentMapper;
 
-	@GetMapping("/list")
+	@GetMapping("")
 	public List<EstablishmentGenericDTO> findAllEstablishments() {
 		return this.establishmentMapper.establishmentsToDtos(this.establishmentService.findAll());
 	}
 
-	@GetMapping("/details/{estId}")
+	@GetMapping("/{estId}")
 	public EstablishmentDetailsDTO show(@PathVariable int estId) {
 		return this.establishmentMapper.establishmentToDto(this.establishmentService.findById(estId));
 	}

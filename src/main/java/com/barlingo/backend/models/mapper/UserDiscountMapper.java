@@ -1,11 +1,15 @@
 package com.barlingo.backend.models.mapper;
 
+import com.barlingo.backend.models.dtos.UserDetailsDTO;
+import com.barlingo.backend.models.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.barlingo.backend.models.dtos.UserDiscountGenericDTO;
 import com.barlingo.backend.models.entities.UserDiscount;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserDiscountMapper {
@@ -17,5 +21,7 @@ public interface UserDiscountMapper {
 	UserDiscountGenericDTO entityToDto(UserDiscount entity);
 
 	UserDiscount dtoToEntity(UserDiscountGenericDTO dto);
+
+	List<UserDiscountGenericDTO> entitysToDtos(List<UserDiscount> users);
 
 }

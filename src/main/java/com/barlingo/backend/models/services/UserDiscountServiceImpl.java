@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,11 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 	private IUserService userService;
 	@Autowired
 	private ILanguageExchangeService languageExchangeService;
+
+	@Override
+	public List<UserDiscount> findAll() {
+		return this.userDiscountRepository.findAll();
+	}
 
 	@Override
 	public UserDiscount createAndSave(Integer userId, Integer langExchangeId) {
