@@ -21,7 +21,7 @@ import io.jsonwebtoken.lang.Assert;
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 @RequestMapping("/userDiscount/user")
-public class UserDiscountRestController {
+public class ObsoleteUserDiscountRestController {
 
 	@Autowired
 	private IUserDiscountService userDiscountService;
