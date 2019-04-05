@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Basic;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,11 +22,17 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 public class LanguageExchange extends DomainEntity {
@@ -43,7 +50,6 @@ public class LanguageExchange extends DomainEntity {
 
 	@Basic
 	@NotNull
-//	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	private LocalDateTime moment;
 
@@ -54,6 +60,10 @@ public class LanguageExchange extends DomainEntity {
 	@NotNull
 	@Min(value = 0)
 	private Integer numberMaxParticipants;
+
+	@NotNull
+	@ElementCollection
+	private Collection<String> targetLangs;
 
 	///////////////
 	// Relations //
@@ -72,11 +82,6 @@ public class LanguageExchange extends DomainEntity {
 	@NotNull
 	@Valid
 	private Collection<User> participants;
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Valid
-	@NotNull
-	private Collection<Language> targetLangs;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "langExchange")
 	@Valid

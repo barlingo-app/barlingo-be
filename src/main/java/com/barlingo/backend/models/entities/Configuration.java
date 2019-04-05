@@ -1,23 +1,29 @@
 package com.barlingo.backend.models.entities;
 
+import java.util.Collection;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @Access(AccessType.FIELD)
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
-public abstract class Configuration extends DomainEntity {
+public class Configuration extends DomainEntity {
 
 	////////////////
 	// Attributes //
@@ -26,29 +32,33 @@ public abstract class Configuration extends DomainEntity {
 	@SafeHtml
 	private String companyName;
 
-	@NotBlank
+	@NotNull
+	@ElementCollection
+	private Collection<String> languagesCode;
+
+	@NotNull
 	@DecimalMin("0.0")
 	private Double priceMonthSubscription;
 
-	@NotBlank
+	@NotNull
 	@DecimalMin("0.0")
 	@DecimalMax("0.5")
 	private Double trimestralDiscount;
 
-	@NotBlank
+	@NotNull
 	@DecimalMin("0.0")
 	@DecimalMax("0.8")
 	private Double annualDiscount;
 
-	@NotBlank
+	@NotNull
 	@Min(0)
 	private Integer timeShowBeforeDiscount;
 
-	@NotBlank
+	@NotNull
 	@Min(0)
 	private Integer timeShowAfterDiscount;
 
-	@NotBlank
+	@NotNull
 	@Min(0)
 	private Integer timeJoinUserToExchange;
 

@@ -4,17 +4,20 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@Builder
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 public class PayData extends DomainEntity {
@@ -31,8 +34,8 @@ public class PayData extends DomainEntity {
 	@SafeHtml
 	private String payType;
 
+	@Basic
 	@NotNull
-//	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	private LocalDateTime moment;
 

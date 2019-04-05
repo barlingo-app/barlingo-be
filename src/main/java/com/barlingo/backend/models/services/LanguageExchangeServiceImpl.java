@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.barlingo.backend.models.entities.ExchangeState;
-import com.barlingo.backend.models.entities.Language;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
@@ -49,7 +48,7 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 		// ExchangeState 81 is open
 		langExch.setExchangeState(ExchangeState.OPEN);
 		langExch.setEstablishment(this.establishmentService.findById(establishmentId));
-		langExch.setTargetLangs(new LinkedList<Language>());
+		langExch.setTargetLangs(new LinkedList<String>());
 		langExch.setUserDiscounts(new LinkedList<UserDiscount>());
 
 		LanguageExchange saved = this.langExchangeRepository.save(langExch);

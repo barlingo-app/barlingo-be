@@ -1,15 +1,21 @@
 package com.barlingo.backend.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.barlingo.backend.models.dtos.UserDiscountGenericDTO;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.mapper.UserDiscountMapper;
 import com.barlingo.backend.models.services.IUserDiscountService;
-import io.jsonwebtoken.lang.Assert;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.jsonwebtoken.lang.Assert;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
@@ -21,18 +27,17 @@ public class UserDiscountRestController {
 	@Autowired
 	private UserDiscountMapper userDiscountMapper;
 
-
 	@GetMapping("")
-	public List<UserDiscountGenericDTO> findDiscount(@RequestParam(value = "code", required=false) String code,
-													 @RequestParam(value = "langExchangeId", required=false) Integer langExchangeId,
-													 @RequestParam(value = "userId", required=false) Integer userId) {
+	public List<UserDiscountGenericDTO> findDiscount(@RequestParam(value = "code", required = false) String code,
+			@RequestParam(value = "langExchangeId", required = false) Integer langExchangeId,
+			@RequestParam(value = "userId", required = false) Integer userId) {
 
 		List<UserDiscount> discountList = new ArrayList<>();
-		UserDiscount userDiscount,saved;
+		UserDiscount userDiscount, saved;
 
-		if (code==null && langExchangeId==null && userId==null){
+		if (code == null && langExchangeId == null && userId == null) {
 			discountList = this.userDiscountService.findAll();
-		}else {
+		} else {
 			if (code != null) {
 				userDiscount = this.userDiscountService.findByCode(code);
 			} else {

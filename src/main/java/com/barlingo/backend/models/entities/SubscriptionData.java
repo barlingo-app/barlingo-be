@@ -16,21 +16,27 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@Builder
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 public class SubscriptionData extends DomainEntity {
+
+//	@Value("${annualDiscount}")
+//	private Integer annualDiscount;
+//	@Value("${trimestralDiscount}")
+//	private Integer trimestralDiscount;
 
 	////////////////
 	// Attributes //
 	////////////////
 	@Basic
 	@NotNull
-//	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	private LocalDateTime initMoment;
 
@@ -43,57 +49,19 @@ public class SubscriptionData extends DomainEntity {
 
 	@Basic
 	@NotNull
-//	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	private LocalDateTime finishMoment;
-
-//	@NotNull
-//	@DecimalMin("0.0")
-//	private Double finalPrice = discountPrice();
 
 	///////////////
 	// Relations //
 	///////////////
 	@Valid
 	@NotNull
-	@OneToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH })
+	@OneToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	private PayData paydata;
 
-	public LocalDateTime getFinishMoment() {
-		Integer year = this.paydata.getMoment().getYear();
-		Integer month = this.paydata.getMoment().getMonthValue();
-
-		switch (this.subscriptionType) {
-		case ANNUAL:
-			year = year + 1;
-			break;
-		case TRIMESTRAL:
-			month = (month + 3) % 12;
-			break;
-		default: // MONTHLY
-			month = (month + 1) % 12;
-			break;
-		}
-		return LocalDateTime.of(year, month, this.paydata.getMoment().getDayOfMonth(),
-				this.paydata.getMoment().getHour(), this.paydata.getMoment().getMinute());
+	public LocalDateTime getFiDateTime() {
+		return getPaydata().getMoment().plusMonths(getSubscriptionType().getMonths());
 	}
-
-//	private Double discountPrice() {
-//		Double result;
-//
-//		switch (this.subscriptionType) {
-//		case ANNUAL:
-//			result = price * .25;
-//			break;
-//		case TRIMESTRAL:
-//			result = price * .1;
-//			break;
-//		default: // MONTHLY
-//			result = price;
-//			break;
-//		}
-//		return result;
-//	}
 
 }
