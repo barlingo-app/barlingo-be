@@ -161,52 +161,50 @@ public class DataInitializer implements CommandLineRunner {
 	private User createUser(String name, String surname, String country, String city, String email, String username,
 			String password, String personalPic, String profileBackPic, LocalDate birthday,
 			Collection<String> speakLangs, Collection<String> langsToLearn, String motherTongue) {
-		User user = User.builder() //
-				.name(name) //
-				.surname(surname) //
-				.country(country) //
-				.city(city) //
-				.email(email) //
-				.username(username) //
-				.password(this.passwordEncoder.encode(password)) //
-				.roles(Arrays.asList(Role.ROLE_CLIENT)) //
-				.notifications(Arrays.asList()) //
-				.personalPic(personalPic) //
-				.profileBackPic(profileBackPic) //
-				.aboutMe("") //
-				.birthday(birthday) //
-				.location("") //
-				.speakLangs(speakLangs) //
-				.langsToLearn(langsToLearn) //
-				.motherTongue(motherTongue) //
-				.langsExchanges(Arrays.asList()) //
-				.build();
+		User user = new User();
+		user.setName(name);
+		user.setSurname(surname);
+		user.setCountry(country);
+		user.setCity(city);
+		user.setEmail(email);
+		user.setUsername(username);
+		user.setPassword(this.passwordEncoder.encode(password));
+		user.setRoles(Arrays.asList(Role.ROLE_CLIENT));
+		user.setNotifications(Arrays.asList());
+		user.setPersonalPic(personalPic);
+		user.setProfileBackPic(profileBackPic);
+		user.setAboutMe("");
+		user.setBirthday(birthday);
+		user.setLocation("");
+		user.setSpeakLangs(speakLangs);
+		user.setLangsToLearn(langsToLearn);
+		user.setMotherTongue(motherTongue);
+		user.setLangsExchanges(Arrays.asList());
 		return this.userRepository.saveAndFlush(user);
 	}
 
 	private Establishment createEstablishment(String name, String surname, String country, String city, String email,
 			String username, String password, String establishmentName, String address, Collection<String> images,
 			String imageProfile, String workingHours, String offer, SubscriptionData subscription) {
-		Establishment establishment = Establishment.builder() //
-				.name(name) //
-				.surname(surname) //
-				.country(country) //
-				.city(city) //
-				.email(email) //
-				.username(username) //
-				.password(this.passwordEncoder.encode(password)) //
-				.roles(Arrays.asList(Role.ROLE_ESTABLISHMENT)) //
-				.notifications(Arrays.asList()) //
-				.establishmentName(establishmentName) //
-				.description("") //
-				.address(address) //
-				.images(images) //
-				.imageProfile(imageProfile) //
-				.workingHours(workingHours) //
-				.offer(offer) //
-				.subscription(subscription) //
-				.langsExchange(Arrays.asList()) //
-				.build();
+		Establishment establishment = new Establishment();
+		establishment.setName(name);
+		establishment.setSurname(surname);
+		establishment.setCountry(country);
+		establishment.setCity(city);
+		establishment.setEmail(email);
+		establishment.setUsername(username);
+		establishment.setPassword(this.passwordEncoder.encode(password));
+		establishment.setRoles(Arrays.asList(Role.ROLE_ESTABLISHMENT));
+		establishment.setNotifications(Arrays.asList());
+		establishment.setEstablishmentName(establishmentName);
+		establishment.setDescription("");
+		establishment.setAddress(address);
+		establishment.setImages(images);
+		establishment.setImageProfile(imageProfile);
+		establishment.setWorkingHours(workingHours);
+		establishment.setOffer(offer);
+		establishment.setSubscription(subscription);
+		establishment.setLangsExchange(Arrays.asList());
 		return this.establishmentRepository.saveAndFlush(establishment);
 	}
 
@@ -235,18 +233,17 @@ public class DataInitializer implements CommandLineRunner {
 			ExchangeState exchangeState, Integer numberMaxParticipants, Collection<String> targetLangs,
 			Establishment establishment, User creator, Collection<User> participants,
 			Collection<UserDiscount> userDiscounts) {
-		LanguageExchange langExchange = LanguageExchange.builder() //
-				.title(title) //
-				.description(description) //
-				.moment(moment) //
-				.exchangeState(exchangeState) //
-				.numberMaxParticipants(numberMaxParticipants) //
-				.targetLangs(targetLangs) //
-				.establishment(establishment) //
-				.creator(creator) //
-				.participants(participants) //
-				.userDiscounts(userDiscounts) //
-				.build();
+		LanguageExchange langExchange = new LanguageExchange();
+		langExchange.setTitle(title);
+		langExchange.setDescription(description);
+		langExchange.setMoment(moment);
+		langExchange.setExchangeState(exchangeState);
+		langExchange.setNumberMaxParticipants(numberMaxParticipants);
+		langExchange.setTargetLangs(targetLangs);
+		langExchange.setEstablishment(establishment);
+		langExchange.setCreator(creator);
+		langExchange.setParticipants(participants);
+		langExchange.setUserDiscounts(userDiscounts);
 		return this.languageExchangeRepository.saveAndFlush(langExchange);
 	}
 

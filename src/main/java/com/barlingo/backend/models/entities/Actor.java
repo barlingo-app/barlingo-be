@@ -16,14 +16,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @Access(AccessType.FIELD)
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public abstract class Actor extends DomainEntity {
 

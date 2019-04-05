@@ -1,7 +1,6 @@
 package com.barlingo.backend.models.entities;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -17,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -41,7 +39,6 @@ public class Establishment extends Actor {
 	@SafeHtml
 	private String address;
 
-//	@URL
 	@NotNull
 	@ElementCollection
 	@Column(length = 3000)
@@ -72,21 +69,21 @@ public class Establishment extends Actor {
 	@Valid
 	private Collection<LanguageExchange> langsExchange;
 
-	@Builder
-	public Establishment(String name, String surname, String country, String city, String email, String password,
-			String username, List<Role> roles, Collection<Notification> notifications, String establishmentName,
-			String description, String address, Collection<String> images, String imageProfile, String workingHours,
-			String offer, SubscriptionData subscription, Collection<LanguageExchange> langsExchange) {
-		super(name, surname, country, city, email, password, username, roles, notifications);
-
-		this.establishmentName = establishmentName;
-		this.description = description;
-		this.address = address;
-		this.images = images;
-		this.imageProfile = imageProfile;
-		this.workingHours = workingHours;
-		this.offer = offer;
-		this.subscription = subscription;
-		this.langsExchange = langsExchange;
-	}
+//	@Builder
+//	public Establishment(String name, String surname, String country, String city, String email, String password,
+//			String username, List<Role> roles, Collection<Notification> notifications, String establishmentName,
+//			String description, String address, Collection<String> images, String imageProfile, String workingHours,
+//			String offer, SubscriptionData subscription, Collection<LanguageExchange> langsExchange) {
+//		super(name, surname, country, city, email, password, username, roles, notifications);
+//
+//		this.establishmentName = establishmentName;
+//		this.description = description;
+//		this.address = address;
+//		this.images = images;
+//		this.imageProfile = imageProfile;
+//		this.workingHours = workingHours;
+//		this.offer = offer;
+//		this.subscription = subscription;
+//		this.langsExchange = langsExchange;
+//	}
 }
