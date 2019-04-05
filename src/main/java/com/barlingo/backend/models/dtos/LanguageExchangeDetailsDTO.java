@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 
 import com.barlingo.backend.models.entities.ExchangeState;
-import com.barlingo.backend.models.entities.Language;
 
 import lombok.Data;
 
@@ -18,7 +17,7 @@ public class LanguageExchangeDetailsDTO {
 	private UserDetailsDTO creator;
 	private EstablishmentDetailsDTO establishment;
 	private ExchangeState exchangeState;
-	private Collection<Language> targetLangs;
+	private Collection<String> targetLangs;
 	private Collection<ParticipantDTO> participants;
 
 }

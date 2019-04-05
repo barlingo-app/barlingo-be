@@ -3,8 +3,6 @@ package com.barlingo.backend.models.dtos;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-import com.barlingo.backend.models.entities.Language;
-
 import lombok.Data;
 
 @Data
@@ -19,7 +17,7 @@ public class UserDetailsDTO {
 	private String personalPic;
 	private String profileBackPic;
 	private String aboutMe;
-	private Collection<Language> speakLanguages;
-	private Collection<Language> learnLanguages;
+	private Collection<String> speakLanguages;
+	private Collection<String> learnLanguages;
 
 }

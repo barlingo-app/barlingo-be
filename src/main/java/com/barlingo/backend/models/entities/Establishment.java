@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -38,14 +39,15 @@ public class Establishment extends Actor {
 	@SafeHtml
 	private String address;
 
-	@URL
 	@NotNull
 	@ElementCollection
+	@Column(length = 3000)
 	private Collection<String> images;
 
 	@URL
 	@NotBlank
 	@SafeHtml
+	@Column(length = 3000)
 	private String imageProfile;
 
 	@NotBlank
@@ -66,4 +68,22 @@ public class Establishment extends Actor {
 	@OneToMany(mappedBy = "establishment")
 	@Valid
 	private Collection<LanguageExchange> langsExchange;
+
+//	@Builder
+//	public Establishment(String name, String surname, String country, String city, String email, String password,
+//			String username, List<Role> roles, Collection<Notification> notifications, String establishmentName,
+//			String description, String address, Collection<String> images, String imageProfile, String workingHours,
+//			String offer, SubscriptionData subscription, Collection<LanguageExchange> langsExchange) {
+//		super(name, surname, country, city, email, password, username, roles, notifications);
+//
+//		this.establishmentName = establishmentName;
+//		this.description = description;
+//		this.address = address;
+//		this.images = images;
+//		this.imageProfile = imageProfile;
+//		this.workingHours = workingHours;
+//		this.offer = offer;
+//		this.subscription = subscription;
+//		this.langsExchange = langsExchange;
+//	}
 }

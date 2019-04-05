@@ -37,7 +37,6 @@ public abstract class Notification extends DomainEntity {
 
 	@Basic
 	@NotNull
-//	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	private LocalDateTime moment;
 
