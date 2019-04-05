@@ -1,8 +1,7 @@
 package com.barlingo.backend.models.dtos;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
-
 
 import com.barlingo.backend.models.entities.Language;
 
@@ -14,7 +13,7 @@ public class UserDetailsDTO {
 	private Integer id;
 	private String name;
 	private String surname;
-	private Date birthdate;
+	private LocalDateTime birthdate;
 	private String country;
 	private String city;
 	private String personalPic;

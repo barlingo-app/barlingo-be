@@ -1,0 +1,55 @@
+package com.barlingo.backend.models.entities;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.SafeHtml;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Entity
+@Access(AccessType.FIELD)
+@Data
+@EqualsAndHashCode(callSuper = false)
+public abstract class Configuration extends DomainEntity {
+
+	////////////////
+	// Attributes //
+	////////////////
+	@NotBlank
+	@SafeHtml
+	private String companyName;
+
+	@NotBlank
+	@DecimalMin("0.0")
+	private Double priceMonthSubscription;
+
+	@NotBlank
+	@DecimalMin("0.0")
+	@DecimalMax("0.5")
+	private Double trimestralDiscount;
+
+	@NotBlank
+	@DecimalMin("0.0")
+	@DecimalMax("0.8")
+	private Double annualDiscount;
+
+	@NotBlank
+	@Min(0)
+	private Integer timeShowBeforeDiscount;
+
+	@NotBlank
+	@Min(0)
+	private Integer timeShowAfterDiscount;
+
+	@NotBlank
+	@Min(0)
+	private Integer timeJoinUserToExchange;
+
+}

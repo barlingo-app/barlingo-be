@@ -2,7 +2,12 @@ package com.barlingo.backend.models.entities;
 
 import java.util.Collection;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -32,8 +37,9 @@ public class Establishment extends Actor {
 	@NotBlank
 	@SafeHtml
 	private String address;
-	
+
 	@URL
+	@NotNull
 	@ElementCollection
 	private Collection<String> images;
 
@@ -45,7 +51,10 @@ public class Establishment extends Actor {
 	@NotBlank
 	@SafeHtml
 	private String workingHours;
-	
+
+	@SafeHtml
+	private String offer;
+
 	///////////////
 	// Relations //
 	///////////////
