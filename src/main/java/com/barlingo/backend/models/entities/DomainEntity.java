@@ -24,9 +24,8 @@ public abstract class DomainEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private int id;
+
 	@Version
 	private int version;
-
-	
 
 }

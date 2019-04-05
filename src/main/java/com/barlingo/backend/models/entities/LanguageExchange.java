@@ -1,10 +1,20 @@
 package com.barlingo.backend.models.entities;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -31,21 +41,24 @@ public class LanguageExchange extends DomainEntity {
 	@SafeHtml
 	private String description;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-	@NotNull
 	@Basic
-	private Date moment;
+	@NotNull
+//	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+	private LocalDateTime moment;
+
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	private ExchangeState exchangeState;
+
+	@NotNull
+	@Min(value = 0)
+	private Integer numberMaxParticipants;
 
 	///////////////
 	// Relations //
 	///////////////
 	@ManyToOne(optional = false)
-	@Valid
-	private ExchangeState exchangeState;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "establishment_id")
 	@NotNull
 	@Valid
 	private Establishment establishment;

@@ -1,14 +1,16 @@
 package com.barlingo.backend.models.entities;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Column;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,32 +19,29 @@ import lombok.EqualsAndHashCode;
 @Data
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
-public class UserDiscount extends DomainEntity {
+public abstract class Notification extends DomainEntity {
 
 	////////////////
 	// Attributes //
 	////////////////
-	@Column(unique = true)
+	@NotBlank
 	@SafeHtml
-	private String code;
+	private String title;
 
-	@NotNull
-	private Boolean exchanged;
+	@NotBlank
+	@SafeHtml
+	private String description;
 
+	@NotBlank
+	private Boolean isRead;
+
+	@Basic
 	@NotNull
-	private Boolean visible;
+//	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+	private LocalDateTime moment;
 
 	///////////////
 	// Relations //
 	///////////////
-	@ManyToOne(optional = false)
-	@Valid
-	@NotNull
-	private User user;
-
-	@ManyToOne(optional = false)
-	@Valid
-	@NotNull
-	private LanguageExchange langExchange;
-
 }

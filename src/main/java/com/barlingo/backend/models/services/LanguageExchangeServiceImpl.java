@@ -1,7 +1,6 @@
 package com.barlingo.backend.models.services;
 
-import java.time.Instant;
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.Language;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
@@ -30,8 +30,6 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 	@Autowired
 	private IUserDiscountService userDiscountService;
 	@Autowired
-	private IExchangeStateService exchangeStateService;
-	@Autowired
 	private IEstablishmentService establishmentService;
 
 	@Override
@@ -49,7 +47,7 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 		langExch.setMoment(langExchange.getMoment());
 		langExch.setParticipants(new LinkedList<User>());
 		// ExchangeState 81 is open
-		langExch.setExchangeState(this.exchangeStateService.findById(81));
+		langExch.setExchangeState(ExchangeState.OPEN);
 		langExch.setEstablishment(this.establishmentService.findById(establishmentId));
 		langExch.setTargetLangs(new LinkedList<Language>());
 		langExch.setUserDiscounts(new LinkedList<UserDiscount>());
@@ -87,12 +85,12 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 		LanguageExchange langExchange = this.findById(languageExchangeId);
 		Assert.notNull(langExchange, "Invalid language exchange");
 		// Si el evento ha tenido lugar en más de un día salta excepción
-		Assert.isTrue(langExchange.getMoment().toInstant().isAfter(Instant.now()), "Event has already taken place");
+		Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()), "Event has already taken place");
 		// TODO
 //		User user = this.userService.findByPrincipal();
 		User user = this.userService.findById(userId);
 
-		if (langExchange.getMoment().toInstant().isAfter(Instant.now())) {
+		if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
 			Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
 			Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You already register");
 
