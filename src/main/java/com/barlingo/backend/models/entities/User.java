@@ -92,5 +92,4 @@ public class User extends Actor {
 		this.motherTongue = motherTongue;
 		this.langsExchanges = langsExchanges;
 	}
-
 }
