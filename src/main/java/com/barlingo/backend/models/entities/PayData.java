@@ -8,15 +8,14 @@ import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+import lombok.*;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)

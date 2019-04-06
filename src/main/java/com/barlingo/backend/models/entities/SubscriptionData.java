@@ -14,14 +14,14 @@ import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
@@ -59,6 +59,8 @@ public class SubscriptionData extends DomainEntity {
 	@NotNull
 	@OneToOne(optional = false, cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	private PayData paydata;
+
+
 
 	public LocalDateTime getFiDateTime() {
 		return getPaydata().getMoment().plusMonths(getSubscriptionType().getMonths());

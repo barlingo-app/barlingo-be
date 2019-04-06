@@ -1,10 +1,12 @@
 package com.barlingo.backend.controllers;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -79,18 +81,19 @@ public class LanguageExchangeRestController {
 
 	@PostMapping(consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
-	public LanguageExchangeDetailsDTO create(@RequestBody Map<String, Object> langExchangeData) {
+	public LanguageExchangeDetailsDTO create(@RequestBody LanguageExchangeGenericDTO langExchangeData) {
 		LanguageExchange langExchange = new LanguageExchange();
-		langExchange.setTitle((String) langExchangeData.get("title"));
-		langExchange.setDescription((String) langExchangeData.get("description"));
+		langExchange.setTitle(langExchangeData.getTitle());
+		langExchange.setDescription(langExchangeData.getDescription());
 
 		LanguageExchangeDetailsDTO result = null;
 
 		try {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-			langExchange.setMoment(LocalDateTime.parse((String) langExchangeData.get("moment"), formatter));
-			Integer creatorId = (Integer) langExchangeData.get("creatorId");
-			Integer establishmentId = (Integer) langExchangeData.get("establishmentId");
+//			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//			langExchange.setMoment(LocalDateTime.parse((String) langExchangeData.get("moment"), formatter));
+			langExchange.setMoment(langExchangeData.getMoment());
+			Integer creatorId = langExchangeData.getCreatorId();
+			Integer establishmentId = langExchangeData.getEstablishmentId();
 			result = this.langExchangeMapper
 					.entityToDto(this.langExchangeService.createAndSave(creatorId, establishmentId, langExchange));
 		} catch (Exception e) {

@@ -11,6 +11,8 @@ public class LanguageExchangeGenericDTO {
 	private String title;
 	private String description;
 	private LocalDateTime moment;
+	private Integer creatorId;
+	private Integer establishmentId;
 	private Collection<String> targetLangs;
 	private int numberOfParticipants;
 
