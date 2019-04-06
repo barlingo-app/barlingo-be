@@ -17,7 +17,7 @@ public class UserDetailsDTO {
 	private String personalPic;
 	private String profileBackPic;
 	private String aboutMe;
-	private Collection<String> speakLanguages;
-	private Collection<String> learnLanguages;
+	private Collection<String> speakLangs;
+	private Collection<String> langsToLearn;
 
 }

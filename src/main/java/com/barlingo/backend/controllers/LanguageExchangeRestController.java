@@ -51,22 +51,12 @@ public class LanguageExchangeRestController {
     LanguageExchange langExchEntity = langExchangeService.findById(id);
     LanguageExchangeDetailsDTO langExch = langExchangeMapper.entityToDto(langExchEntity);
     return langExch;
-
-  }
-
-  @PostMapping("/exchanges")
-  @ResponseStatus(HttpStatus.CREATED)
-  public LanguageExchangeDetailsDTO create(
-      @RequestBody LanguageExchangeDetailsDTO langExchangeDTO) {
-
-    return new LanguageExchangeDetailsDTO();
   }
 
   @PutMapping("/exchanges/{id}")
   @ResponseStatus(HttpStatus.CREATED)
   public LanguageExchangeDetailsDTO update(@RequestBody LanguageExchangeDetailsDTO langExchangeDTO,
       @PathVariable Integer id) {
-
     return new LanguageExchangeDetailsDTO();
   }
 
@@ -77,16 +67,16 @@ public class LanguageExchangeRestController {
     this.langExchangeService.delete(currentLangExchange);
   }
 
-  @PostMapping(path = "/{languageExchangeId}/join", consumes = "application/json")
+  @PostMapping(path = "/exchanges/{languageExchangeId}/join", consumes = "application/json")
   public LanguageExchangeDetailsDTO joinUser(@PathVariable Integer languageExchangeId,
-      @RequestBody Map<String, String> langExchangeData) {
+      @RequestBody Map<String, Integer> langExchangeData) {
 
-    Integer userId = Integer.valueOf(langExchangeData.get("id"));
+    Integer userId = langExchangeData.get("userId");
     return this.langExchangeMapper
         .entityToDto(this.langExchangeService.joinUser(userId, languageExchangeId));
   }
 
-  @PostMapping(consumes = "application/json")
+  @PostMapping(path = "/exchanges", consumes = "application/json")
   @ResponseStatus(HttpStatus.CREATED)
   public LanguageExchangeDetailsDTO create(
       @RequestBody LanguageExchangeGenericDTO langExchangeData) {
@@ -103,6 +93,8 @@ public class LanguageExchangeRestController {
       langExchange.setMoment(langExchangeData.getMoment());
       Integer creatorId = langExchangeData.getCreatorId();
       Integer establishmentId = langExchangeData.getEstablishmentId();
+      langExchange.setTargetLangs(langExchangeData.getTargetLangs());
+      langExchange.setNumberMaxParticipants(langExchangeData.getNumberOfParticipants());
       result = this.langExchangeMapper.entityToDto(
           this.langExchangeService.createAndSave(creatorId, establishmentId, langExchange));
     } catch (Exception e) {
