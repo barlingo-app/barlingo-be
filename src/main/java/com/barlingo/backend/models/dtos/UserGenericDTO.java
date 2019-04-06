@@ -11,6 +11,6 @@ public class UserGenericDTO {
 	private String name;
 	private String surname;
 	private String personalPic;
-	private Collection<String> speakLanguages;
-	private Collection<String> learnLanguages;
+	private Collection<String> speakLangs;
+	private Collection<String> langsToLearn;
 }

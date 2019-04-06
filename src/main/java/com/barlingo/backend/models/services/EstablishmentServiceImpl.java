@@ -61,7 +61,8 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 	public String signin(String username, String password) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-			return jwtTokenProvider.createToken(username, establishmentRepository.findByUsername(username).getRoles());
+			Establishment establishment = establishmentRepository.findByUsername(username);
+			return jwtTokenProvider.createToken(username,establishment.getId(), establishment.getRoles());
 		} catch (AuthenticationException e) {
 			throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
 		}

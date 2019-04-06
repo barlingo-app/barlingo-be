@@ -60,7 +60,8 @@ public class UserServiceImpl implements IUserService {
 	public String signin(String username, String password) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-			return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+			User user = userRepository.findByUsername(username);
+			return jwtTokenProvider.createToken(username, user.getId(), user.getRoles());
 		} catch (AuthenticationException e) {
 			throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
 		}

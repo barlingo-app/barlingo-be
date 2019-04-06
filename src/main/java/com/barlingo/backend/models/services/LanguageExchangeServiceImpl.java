@@ -45,10 +45,11 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 		langExch.setDescription(langExchange.getDescription());
 		langExch.setMoment(langExchange.getMoment());
 		langExch.setParticipants(new LinkedList<User>());
+		langExch.setNumberMaxParticipants(langExchange.getNumberMaxParticipants());
 		// ExchangeState 81 is open
 		langExch.setExchangeState(ExchangeState.OPEN);
 		langExch.setEstablishment(this.establishmentService.findById(establishmentId));
-		langExch.setTargetLangs(new LinkedList<String>());
+		langExch.setTargetLangs(langExchange.getTargetLangs());
 		langExch.setUserDiscounts(new LinkedList<UserDiscount>());
 
 		LanguageExchange saved = this.langExchangeRepository.save(langExch);
