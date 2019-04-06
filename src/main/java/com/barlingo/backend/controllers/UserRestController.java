@@ -24,7 +24,8 @@ public class UserRestController {
 
 	@GetMapping("")
 	public List<UserDetailsDTO> findUser() {
-		return this.userMapper.entitysToDtos(userService.findAll());
+		List<User> userList = userService.findAll();
+		return this.userMapper.entitysToDtos(userList);
 	}
 
 	@GetMapping("/{id}")
