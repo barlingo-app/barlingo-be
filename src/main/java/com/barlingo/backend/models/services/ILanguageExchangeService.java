@@ -1,7 +1,7 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.entities.LanguageExchange;
 import java.util.List;
+import com.barlingo.backend.models.entities.LanguageExchange;
 
 public interface ILanguageExchangeService {
 
@@ -14,6 +14,8 @@ public interface ILanguageExchangeService {
   void delete(LanguageExchange exchange);
 
   LanguageExchange joinUser(Integer userId, Integer languageExchangeId);
+
+  LanguageExchange leaveLanguageExchange(Integer userId, Integer languageExchangeId);
 
   List<LanguageExchange> findByEstId(Integer estId);
 

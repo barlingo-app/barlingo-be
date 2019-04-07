@@ -189,9 +189,6 @@
               <version>1.18.4</version>
             </path>
           </annotationProcessorPaths>
-          <!-- 					<annotationProcessors> -->
-          <!-- 						<annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor> -->
-          <!-- 					</annotationProcessors> -->
           <generatedSourcesDirectory>${project.build.directory}/generated-sources
           </generatedSourcesDirectory>
         </configuration>

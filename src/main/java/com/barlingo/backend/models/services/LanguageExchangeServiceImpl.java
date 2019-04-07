@@ -1,10 +1,5 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.entities.ExchangeState;
-import com.barlingo.backend.models.entities.LanguageExchange;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.entities.UserDiscount;
-import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -13,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import com.barlingo.backend.models.entities.ExchangeState;
+import com.barlingo.backend.models.entities.LanguageExchange;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.entities.UserDiscount;
+import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
 
 @Service
 @Transactional
@@ -103,6 +103,41 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
       Assert.isTrue(!langExchange.getParticipants().contains(user), "You already register");
 
       participants.add(this.userService.save(user));
+      langExchange.setParticipants(participants);
+
+      // Generate new code to new participant
+      this.userDiscountService.createAndSave(userId, languageExchangeId);
+    }
+    langExchangeSaved = this.save(langExchange);
+
+    return langExchangeSaved;
+  }
+
+  @Override
+  public LanguageExchange leaveLanguageExchange(Integer userId, Integer languageExchangeId) {
+    LanguageExchange langExchangeSaved;
+    LanguageExchange langExchange = this.findById(languageExchangeId);
+    Assert.notNull(langExchange, "Invalid language exchange");
+    // Si el evento ha tenido lugar en más de un día salta excepción
+    Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
+        "Event has already taken place");
+    // TODO
+    // User user = this.userService.findByPrincipal();
+    User user = this.userService.findById(userId);
+
+    if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
+      Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
+      Assert.isTrue(user.getLangsExchanges().contains(langExchange),
+          "You not register in this language exchange");
+
+      userExchanges.remove(langExchange);
+      user.setLangsExchanges(userExchanges);
+
+      Collection<User> participants = langExchange.getParticipants();
+      Assert.isTrue(langExchange.getParticipants().contains(user),
+          "You not register in this language exchange");
+
+      participants.remove(this.userService.save(user));
       langExchange.setParticipants(participants);
 
       // Generate new code to new participant
