@@ -1,5 +1,11 @@
 package com.barlingo.backend.controllers;
 
+import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
+import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
+import com.barlingo.backend.models.entities.LanguageExchange;
+import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
+import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
+import com.barlingo.backend.models.services.UserServiceImpl;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
-import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
-import com.barlingo.backend.models.entities.LanguageExchange;
-import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
-import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
-import com.barlingo.backend.models.services.UserServiceImpl;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -37,11 +37,12 @@ public class LanguageExchangeRestController {
   public List<LanguageExchangeDetailsDTO> findExchange(
       @RequestParam(value = "estId", required = false) Integer estId,
       @RequestParam(value = "userId", required = false) Integer userId) {
-    if (userId != null) {
-      Assert.notNull(this.userService.findById(userId), "user doesn't exist");
-      return this.langExchangeMapper.entitysToDtos(langExchangeService.findAllByUserId(userId));
-    } else
-      return this.langExchangeMapper.entitysToDtos(langExchangeService.findAll());
+	  if (userId != null) {
+		  Assert.notNull(this.userService.findById(userId), "user doesn't exist");
+		  return this.langExchangeMapper.entitysToDtos(langExchangeService.findAllByUserId(userId));
+	  } else {
+		  return this.langExchangeMapper.entitysToDtos(langExchangeService.findAll());
+	  }
 
 
   }

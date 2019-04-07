@@ -1,5 +1,10 @@
 package com.barlingo.backend.controllers;
 
+import com.barlingo.backend.models.dtos.UserDiscountGenericDTO;
+import com.barlingo.backend.models.entities.UserDiscount;
+import com.barlingo.backend.models.mapper.UserDiscountMapper;
+import com.barlingo.backend.models.services.IUserDiscountService;
+import io.jsonwebtoken.lang.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.barlingo.backend.models.dtos.UserDiscountGenericDTO;
-import com.barlingo.backend.models.entities.UserDiscount;
-import com.barlingo.backend.models.mapper.UserDiscountMapper;
-import com.barlingo.backend.models.services.IUserDiscountService;
-import io.jsonwebtoken.lang.Assert;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -41,8 +41,9 @@ public class UserDiscountRestController {
     } else {
       if (code != null) {
         userDiscount = this.userDiscountService.findByCode(code);
-        if (validate.equals(true))
+        if (validate.equals(true)) {
           Assert.isTrue(this.userDiscountService.isValid(userDiscount), "code is not valid");
+        }
       } else {
         userDiscount = this.userDiscountService.findByLangExchangeId(userId, langExchangeId);
       }

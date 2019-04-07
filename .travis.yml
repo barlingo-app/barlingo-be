@@ -6,7 +6,7 @@ services:
 addons:
   apt:
     packages:
-    - sshpass
+      - sshpass
 before_install:
   - chmod +x scripts/
   - sudo mysql -uroot -e "SET PASSWORD FOR '${CI_DB_USERNAME}'@'localhost' = PASSWORD('${CI_DB_PASSWORD}');FLUSH PRIVILEGES;"
@@ -20,7 +20,7 @@ install: true
 script: mvn clean install -q
 cache:
   directories:
-  - $HOME/.m2
+    - $HOME/.m2
 branches:
   only:
     - CI

@@ -1,6 +1,9 @@
 package com.barlingo.backend.models.services;
 
-import java.security.NoSuchAlgorithmException;
+import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.entities.UserDiscount;
+import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -10,10 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import com.barlingo.backend.models.entities.Actor;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.entities.UserDiscount;
-import com.barlingo.backend.models.repositories.UserDiscountRepository;
 
 @Service
 @Transactional
@@ -59,8 +58,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
   /**
    * Update an existing UserDiscount
-   * 
-   * @param userDiscount
+   *
    * @return saved
    */
   @Override
@@ -84,9 +82,10 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     // USER_NOT_JOINT_IN_USER_DISCOUNT);
     /* Comprueba que el mismo código no pertenezca ya a otro UserDiscount */
     UserDiscount duplicate = this.findByCode(userDiscount.getCode());
-    if (duplicate != null && userDiscount.getId() > 0)
+    if (duplicate != null && userDiscount.getId() > 0) {
       Assert.isTrue(userDiscount.getId() == duplicate.getId(),
           "this code belongs to another exchange");
+    }
 
     saved = this.userDiscountRepository.save(userDiscount);
     Assert.notNull(saved, "error saving the discount in repository");
@@ -153,7 +152,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
    * Generate an unique reference
    *
    * @return the reference
-   * @throws NoSuchAlgorithmException
    */
   private String generateUniqueCode() {
     final SimpleDateFormat dt = new SimpleDateFormat("ddMMyyyy");
@@ -162,8 +160,9 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     String reference = "";
 
     while (this.checkReference(reference) || reference.equals("")) {
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < 4; i++) {
         randomLetter.append(String.valueOf((char) (r.nextInt(26) + 'A')));
+      }
 
       reference = dt.format(new Date()) + "-" + randomLetter;
     }
@@ -172,35 +171,32 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
   /**
    * Check if exist a coincidence
-   *
-   * @param reference
-   * @return
    */
   private boolean checkReference(final String reference) {
     Boolean result = false;
-    if (this.userDiscountRepository.findByCode(reference) != null)
+    if (this.userDiscountRepository.findByCode(reference) != null) {
       result = true;
+    }
     return result;
   }
 
   /**
-   * 
-   * @param userDiscount
    * @return True if the discount code is valid, False in other case
    */
   @Override
   public Boolean isValid(UserDiscount userDiscount) {
 
     if (userDiscount.getExchanged() || !userDiscount.getVisible() || userDiscount.getLangExchange()
-        .getMoment().plusSeconds(86400).isBefore(LocalDateTime.now()))
+        .getMoment().plusSeconds(86400).isBefore(LocalDateTime.now())) {
       return false;
+    }
 
     return true;
   }
 
   /**
    * Sets discount as exchanged and updates it in the repository
-   * 
+   *
    * @param userDiscount the code to redeem
    * @return saved UserDiscount updated with attrib exchanged set to true
    */

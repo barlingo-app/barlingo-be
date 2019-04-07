@@ -1,7 +1,7 @@
 package com.barlingo.backend.models.services;
 
-import java.util.List;
 import com.barlingo.backend.models.entities.LanguageExchange;
+import java.util.List;
 
 public interface ILanguageExchangeService {
 
