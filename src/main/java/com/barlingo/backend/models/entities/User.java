@@ -11,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
@@ -30,7 +29,6 @@ public class User extends Actor {
   // Attributes //
   ////////////////
   @URL
-  @NotBlank
   @SafeHtml
   private String personalPic;
 
@@ -43,7 +41,7 @@ public class User extends Actor {
 
   @Basic
   @NotNull
-  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private LocalDate birthday;
 
   @SafeHtml

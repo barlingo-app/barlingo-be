@@ -1,7 +1,10 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.entities.User;
 import java.util.List;
+import org.springframework.validation.BindingResult;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.forms.UserEdit;
+import com.barlingo.backend.models.forms.UserSignin;
 
 public interface IUserService {
 
@@ -15,6 +18,10 @@ public interface IUserService {
 
   void delete(User user);
 
-  String signin(String username, String password);
+  String login(String username, String password);
+
+  User register(UserSignin userData, BindingResult binding);
+
+  User edit(UserEdit userData, BindingResult binding);
 
 }

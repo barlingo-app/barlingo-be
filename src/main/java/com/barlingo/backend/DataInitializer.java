@@ -1,5 +1,14 @@
 package com.barlingo.backend;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import com.barlingo.backend.models.entities.Configuration;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
@@ -18,16 +27,7 @@ import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
 import com.barlingo.backend.security.UserAccount;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -184,6 +184,7 @@ public class DataInitializer implements CommandLineRunner {
 
       log.info("=== Finalize Populate Database ===");
     }
+
   }
 
   private User createUser(String name, String surname, String country, String city, String email,
