@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,7 @@ public class UserDiscountRestController {
   public List<UserDiscountGenericDTO> findDiscount(
       @RequestParam(value = "code", required = false) String code,
       @RequestParam(value = "langExchangeId", required = false) Integer langExchangeId,
+      @RequestParam(value = "validate", required = false, defaultValue = "false") Boolean validate,
       @RequestParam(value = "userId", required = false) Integer userId) {
 
     List<UserDiscount> discountList = new ArrayList<>();
@@ -38,6 +41,8 @@ public class UserDiscountRestController {
     } else {
       if (code != null) {
         userDiscount = this.userDiscountService.findByCode(code);
+        if (validate.equals(true))
+          Assert.isTrue(this.userDiscountService.isValid(userDiscount), "code is not valid");
       } else {
         userDiscount = this.userDiscountService.findByLangExchangeId(userId, langExchangeId);
       }
@@ -48,18 +53,8 @@ public class UserDiscountRestController {
     return this.userDiscountMapper.entitysToDtos(discountList);
   }
 
-  @GetMapping("/validate")
-  public UserDiscountGenericDTO validate(@RequestParam String code) {
-    UserDiscount userDiscount;
-    userDiscount = this.userDiscountService.findByCode(code);
-    Assert.notNull(userDiscount, "code dont exist");
-    Assert.isTrue(this.userDiscountService.isValid(userDiscount), "code is not valid");
-    return this.userDiscountMapper.entityToDto(userDiscount);
-  }
-
-
-  @GetMapping("/redeem")
-  public UserDiscountGenericDTO redeem(@RequestParam String code) {
+  @PutMapping("/{code}/redeem")
+  public UserDiscountGenericDTO redeem(@PathVariable("code") String code) {
     UserDiscount userDiscount, saved;
     userDiscount = this.userDiscountService.findByCode(code);
     Assert.notNull(userDiscount, "code dont exist");
