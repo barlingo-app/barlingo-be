@@ -1,20 +1,16 @@
 package com.barlingo.backend.models.services;
 
-import java.util.Collection;
-
 import com.barlingo.backend.models.entities.Establishment;
+import java.util.Collection;
 
 public interface IEstablishmentService {
 
-	Collection<Establishment> findAll();
-	
-	Establishment save(Establishment establishment);
-	
-	Establishment findById(Integer id);
+  Collection<Establishment> findAll();
 
-	Establishment findByUsername(String username);
-	
-	void delete(Establishment establishment);
+  Establishment save(Establishment establishment);
 
-	String signin(String username, String password);
+  Establishment findById(Integer id);
+
+  void delete(Establishment establishment);
+
 }

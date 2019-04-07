@@ -1,7 +1,5 @@
 package com.barlingo.backend.security;
 
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,14 +7,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MyUserDetails implements UserDetailsService {
+public class UserAccountSecurityService implements UserDetailsService {
 
   @Autowired
-  private UserRepository userRepository;
+  private UserAccountRepository userAccountRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    final User user = userRepository.findByUsername(username);
+    final UserAccount user = userAccountRepository.findByUsername(username);
 
     if (user == null) {
       throw new UsernameNotFoundException("User '" + username + "' not found");

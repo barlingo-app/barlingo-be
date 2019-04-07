@@ -2,7 +2,6 @@ package com.barlingo.backend.models.entities;
 
 import java.time.LocalDate;
 import java.util.Collection;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Basic;
@@ -14,13 +13,11 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
@@ -29,50 +26,50 @@ import lombok.EqualsAndHashCode;
 @Table(name = "users")
 public class User extends Actor {
 
-	////////////////
-	// Attributes //
-	////////////////
-	@URL
-	@NotBlank
-	@SafeHtml
-	private String personalPic;
+  ////////////////
+  // Attributes //
+  ////////////////
+  @URL
+  @NotBlank
+  @SafeHtml
+  private String personalPic;
 
-	@URL
-	@SafeHtml
-	private String profileBackPic;
+  @URL
+  @SafeHtml
+  private String profileBackPic;
 
-	@SafeHtml
-	private String aboutMe;
+  @SafeHtml
+  private String aboutMe;
 
-	@Basic
-	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-	private LocalDate birthday;
+  @Basic
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+  private LocalDate birthday;
 
-	@SafeHtml
-	private String location;
+  @SafeHtml
+  private String location;
 
-	@NotNull
-	@ElementCollection
-	private Collection<String> speakLangs;
+  @NotNull
+  @ElementCollection
+  private Collection<String> speakLangs;
 
-	@NotNull
-	@ElementCollection
-	private Collection<String> langsToLearn;
+  @NotNull
+  @ElementCollection
+  private Collection<String> langsToLearn;
 
-	@NotNull
-	@SafeHtml
-	private String motherTongue;
+  @NotNull
+  @SafeHtml
+  private String motherTongue;
 
-	///////////////
-	// Relations //
-	///////////////
-	// fetch = FetchType.LAZY ->
-	// no se trae esta collection cuando se llama al user,solo cuando es necesario
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Valid
-	@NotNull
-	private Collection<LanguageExchange> langsExchanges;
+  ///////////////
+  // Relations //
+  ///////////////
+  // fetch = FetchType.LAZY ->
+  // no se trae esta collection cuando se llama al user,solo cuando es necesario
+  @ManyToMany(fetch = FetchType.LAZY)
+  @Valid
+  @NotNull
+  private Collection<LanguageExchange> langsExchanges;
 
 //	@Builder
 //	public User(String name, String surname, String country, String city, String email, String password,

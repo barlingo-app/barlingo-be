@@ -2,18 +2,17 @@ package com.barlingo.backend.models.dtos;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-
 import lombok.Data;
 
 @Data
 public class LanguageExchangeGenericDTO {
 
-	private String title;
-	private String description;
-	private LocalDateTime moment;
-	private Integer creatorId;
-	private Integer establishmentId;
-	private Collection<String> targetLangs;
-	private int numberOfParticipants;
+  private String title;
+  private String description;
+  private LocalDateTime moment;
+  private Integer creatorId;
+  private Integer establishmentId;
+  private Collection<String> targetLangs;
+  private int numberOfParticipants;
 
 }

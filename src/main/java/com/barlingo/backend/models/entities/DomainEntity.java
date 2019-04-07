@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Version;
-
 import lombok.Data;
 
 @Entity
@@ -18,14 +17,14 @@ import lombok.Data;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class DomainEntity {
 
-	////////////////
-	// Attributes //
-	////////////////
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	private int id;
+  ////////////////
+  // Attributes //
+  ////////////////
+  @Id
+  @GeneratedValue(strategy = GenerationType.TABLE)
+  private int id;
 
-	@Version
-	private int version;
+  @Version
+  private int version;
 
 }
