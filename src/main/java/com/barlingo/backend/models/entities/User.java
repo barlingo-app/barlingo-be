@@ -13,11 +13,11 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
@@ -71,20 +71,4 @@ public class User extends Actor {
   @NotNull
   private Collection<LanguageExchange> langsExchanges;
 
-//	@Builder
-//	public User(String name, String surname, String country, String city, String email, String password,
-//			String username, List<Role> roles, Collection<Notification> notifications, String personalPic,
-//			String profileBackPic, String aboutMe, LocalDate birthday, String location, Collection<String> speakLangs,
-//			Collection<String> langsToLearn, String motherTongue, Collection<LanguageExchange> langsExchanges) {
-//		super(name, surname, country, city, email, password, username, roles, notifications);
-//		this.personalPic = personalPic;
-//		this.profileBackPic = profileBackPic;
-//		this.aboutMe = aboutMe;
-//		this.birthday = birthday;
-//		this.location = location;
-//		this.speakLangs = speakLangs;
-//		this.langsToLearn = langsToLearn;
-//		this.motherTongue = motherTongue;
-//		this.langsExchanges = langsExchanges;
-//	}
 }
