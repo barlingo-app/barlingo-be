@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.entities;
 
-import com.barlingo.backend.security.UserAccount;
 import java.util.Collection;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -13,9 +12,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.SafeHtml;
+import com.barlingo.backend.security.UserAccount;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Access(AccessType.FIELD)

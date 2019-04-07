@@ -1,6 +1,6 @@
 package com.barlingo.backend.models.dtos;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class UserDetailsDTO {
   private Integer id;
   private String name;
   private String surname;
-  private LocalDateTime birthdate;
+  private LocalDate birthday;
   private String country;
   private String city;
   private String personalPic;

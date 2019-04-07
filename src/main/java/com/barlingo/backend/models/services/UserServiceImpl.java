@@ -1,11 +1,7 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.exception.CustomException;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.repositories.UserRepository;
-import com.barlingo.backend.security.JwtTokenProvider;
-import com.barlingo.backend.security.UserAccount;
-import com.barlingo.backend.security.UserAccountRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +11,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import com.barlingo.backend.exception.CustomException;
+import com.barlingo.backend.models.entities.Role;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.forms.UserEdit;
+import com.barlingo.backend.models.forms.UserSignin;
+import com.barlingo.backend.models.repositories.UserRepository;
+import com.barlingo.backend.security.JwtTokenProvider;
+import com.barlingo.backend.security.UserAccount;
+import com.barlingo.backend.security.UserAccountRepository;
+import io.jsonwebtoken.lang.Assert;
 
 @Service
 @Transactional
@@ -35,6 +43,20 @@ public class UserServiceImpl implements IUserService {
   @Autowired
   private AuthenticationManager authenticationManager;
 
+  @Autowired
+  private Validator validator;
+
+  private User create() {
+    User user = new User();
+    user.setUserAccount(new UserAccount());
+    user.getUserAccount().setRoles(new ArrayList<>());
+    user.getUserAccount().getRoles().add(Role.ROLE_CLIENT);
+    user.setLangsExchanges(new ArrayList<>());
+    user.setNotifications(new ArrayList<>());
+
+    return user;
+  }
+
   @Override
   public List<User> findAll() {
     return this.userRepository.findAll();
@@ -53,6 +75,9 @@ public class UserServiceImpl implements IUserService {
   @Override
   public User findByUsername(String username) {
     UserAccount userAccount = userAccountRepository.findByUsername(username);
+    if (userAccount == null) {
+      return null;
+    }
     return this.userRepository.findByUserAccountId(userAccount.getId());
   }
 
@@ -61,7 +86,8 @@ public class UserServiceImpl implements IUserService {
     this.userRepository.delete(user);
   }
 
-  public String signin(String username, String password) {
+  @Override
+  public String login(String username, String password) {
     try {
       authenticationManager
           .authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -71,6 +97,55 @@ public class UserServiceImpl implements IUserService {
       throw new CustomException("Invalid username/password supplied",
           HttpStatus.UNPROCESSABLE_ENTITY);
     }
+  }
+
+
+  @Override
+  public User edit(UserEdit userData, BindingResult binding) {
+
+    validator.validate(userData, binding);
+    Assert.isTrue(!binding.hasErrors());
+
+    User user = findById(userData.getId());
+
+    Assert.notNull(user, "User not found");
+
+    user.setName(userData.getName());
+    user.setSurname(userData.getSurname());
+    user.setEmail(userData.getEmail());
+    user.setCity(userData.getCity());
+    user.setCountry(userData.getCountry());
+    user.setAboutMe(userData.getAboutMe());
+    user.setBirthday(userData.getBirthdate());
+    user.setSpeakLangs(userData.getSpeakLanguages());
+    user.setLangsToLearn(userData.getLearnLanguages());
+    user.setMotherTongue(userData.getMotherTongue());
+
+    return save(user);
+  }
+
+  @Override
+  public User register(UserSignin userData, BindingResult binding) {
+
+    validator.validate(userData, binding);
+    Assert.isTrue(!binding.hasErrors());
+
+    User user = create();
+
+    user.getUserAccount().setUsername(userData.getUsername());
+    user.getUserAccount().setPassword(passwordEncoder.encode(userData.getPassword()));
+    user.setName(userData.getName());
+    user.setSurname(userData.getSurname());
+    user.setEmail(userData.getEmail());
+    user.setCity(userData.getCity());
+    user.setCountry(userData.getCountry());
+    user.setAboutMe(userData.getAboutMe());
+    user.setBirthday(userData.getBirthdate());
+    user.setSpeakLangs(userData.getSpeakLanguages());
+    user.setLangsToLearn(userData.getLearnLanguages());
+    user.setMotherTongue(userData.getMotherTongue());
+
+    return save(user);
   }
 
 }
