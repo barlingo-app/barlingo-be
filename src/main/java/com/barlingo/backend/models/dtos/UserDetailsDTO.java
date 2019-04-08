@@ -13,6 +13,7 @@ public class UserDetailsDTO {
   private LocalDate birthday;
   private String country;
   private String city;
+  private String email;
   private String personalPic;
   private String profileBackPic;
   private String aboutMe;
