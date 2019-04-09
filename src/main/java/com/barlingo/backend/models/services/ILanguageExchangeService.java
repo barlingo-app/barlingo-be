@@ -23,4 +23,6 @@ public interface ILanguageExchangeService {
       LanguageExchange langExchange);
 
   List<LanguageExchange> findAllByUserId(Integer userId);
+
+  List<LanguageExchange> findAllActual();
 }

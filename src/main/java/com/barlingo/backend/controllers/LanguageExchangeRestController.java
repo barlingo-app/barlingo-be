@@ -38,13 +38,18 @@ public class LanguageExchangeRestController {
   @GetMapping
   public List<LanguageExchangeDetailsDTO> findExchange(
       @RequestParam(value = "estId", required = false) Integer estId,
-      @RequestParam(value = "userId", required = false) Integer userId) {
+      @RequestParam(value = "userId", required = false) Integer userId,
+      @RequestParam(value = "date", required = false) Boolean actual) {
     List<LanguageExchangeDetailsDTO> result;
     if (userId != null) {
       Assert.notNull(this.userService.findById(userId), "user doesn't exist");
       result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAllByUserId(userId));
     } else {
-      result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll());
+      if (actual != null && actual) {
+        result = this.langExchangeMapper.entitysToDtos(this.langExchangeService.findAllActual());
+      } else {
+        result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll());
+      }
     }
     return result;
   }
