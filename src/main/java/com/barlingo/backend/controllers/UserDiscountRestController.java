@@ -8,6 +8,7 @@ import io.jsonwebtoken.lang.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class UserDiscountRestController {
   private UserDiscountMapper userDiscountMapper;
 
   @GetMapping("")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_ESTABLISHMENT')")
   public List<UserDiscountGenericDTO> findDiscount(
       @RequestParam(value = "code", required = false) String code,
       @RequestParam(value = "langExchangeId", required = false) Integer langExchangeId,
@@ -55,6 +57,7 @@ public class UserDiscountRestController {
   }
 
   @PutMapping("/{code}/redeem")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
   public UserDiscountGenericDTO redeem(@PathVariable("code") String code) {
     UserDiscount userDiscount, saved;
     userDiscount = this.userDiscountService.findByCode(code);

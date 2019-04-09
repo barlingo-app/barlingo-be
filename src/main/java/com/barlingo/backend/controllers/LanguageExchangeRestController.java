@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -68,6 +69,7 @@ public class LanguageExchangeRestController {
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(@PathVariable Integer id) {
     LanguageExchange currentLangExchange = this.langExchangeService.findById(id);
@@ -75,6 +77,7 @@ public class LanguageExchangeRestController {
   }
 
   @PostMapping(path = "/{languageExchangeId}/join", consumes = "application/json")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public LanguageExchangeDetailsDTO joinUser(@PathVariable Integer languageExchangeId,
       @RequestBody Map<String, Integer> langExchangeData) {
 
@@ -84,6 +87,7 @@ public class LanguageExchangeRestController {
   }
 
   @PostMapping(path = "/{languageExchangeId}/leave", consumes = "application/json")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public LanguageExchangeDetailsDTO leaveLanguageExchange(@PathVariable Integer languageExchangeId,
       @RequestBody Map<String, Integer> langExchangeData) {
 
@@ -93,6 +97,7 @@ public class LanguageExchangeRestController {
   }
 
   @PostMapping(consumes = "application/json")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   @ResponseStatus(HttpStatus.CREATED)
   public LanguageExchangeDetailsDTO create(
       @RequestBody LanguageExchangeGenericDTO langExchangeData) {

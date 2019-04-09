@@ -3,6 +3,7 @@ package com.barlingo.backend.controllers;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -57,6 +58,7 @@ public class UserRestController {
   }
 
   @GetMapping("/checkUsername")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> checkUsername(
       @RequestParam(required = false) String username) {
     ResponseBody responseBody = new ResponseBody();
@@ -77,6 +79,7 @@ public class UserRestController {
   }
 
   @PostMapping("/register")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> register(@RequestBody(required = false) UserSignin userData,
       BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
@@ -107,6 +110,7 @@ public class UserRestController {
   }
 
   @PostMapping("/edit")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> edit(@RequestBody(required = false) UserEdit userData,
       BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
