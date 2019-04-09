@@ -50,7 +50,7 @@ public class UserServiceImpl implements IUserService {
     User user = new User();
     user.setUserAccount(new UserAccount());
     user.getUserAccount().setRoles(new ArrayList<>());
-    user.getUserAccount().getRoles().add(Role.ROLE_CLIENT);
+    user.getUserAccount().getRoles().add(Role.ROLE_USER);
     user.setLangsExchanges(new ArrayList<>());
     user.setNotifications(new ArrayList<>());
 

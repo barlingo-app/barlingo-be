@@ -201,7 +201,7 @@ public class DataInitializer implements CommandLineRunner {
     UserAccount userAccount = new UserAccount();
     userAccount.setUsername(username);
     userAccount.setPassword(this.passwordEncoder.encode(password));
-    userAccount.setRoles(Arrays.asList(Role.ROLE_CLIENT));
+    userAccount.setRoles(Arrays.asList(Role.ROLE_USER));
     userAccount.setActive(true);
     user.setUserAccount(userAccount);
     user.setNotifications(Arrays.asList());
