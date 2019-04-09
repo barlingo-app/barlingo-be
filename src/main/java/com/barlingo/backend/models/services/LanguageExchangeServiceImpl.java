@@ -66,6 +66,11 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
+  public List<LanguageExchange> findAllActual() {
+    return this.langExchangeRepository.findByMomentAfter(LocalDateTime.now());
+  }
+
+  @Override
   public LanguageExchange save(LanguageExchange exchange) {
     return this.langExchangeRepository.save(exchange);
   }

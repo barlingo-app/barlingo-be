@@ -135,9 +135,9 @@ public class DataInitializer implements CommandLineRunner {
       Establishment establishment2 = createEstablishment("Juan Miguel", "Luza León", "España",
           "Sevilla", "establishment2@gmail.com", "establishment2", "establishment",
           "Ronda el Alamillo", "Ronda el Alamillo",
-          Arrays.asList(
-              "https://www.google.com/maps/uv?hl=es&pb=!1s0xd126be347a1a9fd%3A0x9390661062567e95!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4s%2Fmaps%2Fplace%2Fcervecer%25C3%25ADa%2Bronda%2Bel%2Balamillo%2F%4037.4134405%2C-5.9873151%2C3a%2C75y%2C359.55h%2C90t%2Fdata%3D*213m4*211e1*213m2*211syAYN10ViVo0F66wOqnW6tg*212e0*214m2*213m1*211s0xd126be347a1a9fd%3A0x9390661062567e95%3Fsa%3DX!5scervecer%C3%ADa%20ronda%20el%20alamillo%20-%20Buscar%20con%20Google&imagekey=!1e10!2sAF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd&sa=X&ved=2ahUKEwjSrfTapbnhAhVC8OAKHfDLBsoQpx8wCnoECA8QCw#"),
-          "https://www.google.com/maps/uv?hl=es&pb=!1s0xd126be347a1a9fd%3A0x9390661062567e95!2m22!2m2!1i80!2i80!3m1!2i20!16m16!1b1!2m2!1m1!1e1!2m2!1m1!1e3!2m2!1m1!1e5!2m2!1m1!1e4!2m2!1m1!1e6!3m1!7e115!4s%2Fmaps%2Fplace%2Fcervecer%25C3%25ADa%2Bronda%2Bel%2Balamillo%2F%4037.4134405%2C-5.9873151%2C3a%2C75y%2C359.55h%2C90t%2Fdata%3D*213m4*211e1*213m2*211syAYN10ViVo0F66wOqnW6tg*212e0*214m2*213m1*211s0xd126be347a1a9fd%3A0x9390661062567e95%3Fsa%3DX!5scervecer%C3%ADa%20ronda%20el%20alamillo%20-%20Buscar%20con%20Google&imagekey=!1e10!2sAF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd&sa=X&ved=2ahUKEwjSrfTapbnhAhVC8OAKHfDLBsoQpx8wCnoECA8QCw#",
+          Arrays
+              .asList("https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024"),
+          "https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024",
           "06:00 - 00:00", "Cerveceza 0.90€", subscription2);
       Establishment establishment3 = createEstablishment("Evaristo", "Ramírez Calvo", "España",
           "Sevilla", "establishment1@gmail.com", "establishment3", "establishment",
@@ -148,9 +148,10 @@ public class DataInitializer implements CommandLineRunner {
       Establishment establishment4 = createEstablishment("Evaristo", "Ramírez Calvo", "España",
           "Sevilla", "establishment1@gmail.com", "establishment4", "establishment",
           "O'Neill's Irish Pub", "Calle Adriano, 34",
-          Arrays.asList("https://www.facebook.com/159741280723607/photos/894861150544946/"),
-          "https://www.facebook.com/159741280723607/photos/894861150544946/", "06:00 - 00:00",
-          "Cerveceza 0.90€", subscription4);
+          Arrays.asList(
+              "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
+          "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
+          "06:00 - 00:00", "Cerveceza 0.90€", subscription4);
 
       log.info("== Language Exchanges ==");
       LanguageExchange langExchange1 = createLanguageExchange("Language Exchange 1",
@@ -158,7 +159,7 @@ public class DataInitializer implements CommandLineRunner {
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2),
           Arrays.asList());
       LanguageExchange langExchange2 = createLanguageExchange("Language Exchange 2",
-          "Language Exchange 2", LocalDateTime.of(2019, 4, 5, 21, 00), ExchangeState.OPEN, 2,
+          "Language Exchange 2", LocalDateTime.of(2019, 10, 5, 21, 00), ExchangeState.OPEN, 2,
           Arrays.asList("es", "en"), establishment1, user3, Arrays.asList(user3, user2),
           Arrays.asList());
       LanguageExchange langExchange3 = createLanguageExchange("Language Exchange 3",

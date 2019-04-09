@@ -25,7 +25,6 @@ import com.barlingo.backend.utilities.Utils;
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/users")
-
 public class UserRestController {
 
   @Autowired
