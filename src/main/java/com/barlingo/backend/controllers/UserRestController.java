@@ -58,7 +58,6 @@ public class UserRestController {
   }
 
   @GetMapping("/checkUsername")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> checkUsername(
       @RequestParam(required = false) String username) {
     ResponseBody responseBody = new ResponseBody();
@@ -79,7 +78,6 @@ public class UserRestController {
   }
 
   @PostMapping("/register")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> register(@RequestBody(required = false) UserSignin userData,
       BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
