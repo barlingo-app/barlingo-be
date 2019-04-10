@@ -18,6 +18,7 @@ import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.forms.UserEdit;
 import com.barlingo.backend.models.forms.UserSignin;
+import com.barlingo.backend.models.mapper.UserAccountMapper;
 import com.barlingo.backend.models.mapper.UserMapper;
 import com.barlingo.backend.models.services.IUserService;
 import com.barlingo.backend.utilities.ResponseBody;
@@ -30,9 +31,10 @@ public class UserRestController {
 
   @Autowired
   private IUserService userService;
-
   @Autowired
   private UserMapper userMapper;
+  @Autowired
+  UserAccountMapper userAccountMapper;
 
   @GetMapping("")
   public List<UserDetailsDTO> findUser() {
@@ -127,6 +129,19 @@ public class UserRestController {
         responseBody.setMessage(e.getMessage());
       }
     }
+
+    return ResponseEntity.ok().body(responseBody);
+  }
+
+  @PostMapping("/{id}/ban")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+  public ResponseEntity<ResponseBody> activateDeactivate(@PathVariable Integer id) {
+    ResponseBody responseBody = new ResponseBody();
+
+    responseBody.setCode(200);
+    responseBody.setSuccess(true);
+    responseBody
+        .setContent(this.userMapper.entityToDto(this.userService.activateDeactivateUser(id)));
 
     return ResponseEntity.ok().body(responseBody);
   }
