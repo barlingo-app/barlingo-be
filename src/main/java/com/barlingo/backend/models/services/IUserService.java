@@ -24,4 +24,6 @@ public interface IUserService {
 
   User edit(UserEdit userData, BindingResult binding);
 
+  User activateDeactivateUser(Integer id);
+
 }

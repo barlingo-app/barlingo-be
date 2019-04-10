@@ -1,9 +1,5 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.entities.Actor;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.entities.UserDiscount;
-import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -13,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.entities.UserDiscount;
+import com.barlingo.backend.models.repositories.UserDiscountRepository;
 
 @Service
 @Transactional
@@ -24,8 +23,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
       "User not joint to the exchange in user discount";
   @Autowired
   private UserDiscountRepository userDiscountRepository;
-  @Autowired
-  private ActorService actorService;
   @Autowired
   private IUserService userService;
   @Autowired
@@ -133,20 +130,42 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     return udSaved;
   }
 
+  /**
+   * Sets discount as exchanged and updates it in the repository
+   *
+   * @param userDiscount the code to redeem
+   * @return saved UserDiscount updated with attrib exchanged set to true
+   */
+  @Override
+  public UserDiscount redeem(UserDiscount userDiscount) {
+    UserDiscount saved;
+    // TODO: Checks current establishment can validate code
+
+    Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
+        "language exchange has not yet begun");
+    Assert.isTrue(this.isValid(userDiscount), "user discount cant be exchanged");
+    userDiscount.setExchanged(true);
+    saved = this.save(userDiscount);
+    Assert.notNull(saved, "error updating users discount in database");
+
+    return saved;
+  }
+
+
   ///////////////////////
   // Auxiliary Methods //
   ///////////////////////
 
-  public void checkPrincipal(final UserDiscount userDiscount) {
-    final Actor principal = this.actorService.findByPrincipal();
-    User userPrincipal = null;
-    if (principal instanceof User) {
-      userPrincipal = (User) principal;
-      Assert.isTrue(userDiscount.getUser().equals(userPrincipal), "");
-    } else {
-      Assert.isTrue(Boolean.TRUE, "Usuario no válido.");
-    }
-  }
+  // public void checkPrincipal(final UserDiscount userDiscount) {
+  // final Actor principal = this.actorService.findByPrincipal();
+  // User userPrincipal = null;
+  // if (principal instanceof User) {
+  // userPrincipal = (User) principal;
+  // Assert.isTrue(userDiscount.getUser().equals(userPrincipal), "");
+  // } else {
+  // Assert.isTrue(Boolean.TRUE, "Usuario no válido.");
+  // }
+  // }
 
   /**
    * Generate an unique reference
@@ -193,27 +212,5 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
     return true;
   }
-
-  /**
-   * Sets discount as exchanged and updates it in the repository
-   *
-   * @param userDiscount the code to redeem
-   * @return saved UserDiscount updated with attrib exchanged set to true
-   */
-  @Override
-  public UserDiscount redeem(UserDiscount userDiscount) {
-    UserDiscount saved;
-    // TODO: Checks current establishment can validate code
-
-    Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
-        "language exchange has not yet begun");
-    Assert.isTrue(this.isValid(userDiscount), "user discount cant be exchanged");
-    userDiscount.setExchanged(true);
-    saved = this.save(userDiscount);
-    Assert.notNull(saved, "error updating users discount in database");
-
-    return saved;
-  }
-
 
 }

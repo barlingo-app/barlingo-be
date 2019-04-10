@@ -19,5 +19,6 @@ public class UserDetailsDTO {
   private String aboutMe;
   private Collection<String> speakLangs;
   private Collection<String> langsToLearn;
+  private UserAccountGenericDTO userAccount;
 
 }

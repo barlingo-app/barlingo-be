@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import com.barlingo.backend.models.entities.Admin;
 import com.barlingo.backend.models.entities.Configuration;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
@@ -19,6 +20,7 @@ import com.barlingo.backend.models.entities.SubscriptionData;
 import com.barlingo.backend.models.entities.SubscriptionType;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
+import com.barlingo.backend.models.repositories.AdminRepository;
 import com.barlingo.backend.models.repositories.ConfigurationRepository;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
@@ -37,6 +39,8 @@ public class DataInitializer implements CommandLineRunner {
   private String dbCreationStrategy;
   @Autowired
   ConfigurationRepository configRepository;
+  @Autowired
+  AdminRepository adminRepository;
   @Autowired
   UserRepository userRepository;
   @Autowired
@@ -68,6 +72,10 @@ public class DataInitializer implements CommandLineRunner {
           .timeShowBeforeDiscount(4) //
           .timeShowAfterDiscount(24) //
           .build());
+
+      log.info("== Admin ==");
+      Admin admin = this.adminRepository.save(createAdmin("admin", "admin", "España", "Sevilla",
+          "admin@barlingo.es", "admin", "admin"));
 
       log.info("== Users ==");
       User user1 = createUser("Cristina Alba", "Kuroiwa", "España", "Sevilla",
@@ -186,6 +194,25 @@ public class DataInitializer implements CommandLineRunner {
       log.info("=== Finalize Populate Database ===");
     }
 
+  }
+
+  private Admin createAdmin(String name, String surname, String country, String city, String email,
+      String username, String password) {
+    Admin admin = new Admin();
+    admin.setName(name);
+    admin.setSurname(surname);
+    admin.setCountry(country);
+    admin.setCity(city);
+    admin.setEmail(email);
+    UserAccount userAccount = new UserAccount();
+    userAccount.setUsername(username);
+    userAccount.setPassword(this.passwordEncoder.encode(password));
+    userAccount.setRoles(Arrays.asList(Role.ROLE_ADMIN));
+    userAccount.setActive(true);
+    admin.setUserAccount(userAccount);
+    admin.setNotifications(Arrays.asList());
+
+    return admin;
   }
 
   private User createUser(String name, String surname, String country, String city, String email,

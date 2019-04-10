@@ -12,4 +12,5 @@ public class UserGenericDTO {
   private String personalPic;
   private Collection<String> speakLangs;
   private Collection<String> langsToLearn;
+  private UserAccountGenericDTO userAccount;
 }

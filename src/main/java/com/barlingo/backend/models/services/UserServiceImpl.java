@@ -148,4 +148,18 @@ public class UserServiceImpl implements IUserService {
     return save(user);
   }
 
+  @Override
+  public User activateDeactivateUser(Integer id) {
+    final User user = this.findById(id);
+    Assert.notNull(user, String.format("User with id: %s not found.", id));
+
+    if (user.getUserAccount().getActive()) {
+      user.getUserAccount().setActive(false);
+    } else {
+      user.getUserAccount().setActive(true);
+    }
+
+    return this.userRepository.save(user);
+  }
+
 }
