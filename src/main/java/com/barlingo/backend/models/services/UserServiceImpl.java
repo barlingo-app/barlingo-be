@@ -1,6 +1,8 @@
 package com.barlingo.backend.models.services;
 
 
+import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.repositories.ActorRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ import io.jsonwebtoken.lang.Assert;
 @Service
 @Transactional
 public class UserServiceImpl implements IUserService {
+
+  @Autowired
+  private ActorRepository actorRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -91,8 +96,10 @@ public class UserServiceImpl implements IUserService {
     try {
       authenticationManager
           .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-      UserAccount user = userAccountRepository.findByUsername(username);
-      return jwtTokenProvider.createToken(username, user.getId(), user.getRoles());
+
+      UserAccount userAccount = userAccountRepository.findByUsername(username);
+      Actor actor = actorRepository.findByUserAccountId(userAccount.getId());
+      return jwtTokenProvider.createToken(username, actor.getId(), userAccount.getRoles());
     } catch (AuthenticationException e) {
       throw new CustomException("Invalid username/password supplied",
           HttpStatus.UNPROCESSABLE_ENTITY);
