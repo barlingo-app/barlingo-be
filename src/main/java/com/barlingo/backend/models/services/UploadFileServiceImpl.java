@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UploadFileServiceImpl implements IUploadFileService {
 
-  private static final String UPLOADS_FOLDER = "uploads";
+  @Value("${folder.uploads}")
+  private static String UPLOADS_FOLDER;
 
   @Override
   public Resource load(String filename) throws MalformedURLException {
@@ -72,7 +74,7 @@ public class UploadFileServiceImpl implements IUploadFileService {
   @Override
   public void init() throws IOException {
     try {
-      if (Files.notExists(Paths.get(UPLOADS_FOLDER))) {
+      if (!Paths.get(UPLOADS_FOLDER).toFile().exists()) {
         Files.createDirectory(Paths.get(UPLOADS_FOLDER));
       }
     } catch (Exception e) {
