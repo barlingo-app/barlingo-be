@@ -59,7 +59,6 @@ public class Establishment extends Actor {
   ///////////////
   @OneToOne
   @Valid
-  @NotNull
   private SubscriptionData subscription;
 
   @OneToMany(mappedBy = "establishment")
