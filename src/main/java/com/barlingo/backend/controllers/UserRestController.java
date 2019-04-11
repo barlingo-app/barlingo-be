@@ -21,6 +21,7 @@ import com.barlingo.backend.models.forms.UserSignin;
 import com.barlingo.backend.models.mapper.UserAccountMapper;
 import com.barlingo.backend.models.mapper.UserMapper;
 import com.barlingo.backend.models.services.IUserService;
+import com.barlingo.backend.security.UserAccountSecurityService;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.Utils;
 
@@ -31,6 +32,8 @@ public class UserRestController {
 
   @Autowired
   private IUserService userService;
+  @Autowired
+  private UserAccountSecurityService userAccountService;
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -66,7 +69,7 @@ public class UserRestController {
     try {
       Assert.notNull(username, "The username must be not empty.");
       responseBody.setCode(200);
-      responseBody.setSuccess(this.userService.findByUsername(username) == null);
+      responseBody.setSuccess(!this.userAccountService.usernameExists(username));
       if (!responseBody.getSuccess()) {
         responseBody.setMessage("The username already exists.");
       }

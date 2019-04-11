@@ -31,4 +31,10 @@ public class UserAccountSecurityService implements UserDetailsService {
         .build();
   }
 
+  public Boolean usernameExists(String username) {
+    final UserAccount user = userAccountRepository.findByUsername(username);
+
+    return user != null;
+  }
+
 }
