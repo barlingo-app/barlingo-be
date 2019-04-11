@@ -20,6 +20,6 @@ public interface IEstablishmentService {
 
   Establishment register(EstablishmentDetailsDTO establishmentData, BindingResult binding);
 
-  Establishment edit(EstablishmentDetailsDTO establishmentData, BindingResult binding);
+  Establishment edit(Integer id, EstablishmentDetailsDTO establishmentData, BindingResult binding);
 
 }

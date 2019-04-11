@@ -141,6 +141,7 @@ public class UserServiceImpl implements IUserService {
 
     user.getUserAccount().setUsername(userData.getUsername());
     user.getUserAccount().setPassword(passwordEncoder.encode(userData.getPassword()));
+    user.getUserAccount().setActive(true);
     user.setName(userData.getName());
     user.setSurname(userData.getSurname());
     user.setEmail(userData.getEmail());
