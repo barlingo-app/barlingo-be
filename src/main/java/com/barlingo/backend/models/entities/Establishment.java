@@ -36,13 +36,13 @@ public class Establishment extends Actor {
   @SafeHtml
   private String address;
 
-  @NotNull
+  //@NotNull
   @ElementCollection
   @Column(length = 3000)
   private Collection<String> images;
 
   @URL
-  @NotBlank
+  //@NotBlank
   @SafeHtml
   @Column(length = 3000)
   private String imageProfile;
