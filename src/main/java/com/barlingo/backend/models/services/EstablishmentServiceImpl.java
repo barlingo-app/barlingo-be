@@ -126,12 +126,12 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   }
 
   @Override
-  public Establishment edit(EstablishmentDetailsDTO establishmentData, BindingResult binding) {
+  public Establishment edit(Integer id, EstablishmentDetailsDTO establishmentData, BindingResult binding) {
 
     validator.validate(establishmentData, binding);
     Assert.isTrue(!binding.hasErrors());
 
-    Establishment establishment = findById(establishmentData.getId());
+    Establishment establishment = findById(id);
 
     Assert.notNull(establishmentData, "Establishment not found");
 
@@ -143,6 +143,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setCountry(establishmentData.getCountry());
     establishment.setWorkingHours(establishmentData.getWorkingHours());
     establishment.setAddress(establishmentData.getAddress());
+    establishment.setDescription(establishmentData.getDescription());
     establishment.setOffer(establishmentData.getOffer());
 
     return save(establishment);
