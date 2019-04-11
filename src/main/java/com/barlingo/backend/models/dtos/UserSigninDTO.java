@@ -1,4 +1,4 @@
-package com.barlingo.backend.models.forms;
+package com.barlingo.backend.models.dtos;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -12,10 +12,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 
 @Data
-public class UserEdit {
+public class UserSigninDTO {
 
-  @NotNull(message = "required")
-  private Integer id;
+  @NotBlank(message = "required")
+  private String username;
+  @NotBlank(message = "required")
+  private String password;
   @NotBlank(message = "required")
   private String name;
   @NotBlank(message = "required")
@@ -43,5 +45,9 @@ public class UserEdit {
   @NotNull(message = "required")
   @SafeHtml
   private String motherTongue;
+  @SafeHtml
+  private String personalPic;
+  @SafeHtml
+  private String profileBackPic;
 
 }

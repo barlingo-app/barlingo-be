@@ -28,6 +28,7 @@ import com.barlingo.backend.models.repositories.PayDataRepository;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
+import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.security.UserAccount;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,11 +56,15 @@ public class DataInitializer implements CommandLineRunner {
   UserDiscountRepository userDiscountRepository;
   @Autowired
   PasswordEncoder passwordEncoder;
+  @Autowired
+  IUploadFileService uploadFileService;
 
   @Override
   public void run(String... args) throws Exception {
-
+    this.uploadFileService.init();
     if (!"none".equalsIgnoreCase(dbCreationStrategy)) {
+      log.info("=== Initialize files directory ===");
+
       log.info("=== Initialize Populate Database ===");
       log.info("== Configuration ==");
       Configuration config = this.configRepository.save(Configuration.builder() //

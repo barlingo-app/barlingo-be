@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
-import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,11 +27,9 @@ public class User extends Actor {
   ////////////////
   // Attributes //
   ////////////////
-  @URL
   @SafeHtml
   private String personalPic;
 
-  @URL
   @SafeHtml
   private String profileBackPic;
 

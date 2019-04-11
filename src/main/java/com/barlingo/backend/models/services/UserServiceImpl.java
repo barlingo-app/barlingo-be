@@ -1,8 +1,6 @@
 package com.barlingo.backend.models.services;
 
 
-import com.barlingo.backend.models.entities.Actor;
-import com.barlingo.backend.models.repositories.ActorRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +8,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import com.barlingo.backend.exception.CustomException;
+import com.barlingo.backend.models.dtos.UserEditDTO;
+import com.barlingo.backend.models.dtos.UserSigninDTO;
+import com.barlingo.backend.models.entities.Actor;
 import com.barlingo.backend.models.entities.Role;
 import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.forms.UserEdit;
-import com.barlingo.backend.models.forms.UserSignin;
+import com.barlingo.backend.models.repositories.ActorRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
 import com.barlingo.backend.security.JwtTokenProvider;
 import com.barlingo.backend.security.UserAccount;
@@ -48,8 +48,6 @@ public class UserServiceImpl implements IUserService {
   @Autowired
   private AuthenticationManager authenticationManager;
 
-  @Autowired
-  private Validator validator;
 
   private User create() {
     User user = new User();
@@ -108,14 +106,18 @@ public class UserServiceImpl implements IUserService {
 
 
   @Override
-  public User edit(UserEdit userData, BindingResult binding) {
+  public User edit(org.springframework.security.core.userdetails.User principal,
+      UserEditDTO userData) {
 
-    validator.validate(userData, binding);
-    Assert.isTrue(!binding.hasErrors());
-
-    User user = findById(userData.getId());
-
+    User user = this.findById(userData.getId());
     Assert.notNull(user, "User not found");
+
+    for (GrantedAuthority authority : principal.getAuthorities()) {
+      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
+        User userPrincipal = this.findByUsername(principal.getUsername());
+        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+      }
+    }
 
     user.setName(userData.getName());
     user.setSurname(userData.getSurname());
@@ -127,15 +129,13 @@ public class UserServiceImpl implements IUserService {
     user.setSpeakLangs(userData.getSpeakLanguages());
     user.setLangsToLearn(userData.getLearnLanguages());
     user.setMotherTongue(userData.getMotherTongue());
+    user.setPersonalPic(userData.getPersonalPic());
 
     return save(user);
   }
 
   @Override
-  public User register(UserSignin userData, BindingResult binding) {
-
-    validator.validate(userData, binding);
-    Assert.isTrue(!binding.hasErrors());
+  public User register(UserSigninDTO userData, BindingResult binding) {
 
     User user = create();
 
@@ -161,13 +161,9 @@ public class UserServiceImpl implements IUserService {
     final User user = this.findById(id);
     Assert.notNull(user, String.format("User with id: %s not found.", id));
 
-    if (user.getUserAccount().getActive()) {
-      user.getUserAccount().setActive(false);
-    } else {
-      user.getUserAccount().setActive(true);
-    }
+    user.getUserAccount().setActive(!user.getUserAccount().getActive());
 
-    return this.userRepository.save(user);
+    return this.save(user);
   }
 
 }
