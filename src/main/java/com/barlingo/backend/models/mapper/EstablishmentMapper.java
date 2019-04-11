@@ -6,6 +6,7 @@ import com.barlingo.backend.models.entities.Establishment;
 import java.util.Collection;
 import java.util.List;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -15,6 +16,7 @@ public interface EstablishmentMapper {
 
   List<EstablishmentGenericDTO> establishmentsToDtos(Collection<Establishment> establishments);
 
+  @Mapping(target = "username", source = "establishment.userAccount.username")
   EstablishmentDetailsDTO establishmentToDto(Establishment establishment);
 
 }
