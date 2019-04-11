@@ -63,8 +63,8 @@ public class SubscriptionData extends DomainEntity {
   private PayData paydata;
 
 
-  public LocalDateTime getFiDateTime() {
+  /*public LocalDateTime getFiDateTime() {
     return getPaydata().getMoment().plusMonths(getSubscriptionType().getMonths());
-  }
+  }*/
 
 }
