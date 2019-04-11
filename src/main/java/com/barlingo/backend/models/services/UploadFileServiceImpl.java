@@ -72,7 +72,9 @@ public class UploadFileServiceImpl implements IUploadFileService {
   @Override
   public void init() throws IOException {
     try {
-      Files.createDirectory(Paths.get(UPLOADS_FOLDER));
+      if (Files.notExists(Paths.get(UPLOADS_FOLDER))) {
+        Files.createDirectory(Paths.get(UPLOADS_FOLDER));
+      }
     } catch (Exception e) {
       log.error(e.getMessage());
     }

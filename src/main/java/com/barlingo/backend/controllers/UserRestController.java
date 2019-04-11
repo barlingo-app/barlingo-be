@@ -130,7 +130,8 @@ public class UserRestController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> uploadFile(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      @PathVariable Integer id, @RequestParam(name = "imageType") String imageType,
+      @PathVariable Integer id,
+      @RequestParam(name = "imageType", required = false) String imageType,
       @RequestBody(required = true) MultipartFile file) {
     ResponseBody responseBody = new ResponseBody();
 
