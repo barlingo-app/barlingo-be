@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UploadFileServiceImpl implements IUploadFileService {
 
   @Value("${folder.uploads}")
-  private static String UPLOADS_FOLDER;
+  private String UPLOADS_FOLDER;
 
   @Override
   public Resource load(String filename) throws MalformedURLException {
