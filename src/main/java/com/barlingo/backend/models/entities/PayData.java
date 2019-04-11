@@ -6,13 +6,13 @@ import javax.persistence.AccessType;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.format.annotation.DateTimeFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.SafeHtml;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Data
@@ -27,6 +27,9 @@ public class PayData extends DomainEntity {
   ////////////////
   // Attributes //
   ////////////////
+  @NotNull
+  private String orderId;
+
   @NotNull
   @SafeHtml
   private String title;

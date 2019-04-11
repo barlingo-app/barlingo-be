@@ -24,7 +24,7 @@ import com.barlingo.backend.models.repositories.AdminRepository;
 import com.barlingo.backend.models.repositories.ConfigurationRepository;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
-import com.barlingo.backend.models.repositories.PaydataRepository;
+import com.barlingo.backend.models.repositories.PayDataRepository;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
@@ -44,7 +44,7 @@ public class DataInitializer implements CommandLineRunner {
   @Autowired
   UserRepository userRepository;
   @Autowired
-  PaydataRepository paydataRepository;
+  PayDataRepository paydataRepository;
   @Autowired
   SubscriptionDataRepository subscriptionRepository;
   @Autowired
@@ -105,12 +105,14 @@ public class DataInitializer implements CommandLineRunner {
           Arrays.asList("es"), Arrays.asList("en"), "es");
 
       log.info("== PayData ==");
-      PayData payData1 =
-          createPayData("Pago de Echate P'Alla Tapas", LocalDateTime.of(2019, 1, 1, 10, 00));
-      PayData payData2 = createPayData("Pago de MonteCristo", LocalDateTime.of(2019, 1, 1, 10, 00));
-      PayData payData3 =
-          createPayData("Pago de Ronda el Alamillo", LocalDateTime.of(2019, 1, 1, 10, 00));
-      PayData payData4 = createPayData("Pago de Oneills", LocalDateTime.of(2019, 1, 1, 10, 00));
+      PayData payData1 = createPayData("Pago de Echate P'Alla Tapas", "1RV07592WN284744T",
+          LocalDateTime.of(2019, 1, 1, 10, 00));
+      PayData payData2 = createPayData("Pago de MonteCristo", "1RV07592WN284744T",
+          LocalDateTime.of(2019, 1, 1, 10, 00));
+      PayData payData3 = createPayData("Pago de Ronda el Alamillo", "1RV07592WN284744T",
+          LocalDateTime.of(2019, 1, 1, 10, 00));
+      PayData payData4 = createPayData("Pago de Oneills", "1RV07592WN284744T",
+          LocalDateTime.of(2019, 1, 1, 10, 00));
 
       log.info("== Subscriptions ==");
       SubscriptionData subscription1 =
@@ -160,6 +162,14 @@ public class DataInitializer implements CommandLineRunner {
               "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
           "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
           "06:00 - 00:00", "Cerveceza 0.90€", subscription4);
+
+      Establishment establishment5 = createEstablishment("Evaristo", "Paramos", "España", "Sevilla",
+          "establishment1@gmail.com", "establishment5", "establishment", "O'Neill's Irish Pub",
+          "Calle Adriano, 34",
+          Arrays.asList(
+              "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
+          "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
+          "06:00 - 00:00", "Cerveceza 0.90€", null);
 
       log.info("== Language Exchanges ==");
       LanguageExchange langExchange1 = createLanguageExchange("Language Exchange 1",
@@ -273,9 +283,10 @@ public class DataInitializer implements CommandLineRunner {
     return this.establishmentRepository.saveAndFlush(establishment);
   }
 
-  private PayData createPayData(String title, LocalDateTime moment) {
+  private PayData createPayData(String title, String orderId, LocalDateTime moment) {
     PayData paydata = PayData.builder() //
         .title(title) //
+        .orderId(orderId) //
         .moment(moment) //
         .payType("Paypal") //
         .build();
