@@ -61,10 +61,10 @@ public class DataInitializer implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
+    log.info("=== Initialize files directory ===");
     this.uploadFileService.init();
-    if (!"none".equalsIgnoreCase(dbCreationStrategy)) {
-      log.info("=== Initialize files directory ===");
 
+    if (!"none".equalsIgnoreCase(dbCreationStrategy)) {
       log.info("=== Initialize Populate Database ===");
       log.info("== Configuration ==");
       Configuration config = this.configRepository.save(Configuration.builder() //
