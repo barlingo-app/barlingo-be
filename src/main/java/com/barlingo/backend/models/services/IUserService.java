@@ -2,9 +2,9 @@ package com.barlingo.backend.models.services;
 
 import java.util.List;
 import org.springframework.validation.BindingResult;
+import com.barlingo.backend.models.dtos.UserEditDTO;
+import com.barlingo.backend.models.dtos.UserSigninDTO;
 import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.forms.UserEdit;
-import com.barlingo.backend.models.forms.UserSignin;
 
 public interface IUserService {
 
@@ -20,9 +20,9 @@ public interface IUserService {
 
   String login(String username, String password);
 
-  User register(UserSignin userData, BindingResult binding);
+  User register(UserSigninDTO userData, BindingResult binding);
 
-  User edit(UserEdit userData, BindingResult binding);
+  User edit(org.springframework.security.core.userdetails.User principal, UserEditDTO userData);
 
   User activateDeactivateUser(Integer id);
 
