@@ -160,7 +160,7 @@ public class DataInitializer implements CommandLineRunner {
           Arrays.asList("http://media.tilllate.es/images/locations/ri_locbild1439178.jpg"),
           "http://media.tilllate.es/images/locations/ri_locbild1439178.jpg", "06:00 - 00:00",
           "Cerveceza 0.90€", subscription3);
-      Establishment establishment4 = createEstablishment("Evaristo", "Ramírez Calvo", "España",
+      Establishment establishment4 = createEstablishment("Eduardo", "Pérez Gonzalez", "España",
           "Sevilla", "establishment1@gmail.com", "establishment4", "establishment",
           "O'Neill's Irish Pub", "Calle Adriano, 34",
           Arrays.asList(
@@ -168,24 +168,16 @@ public class DataInitializer implements CommandLineRunner {
           "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
           "06:00 - 00:00", "Cerveceza 0.90€", subscription4);
 
-      Establishment establishment5 = createEstablishment("Evaristo", "Paramos", "España", "Sevilla",
-          "establishment1@gmail.com", "establishment5", "establishment", "O'Neill's Irish Pub",
-          "Calle Adriano, 34",
-          Arrays.asList(
-              "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
-          "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
-          "06:00 - 00:00", "Cerveceza 0.90€", null);
-
       log.info("== Language Exchanges ==");
-      LanguageExchange langExchange1 = createLanguageExchange("Language Exchange 1",
+      LanguageExchange langExchange1 = createLanguageExchange("Quedada en Los Palacios",
           "Language Exchange 1", LocalDateTime.of(2019, 1, 21, 10, 00), ExchangeState.CLOSE, 3,
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2),
           Arrays.asList());
-      LanguageExchange langExchange2 = createLanguageExchange("Language Exchange 2",
+      LanguageExchange langExchange2 = createLanguageExchange("Intercambio Inglés/Español",
           "Language Exchange 2", LocalDateTime.of(2019, 10, 5, 21, 00), ExchangeState.OPEN, 2,
           Arrays.asList("es", "en"), establishment1, user3, Arrays.asList(user3, user2),
           Arrays.asList());
-      LanguageExchange langExchange3 = createLanguageExchange("Language Exchange 3",
+      LanguageExchange langExchange3 = createLanguageExchange("¿Quién se apunta?",
           "Language Exchange 3", LocalDateTime.of(2019, 5, 21, 10, 00), ExchangeState.OPEN, 3,
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2, user4),
           Arrays.asList());

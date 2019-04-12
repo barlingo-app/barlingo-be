@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -38,6 +40,8 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
     Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
     Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+    Assert.isTrue(langExchange.getMoment().isBefore(LocalDateTime.now()),
+        "This moment is past, can't save this exchange");
 
     LanguageExchange langExch = new LanguageExchange();
 
@@ -47,17 +51,12 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
     langExch.setMoment(langExchange.getMoment());
     langExch.setParticipants(new LinkedList<User>());
     langExch.setNumberMaxParticipants(langExchange.getNumberMaxParticipants());
-    // ExchangeState 81 is open
     langExch.setExchangeState(ExchangeState.OPEN);
     langExch.setEstablishment(this.establishmentService.findById(establishmentId));
     langExch.setTargetLangs(langExchange.getTargetLangs());
     langExch.setUserDiscounts(new LinkedList<UserDiscount>());
 
-    LanguageExchange saved = this.langExchangeRepository.save(langExch);
-    // Creator join as a participant
-    this.joinUser(user.getId(), saved.getId());
-
-    return saved;
+    return this.langExchangeRepository.save(langExch);
   }
 
   @Override
@@ -86,16 +85,26 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
-  public LanguageExchange joinUser(Integer userId, Integer languageExchangeId) {
+  public LanguageExchange joinUser(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      Integer userId, Integer languageExchangeId) {
+
+    User user = this.userService.findById(userId);
+    Assert.notNull(user, "User not found.");
+    for (GrantedAuthority authority : principal.getAuthorities()) {
+      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
+        User userPrincipal = this.userService.findByUsername(principal.getUsername());
+        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+      }
+    }
+
     LanguageExchange langExchangeSaved;
     LanguageExchange langExchange = this.findById(languageExchangeId);
     Assert.notNull(langExchange, "Invalid language exchange");
-    // Si el evento ha tenido lugar en más de un día salta excepción
+
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
         "Event has already taken place");
-    // TODO
-    // User user = this.userService.findByPrincipal();
-    User user = this.userService.findById(userId);
+
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
@@ -119,16 +128,24 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
-  public LanguageExchange leaveLanguageExchange(Integer userId, Integer languageExchangeId) {
+  public LanguageExchange leaveLanguageExchange(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      Integer userId, Integer languageExchangeId) {
+
+    User user = this.userService.findById(userId);
+    for (GrantedAuthority authority : principal.getAuthorities()) {
+      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
+        User userPrincipal = this.userService.findByUsername(principal.getUsername());
+        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+      }
+    }
+
     LanguageExchange langExchangeSaved;
     LanguageExchange langExchange = this.findById(languageExchangeId);
     Assert.notNull(langExchange, "Invalid language exchange");
-    // Si el evento ha tenido lugar en más de un día salta excepción
+
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
         "Event has already taken place");
-    // TODO
-    // User user = this.userService.findByPrincipal();
-    User user = this.userService.findById(userId);
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();

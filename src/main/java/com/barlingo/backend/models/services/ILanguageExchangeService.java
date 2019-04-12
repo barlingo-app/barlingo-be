@@ -1,6 +1,7 @@
 package com.barlingo.backend.models.services;
 
 import java.util.List;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.barlingo.backend.models.entities.LanguageExchange;
 
 public interface ILanguageExchangeService {
@@ -13,9 +14,13 @@ public interface ILanguageExchangeService {
 
   void delete(LanguageExchange exchange);
 
-  LanguageExchange joinUser(Integer userId, Integer languageExchangeId);
+  LanguageExchange joinUser(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      Integer userId, Integer languageExchangeId);
 
-  LanguageExchange leaveLanguageExchange(Integer userId, Integer languageExchangeId);
+  LanguageExchange leaveLanguageExchange(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      Integer userId, Integer languageExchangeId);
 
   List<LanguageExchange> findByEstId(Integer estId);
 

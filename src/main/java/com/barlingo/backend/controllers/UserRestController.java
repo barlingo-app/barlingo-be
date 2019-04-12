@@ -142,7 +142,7 @@ public class UserRestController {
     } catch (IOException e) {
       log.error(e.getMessage());
     }
-    if (imageType.equals("personal")) {
+    if (imageType != null && imageType.equals("personal")) {
       user.setPersonalPic(image);
     } else {
       user.setProfileBackPic(image);
@@ -213,36 +213,5 @@ public class UserRestController {
 
     return ResponseEntity.ok().body(responseBody);
   }
-
-  // @PostMapping("/uploadFile")
-  // public ResponseEntity<ResponseBody> uploadFile(@RequestParam("file") MultipartFile file) {
-  // ResponseBody responseBody = new ResponseBody();
-  //
-  // responseBody.setCode(200);
-  // responseBody.setSuccess(true);
-  // responseBody.setContent(this.userMapper.entityToDto(this.userService.addImage(id, file)));
-  //
-  // return ResponseEntity.ok().body(responseBody);
-  // }
-
-  /*
-   * @PostMapping("/users")
-   * 
-   * @ResponseStatus(HttpStatus.CREATED) public User create(@RequestBody User user) {
-   * this.userService.save(user); return user; }
-   * 
-   * @PutMapping("/users/{id}")
-   * 
-   * @ResponseStatus(HttpStatus.CREATED) public User update(@RequestBody User user, @PathVariable
-   * Integer id) { User currentCliente = this.userService.findById(id);
-   * currentCliente.setSurname(user.getName()); currentCliente.setSurname(user.getSurname());
-   * currentCliente.setEmail(user.getEmail()); this.userService.save(currentCliente); return
-   * currentCliente; }
-   * 
-   * @DeleteMapping("/users/{id}")
-   * 
-   * @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable Integer id) { User
-   * currentUser = this.userService.findById(id); this.userService.delete(currentUser); }
-   */
 
 }

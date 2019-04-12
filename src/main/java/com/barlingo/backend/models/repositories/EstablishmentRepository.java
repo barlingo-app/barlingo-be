@@ -12,4 +12,6 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, In
   @Query("select est from Establishment est join est.subscription sub where sub.finishMoment > :date")
   public List<Establishment> findByDateGreater(@Param("date") LocalDateTime date);
 
+  Establishment findByUserAccountId(Integer id);
+
 }

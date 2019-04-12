@@ -1,13 +1,12 @@
 package com.barlingo.backend.controllers;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.entities.LanguageExchange;
+import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
 import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
 import com.barlingo.backend.models.services.UserServiceImpl;
@@ -68,38 +68,41 @@ public class LanguageExchangeRestController {
     return new LanguageExchangeDetailsDTO();
   }
 
-  @DeleteMapping("/{id}")
+  // @DeleteMapping("/{id}")
+  // @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+  // @ResponseStatus(HttpStatus.NO_CONTENT)
+  // public void delete(@PathVariable Integer id) {
+  // LanguageExchange currentLangExchange = this.langExchangeService.findById(id);
+  // this.langExchangeService.delete(currentLangExchange);
+  // }
+
+  @PostMapping("/{languageExchangeId}/join")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable Integer id) {
-    LanguageExchange currentLangExchange = this.langExchangeService.findById(id);
-    this.langExchangeService.delete(currentLangExchange);
+  public LanguageExchangeDetailsDTO joinUser(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      @PathVariable Integer languageExchangeId) {
+
+    User user = this.userService.findByUsername(principal.getUsername());
+    return this.langExchangeMapper.entityToDto(
+        this.langExchangeService.joinUser(principal, user.getId(), languageExchangeId));
   }
 
-  @PostMapping(path = "/{languageExchangeId}/join", consumes = "application/json")
+  @PostMapping("/{languageExchangeId}/leave")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-  public LanguageExchangeDetailsDTO joinUser(@PathVariable Integer languageExchangeId,
-      @RequestBody Map<String, Integer> langExchangeData) {
+  public LanguageExchangeDetailsDTO leaveLanguageExchange(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      @PathVariable Integer languageExchangeId) {
 
-    Integer userId = langExchangeData.get("userId");
-    return this.langExchangeMapper
-        .entityToDto(this.langExchangeService.joinUser(userId, languageExchangeId));
-  }
-
-  @PostMapping(path = "/{languageExchangeId}/leave", consumes = "application/json")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-  public LanguageExchangeDetailsDTO leaveLanguageExchange(@PathVariable Integer languageExchangeId,
-      @RequestBody Map<String, Integer> langExchangeData) {
-
-    Integer userId = langExchangeData.get("userId");
-    return this.langExchangeMapper
-        .entityToDto(this.langExchangeService.leaveLanguageExchange(userId, languageExchangeId));
+    User user = this.userService.findByUsername(principal.getUsername());
+    return this.langExchangeMapper.entityToDto(this.langExchangeService
+        .leaveLanguageExchange(principal, user.getId(), languageExchangeId));
   }
 
   @PostMapping(consumes = "application/json")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   @ResponseStatus(HttpStatus.CREATED)
   public LanguageExchangeDetailsDTO create(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @RequestBody LanguageExchangeGenericDTO langExchangeData) {
     LanguageExchange langExchange = new LanguageExchange();
     langExchange.setTitle(langExchangeData.getTitle());
@@ -114,6 +117,8 @@ public class LanguageExchangeRestController {
     langExchange.setNumberMaxParticipants(langExchangeData.getNumberOfParticipants());
     result = this.langExchangeMapper.entityToDto(
         this.langExchangeService.createAndSave(creatorId, establishmentId, langExchange));
+    // Creator join as a participant
+    this.langExchangeService.joinUser(principal, creatorId, result.getId());
 
     return result;
   }
