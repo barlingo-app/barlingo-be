@@ -1,15 +1,13 @@
 package com.barlingo.backend.models.dtos;
 
-import com.barlingo.backend.models.entities.PayData;
-import com.barlingo.backend.models.entities.SubscriptionData;
-import com.barlingo.backend.models.validations.EditionValidation;
-import com.barlingo.backend.models.validations.RegisterValidation;
 import java.util.Collection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import lombok.Data;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.URL;
+import com.barlingo.backend.models.entities.SubscriptionData;
+import com.barlingo.backend.models.validations.RegisterValidation;
+import lombok.Data;
 
 @Data
 public class EstablishmentDetailsDTO {
@@ -51,9 +49,11 @@ public class EstablishmentDetailsDTO {
   private String offer;
   private SubscriptionData subscription;
 
-  //TODO Find the way to note the tuple contains two Date objects
+  // TODO Find the way to note the tuple contains two Date objects
   @NotBlank
   @SafeHtml
   private String workingHours;
+
+  private UserAccountGenericDTO userAccount;
 
 }
