@@ -11,4 +11,6 @@ public class EstablishmentGenericDTO {
   private String imageProfile;
   private String workingHours;
 
+  private UserAccountGenericDTO userAccount;
+
 }
