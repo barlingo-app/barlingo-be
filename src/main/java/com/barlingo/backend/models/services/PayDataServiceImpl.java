@@ -46,4 +46,11 @@ public class PayDataServiceImpl implements IPayDataService {
     this.payDataRepository.delete(payData);
   }
 
+  @Override
+  public PayData findByOrderId(String orderId) {
+    Assert.notNull(orderId);
+    return this.payDataRepository.findByOrderId(orderId);
+  }
+
+
 }

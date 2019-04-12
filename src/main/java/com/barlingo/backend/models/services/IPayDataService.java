@@ -14,4 +14,6 @@ public interface IPayDataService {
   PayData findById(Integer id);
 
   void delete(PayData payData);
+
+  PayData findByOrderId(String orderId);
 }

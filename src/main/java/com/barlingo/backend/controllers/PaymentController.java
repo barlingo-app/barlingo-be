@@ -74,14 +74,20 @@ public class PaymentController {
           "Error with the payment order, order may not have been paid");
       Assert.isTrue(paypalOrder.purchaseUnits().get(0).payee().merchantId().equals("AG3N8JTUR4SNA"),
           "Payment order is not valid"); // Change this when sandbox vendor change change
+      Assert.isNull(this.payDataService.findByOrderId(orderId),
+          "that order belongs to another subscription");
 
       payData = this.payDataService.create();
       payData.setTitle("Paypal Order");
       payData.setOrderId(paypalOrder.id());
       payDataSaved = this.payDataService.save(payData);
       String createdTime = paypalOrder.createTime();
+
+      payData.setMoment(LocalDateTime.now());
       try {
-        payData.setMoment(LocalDateTime.parse(createdTime.substring(0, createdTime.length() - 1)));
+        if (createdTime != null)
+          payData
+              .setMoment(LocalDateTime.parse(createdTime.substring(0, createdTime.length() - 1)));
       } catch (DateTimeParseException pe) {
         payData.setMoment(LocalDateTime.now());
       }
