@@ -5,6 +5,8 @@ import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
+import com.barlingo.backend.models.validations.EditionValidation;
+import com.barlingo.backend.models.validations.RegisterValidation;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.Utils;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +45,7 @@ public class EstablishmentRestController {
   }
 
   @PostMapping("")
-  public ResponseEntity<ResponseBody> register(
+  public ResponseEntity<ResponseBody> register(@Validated({ RegisterValidation.class })
       @RequestBody(required = false) EstablishmentDetailsDTO
           estData, BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
