@@ -39,7 +39,7 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
     Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
     Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
-    Assert.isTrue(langExchange.getMoment().isBefore(LocalDateTime.now()),
+    Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
         "This moment is past, can't save this exchange");
 
     LanguageExchange langExch = new LanguageExchange();

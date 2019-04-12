@@ -96,6 +96,7 @@ public class UserServiceImpl implements IUserService {
           .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
       UserAccount userAccount = userAccountRepository.findByUsername(username);
+      // Assert.isTrue(userAccount.getActive(), "User banned.");
       Actor actor = actorRepository.findByUserAccountId(userAccount.getId());
       return jwtTokenProvider.createToken(username, actor.getId(), userAccount.getRoles());
     } catch (AuthenticationException e) {
