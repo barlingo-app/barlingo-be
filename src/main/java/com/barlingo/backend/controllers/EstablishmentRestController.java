@@ -1,14 +1,6 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.mapper.EstablishmentMapper;
-import com.barlingo.backend.models.services.IEstablishmentService;
-import com.barlingo.backend.models.validations.EditionValidation;
-import com.barlingo.backend.models.validations.RegisterValidation;
-import com.barlingo.backend.utilities.ResponseBody;
-import com.barlingo.backend.utilities.Utils;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.mapper.EstablishmentMapper;
+import com.barlingo.backend.models.services.IEstablishmentService;
+import com.barlingo.backend.models.validations.RegisterValidation;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.Utils;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -35,8 +36,15 @@ public class EstablishmentRestController {
   private EstablishmentMapper establishmentMapper;
 
   @GetMapping("")
-  public List<EstablishmentGenericDTO> findAllEstablishments() {
-    return this.establishmentMapper.establishmentsToDtos(this.establishmentService.findAll());
+  public List<EstablishmentGenericDTO> findAllEstablishments(
+      @RequestParam(value = "subAct", required = false, defaultValue = "true") Boolean subAct) {
+    List<Establishment> establishments;
+    if (subAct)
+      establishments = this.establishmentService.findByDateGreater(LocalDateTime.now());
+    else
+      establishments = (List<Establishment>) this.establishmentService.findAll();
+
+    return this.establishmentMapper.establishmentsToDtos(establishments);
   }
 
   @GetMapping("/{estId}")
@@ -45,9 +53,8 @@ public class EstablishmentRestController {
   }
 
   @PostMapping("")
-  public ResponseEntity<ResponseBody> register(@Validated({ RegisterValidation.class })
-      @RequestBody(required = false) EstablishmentDetailsDTO
-          estData, BindingResult binding) {
+  public ResponseEntity<ResponseBody> register(@Validated({RegisterValidation.class}) @RequestBody(
+      required = false) EstablishmentDetailsDTO estData, BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
 
     try {
@@ -62,9 +69,7 @@ public class EstablishmentRestController {
 
         Establishment establish = this.establishmentService.register(estData, binding);
 
-        responseBody
-            .setContent(this.establishmentMapper
-                .establishmentToDto(establish));
+        responseBody.setContent(this.establishmentMapper.establishmentToDto(establish));
       }
     } catch (Exception e) {
       responseBody.setCode(400);
@@ -79,11 +84,11 @@ public class EstablishmentRestController {
     return ResponseEntity.ok().body(responseBody);
   }
 
-   /*responseBody.setCode(200);
-      responseBody.setSuccess(true);
-      responseBody
-          .setContent(this.establishmentMapper
-          .establishmentToDto(this.establishmentService.edit(establishmentData, binding)));*/
+  /*
+   * responseBody.setCode(200); responseBody.setSuccess(true); responseBody
+   * .setContent(this.establishmentMapper
+   * .establishmentToDto(this.establishmentService.edit(establishmentData, binding)));
+   */
 
   @PutMapping("/{id}")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
@@ -95,9 +100,8 @@ public class EstablishmentRestController {
     try {
       responseBody.setCode(200);
       responseBody.setSuccess(true);
-      responseBody
-          .setContent(this.establishmentMapper
-              .establishmentToDto(this.establishmentService.edit(id, establishmentData, binding)));
+      responseBody.setContent(this.establishmentMapper
+          .establishmentToDto(this.establishmentService.edit(id, establishmentData, binding)));
     } catch (Exception e) {
       responseBody.setCode(400);
       responseBody.setSuccess(false);

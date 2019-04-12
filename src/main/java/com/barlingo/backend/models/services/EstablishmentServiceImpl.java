@@ -1,5 +1,6 @@
 package com.barlingo.backend.models.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +148,12 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setNotifications(new ArrayList<>());
 
     return establishment;
+  }
+
+  @Override
+  public List<Establishment> findByDateGreater(LocalDateTime date) {
+    Assert.notNull(date);
+    return this.establishmentRepository.findByDateGreater(date);
   }
 
   /*
