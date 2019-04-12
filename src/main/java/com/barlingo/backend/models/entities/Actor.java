@@ -1,15 +1,21 @@
 package com.barlingo.backend.models.entities;
 
-import javax.persistence.*;
+import java.util.Collection;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
-
+import com.barlingo.backend.security.UserAccount;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.List;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -17,35 +23,39 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public abstract class Actor extends DomainEntity {
 
-	////////////////
-	// Attributes //
-	////////////////
-	@NotBlank
-	@SafeHtml
-	private String name;
-	@NotBlank
-	@SafeHtml
-	private String surname;
-	@NotBlank
-	@SafeHtml
-	private String country;
-	@NotBlank
-	@SafeHtml
-	private String city;
-	@Email
-	@NotBlank
-	@SafeHtml
-	private String email;
+  ////////////////
+  // Attributes //
+  ////////////////
+  @NotBlank
+  @SafeHtml
+  private String name;
 
-	private String password;
+  @NotBlank
+  @SafeHtml
+  private String surname;
 
-	private String username;
+  @NotBlank
+  @SafeHtml
+  private String country;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	List<Role> roles;
+  @NotBlank
+  @SafeHtml
+  private String city;
 
-	///////////////
-	// Relations //
-	///////////////
-	// TODO: add userAccount
+  @Email
+  @NotBlank
+  @SafeHtml
+  private String email;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  private UserAccount userAccount;
+
+  ///////////////
+  // Relations //
+  ///////////////
+  // TODO: add userAccount
+  @OneToMany(fetch = FetchType.LAZY)
+  @NotNull
+  @Valid
+  private Collection<Notification> notifications;
 }

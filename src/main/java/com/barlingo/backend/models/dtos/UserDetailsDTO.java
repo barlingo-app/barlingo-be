@@ -1,25 +1,25 @@
 package com.barlingo.backend.models.dtos;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-
-
-import com.barlingo.backend.models.entities.Language;
-
 import lombok.Data;
 
 @Data
 public class UserDetailsDTO {
 
-	private String name;
-	private String surname;
-	private Date birthdate;
-	private String country;
-	private String city;
-	private String personalPic;
-	private String profileBackPic;
-	private String aboutMe;
-	private Collection<Language> speakLanguages;
-	private Collection<Language> learnLanguages;
+  private Integer id;
+  private String name;
+  private String surname;
+  private LocalDate birthday;
+  private String country;
+  private String city;
+  private String email;
+  private String personalPic;
+  private String profileBackPic;
+  private String aboutMe;
+  private Collection<String> speakLangs;
+  private Collection<String> langsToLearn;
+  private String motherTongue;
+  private UserAccountGenericDTO userAccount;
 
 }

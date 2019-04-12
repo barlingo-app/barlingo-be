@@ -1,25 +1,19 @@
 package com.barlingo.backend.models.entities;
 
-
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.SafeHtml;
-import org.hibernate.validator.constraints.URL;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,54 +22,48 @@ import lombok.EqualsAndHashCode;
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "users")
-public class User  extends Actor {
+public class User extends Actor {
 
-	////////////////
-	// Attributes //
-	////////////////
-	@URL
-	@NotBlank
-	@SafeHtml
-	private String personalPic;
+  ////////////////
+  // Attributes //
+  ////////////////
+  @SafeHtml
+  private String personalPic;
 
-	@URL
-	@SafeHtml
-	private String profileBackPic;
+  @SafeHtml
+  private String profileBackPic;
 
-	@NotBlank
-	@SafeHtml
-	private String aboutMe;
+  @SafeHtml
+  private String aboutMe;
 
-	@NotNull
-	@Temporal(TemporalType.DATE)
-	private Date birthDay;
+  @Basic
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private LocalDate birthday;
 
-	@SafeHtml
-	private String location;
+  @SafeHtml
+  private String location;
 
-	///////////////
-	// Relations //
-	///////////////
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Valid
-	@NotNull
-	private Collection<LanguageExchange> langsExchanges;
-	
-	// fetch = FetchType.LAZY ->
-	// no se trae esta collection cuando se llama al user,solo cuando es necesario
-	@ManyToMany(fetch = FetchType.LAZY)
-	@NotNull
-	@Valid
-	private Collection<Language> speakLangs;
+  @NotNull
+  @ElementCollection
+  private Collection<String> speakLangs;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@NotNull
-	@Valid
-	private Collection<Language> langsToLearn;
+  @NotNull
+  @ElementCollection
+  private Collection<String> langsToLearn;
 
-	@ManyToOne(optional = false)
-	@Valid
-	@NotNull
-	private Language motherTongue;
+  @NotNull
+  @SafeHtml
+  private String motherTongue;
+
+  ///////////////
+  // Relations //
+  ///////////////
+  // fetch = FetchType.LAZY ->
+  // no se trae esta collection cuando se llama al user,solo cuando es necesario
+  @ManyToMany(fetch = FetchType.LAZY)
+  @Valid
+  @NotNull
+  private Collection<LanguageExchange> langsExchanges;
 
 }
