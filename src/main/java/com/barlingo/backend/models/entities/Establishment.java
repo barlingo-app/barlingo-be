@@ -10,9 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
-import org.hibernate.validator.constraints.URL;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -36,13 +34,12 @@ public class Establishment extends Actor {
   @SafeHtml
   private String address;
 
-  //@NotNull
+  // @NotNull
   @ElementCollection
   @Column(length = 3000)
   private Collection<String> images;
 
-  @URL
-  //@NotBlank
+  // @NotBlank
   @SafeHtml
   @Column(length = 3000)
   private String imageProfile;

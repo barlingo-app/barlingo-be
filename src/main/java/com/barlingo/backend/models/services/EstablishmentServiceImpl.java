@@ -4,20 +4,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.entities.Actor;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.Role;
-import com.barlingo.backend.models.repositories.ActorRepository;
 import com.barlingo.backend.models.repositories.ConfigurationRepository;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
-import com.barlingo.backend.security.JwtTokenProvider;
 import com.barlingo.backend.security.UserAccount;
 import com.barlingo.backend.security.UserAccountRepository;
 import io.jsonwebtoken.lang.Assert;
@@ -27,9 +24,6 @@ import io.jsonwebtoken.lang.Assert;
 public class EstablishmentServiceImpl implements IEstablishmentService {
 
   @Autowired
-  private ActorRepository actorRepository;
-
-  @Autowired
   private UserAccountRepository userAccountRepository;
 
   @Autowired
@@ -37,12 +31,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
-
-  @Autowired
-  private JwtTokenProvider jwtTokenProvider;
-
-  @Autowired
-  private AuthenticationManager authenticationManager;
 
   @Autowired
   ConfigurationRepository configRepository;
@@ -72,12 +60,12 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   }
 
   @Override
-  public Actor findByUsername(String username) {
+  public Establishment findByUsername(String username) {
     UserAccount userAccount = userAccountRepository.findByUsername(username);
     if (userAccount == null) {
       return null;
     }
-    return this.actorRepository.findByUserAccountId(userAccount.getId());
+    return this.establishmentRepository.findByUserAccountId(userAccount.getId());
   }
 
   @Override
@@ -116,13 +104,19 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   }
 
   @Override
-  public Establishment edit(Integer id, EstablishmentDetailsDTO establishmentData,
-      BindingResult binding) {
+  public Establishment edit(org.springframework.security.core.userdetails.User principal,
+      EstablishmentDetailsDTO establishmentData) {
 
-    validator.validate(establishmentData, binding);
-    Assert.isTrue(!binding.hasErrors());
+    Establishment establishment = this.findById(establishmentData.getId());
+    Assert.notNull(establishment, "Establishment not found");
 
-    Establishment establishment = findById(id);
+    for (GrantedAuthority authority : principal.getAuthorities()) {
+      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
+        Establishment establishmentPrincipal = this.findByUsername(principal.getUsername());
+        Assert.isTrue(establishment.equals(establishmentPrincipal),
+            "You can not modify other users.");
+      }
+    }
 
     Assert.notNull(establishmentData, "Establishment not found");
 
@@ -154,6 +148,16 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   public List<Establishment> findByDateGreater(LocalDateTime date) {
     Assert.notNull(date);
     return this.establishmentRepository.findByDateGreater(date);
+  }
+
+  @Override
+  public Establishment activateDeactivateUser(Integer id) {
+    final Establishment establishment = this.findById(id);
+    Assert.notNull(establishment, String.format("Establishment with id: %s not found.", id));
+
+    establishment.getUserAccount().setActive(!establishment.getUserAccount().getActive());
+
+    return this.save(establishment);
   }
 
   /*

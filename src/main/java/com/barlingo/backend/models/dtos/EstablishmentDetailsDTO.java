@@ -4,7 +4,6 @@ import java.util.Collection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.SafeHtml;
-import org.hibernate.validator.constraints.URL;
 import com.barlingo.backend.models.entities.SubscriptionData;
 import com.barlingo.backend.models.validations.RegisterValidation;
 import lombok.Data;
@@ -41,15 +40,12 @@ public class EstablishmentDetailsDTO {
   @SafeHtml
   private String description;
   private String address;
-  @URL
   @SafeHtml
   private String imageProfile;
   private Collection<String> images;
   @SafeHtml
   private String offer;
   private SubscriptionData subscription;
-
-  // TODO Find the way to note the tuple contains two Date objects
   @NotBlank
   @SafeHtml
   private String workingHours;

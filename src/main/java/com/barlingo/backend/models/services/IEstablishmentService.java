@@ -22,8 +22,11 @@ public interface IEstablishmentService {
 
   Establishment register(EstablishmentDetailsDTO establishmentData, BindingResult binding);
 
-  Establishment edit(Integer id, EstablishmentDetailsDTO establishmentData, BindingResult binding);
+  Establishment edit(org.springframework.security.core.userdetails.User principal,
+      EstablishmentDetailsDTO userData);
 
   List<Establishment> findByDateGreater(LocalDateTime date);
+
+  Establishment activateDeactivateUser(Integer id);
 
 }

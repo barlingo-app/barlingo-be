@@ -13,9 +13,12 @@ public interface ILanguageExchangeService {
 
   void delete(LanguageExchange exchange);
 
-  LanguageExchange joinUser(Integer userId, Integer languageExchangeId);
+  LanguageExchange joinUser(org.springframework.security.core.userdetails.User principal,
+      Integer userId, Integer languageExchangeId);
 
-  LanguageExchange leaveLanguageExchange(Integer userId, Integer languageExchangeId);
+  LanguageExchange leaveLanguageExchange(
+      org.springframework.security.core.userdetails.User principal, Integer userId,
+      Integer languageExchangeId);
 
   List<LanguageExchange> findByEstId(Integer estId);
 
