@@ -1,50 +1,70 @@
 package com.barlingo.backend.models.entities;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 public class SubscriptionData extends DomainEntity {
 
-	////////////////
-	// Attributes //
-	////////////////
-	@NotNull
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date initMoment;
+//	@Value("${annualDiscount}")
+//	private Integer annualDiscount;
+//	@Value("${trimestralDiscount}")
+//	private Integer trimestralDiscount;
 
-	@NotNull
-	@Pattern(regexp = "^(MONTHLY|QUARTERLY|ANNUAL)$")
-	private String subscriptionType;
+  ////////////////
+  // Attributes //
+  ////////////////
+  @Basic
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+  private LocalDateTime initMoment;
 
-	@NotNull
-	@DecimalMin("0.0")
-	private Double price;
+  @Enumerated(EnumType.STRING)
+  private SubscriptionType subscriptionType;
 
-	///////////////
-	// Relations //
-	///////////////
-	@OneToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH })
-	@Valid
-	@NotNull
-	private PayData paydata;
+  @NotNull
+  @DecimalMin("0.0")
+  private Double price;
+
+  @Basic
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+  private LocalDateTime finishMoment;
+
+  ///////////////
+  // Relations //
+  ///////////////
+  @Valid
+  @NotNull
+  @OneToOne(optional = false, cascade = {CascadeType.MERGE, CascadeType.DETACH,
+      CascadeType.REFRESH})
+  private PayData paydata;
+
+
+  /*public LocalDateTime getFiDateTime() {
+    return getPaydata().getMoment().plusMonths(getSubscriptionType().getMonths());
+  }*/
 
 }

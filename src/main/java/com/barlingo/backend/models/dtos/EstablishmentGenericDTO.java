@@ -4,10 +4,13 @@ import lombok.Data;
 
 @Data
 public class EstablishmentGenericDTO {
-	
-	private String establishmentName;
-	private String address;
-	private String imageProfile;
-	private String workingHours;
+
+  private Integer id;
+  private String establishmentName;
+  private String address;
+  private String imageProfile;
+  private String workingHours;
+
+  private UserAccountGenericDTO userAccount;
 
 }

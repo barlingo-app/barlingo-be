@@ -1,18 +1,26 @@
 package com.barlingo.backend.models.entities;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
-
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Basic;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.SafeHtml;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Data
@@ -20,53 +28,54 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class LanguageExchange extends DomainEntity {
 
-	////////////////
-	// Attributes //
-	////////////////
-	@NotBlank
-	@SafeHtml
-	private String title;
+  ////////////////
+  // Attributes //
+  ////////////////
+  @NotBlank
+  @SafeHtml
+  private String title;
 
-	@NotBlank
-	@SafeHtml
-	private String description;
+  @NotBlank
+  @SafeHtml
+  private String description;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-	@NotNull
-	@Basic
-	private Date moment;
+  @Basic
+  @NotNull
+  @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+  private LocalDateTime moment;
 
-	///////////////
-	// Relations //
-	///////////////
-	@ManyToOne(optional = false)
-	@Valid
-	private ExchangeState exchangeState;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private ExchangeState exchangeState;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "establishment_id")
-	@NotNull
-	@Valid
-	private Establishment establishment;
+  @NotNull
+  @Min(value = 0)
+  private Integer numberMaxParticipants;
 
-	@ManyToOne(optional = false)
-	@NotNull
-	@Valid
-	private User creator;
+  @NotNull
+  @ElementCollection
+  private Collection<String> targetLangs;
 
-	@ManyToMany(mappedBy = "langsExchanges", fetch = FetchType.LAZY)
-	@NotNull
-	@Valid
-	private Collection<User> participants;
+  ///////////////
+  // Relations //
+  ///////////////
+  @ManyToOne(optional = false)
+  @NotNull
+  @Valid
+  private Establishment establishment;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Valid
-	@NotNull
-	private Collection<Language> targetLangs;
+  @ManyToOne(optional = false)
+  @NotNull
+  @Valid
+  private User creator;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "langExchange")
-	@Valid
-	@NotNull
-	private Collection<UserDiscount> userDiscounts;
+  @ManyToMany(mappedBy = "langsExchanges", fetch = FetchType.LAZY)
+  @NotNull
+  @Valid
+  private Collection<User> participants;
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "langExchange")
+  @Valid
+  @NotNull
+  private Collection<UserDiscount> userDiscounts;
 }

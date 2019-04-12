@@ -1,0 +1,22 @@
+package com.barlingo.backend.utilities;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
+public class Utils {
+
+  public static final Map<String, String> convertValidationErrors(BindingResult binding) {
+    Map<String, String> errors = new LinkedHashMap<>();
+
+    binding.getAllErrors().forEach((error) -> {
+      String fieldName = ((FieldError) error).getField();
+      String errorMessage = error.getDefaultMessage();
+      errors.put(fieldName, errorMessage);
+    });
+
+    return errors;
+  }
+
+}
