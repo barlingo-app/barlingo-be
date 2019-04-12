@@ -2,7 +2,9 @@ package com.barlingo.backend.controllers;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +46,7 @@ public class PaymentController {
     try {
       res = paymentService.getStringOrder(orderId);
     } catch (IOException e) {
-      Assert.isTrue(true, "Error getting the order, orderID may be wrong");
+      Assert.isTrue(false, "Error getting the order, orderID may be wrong");
       res = e.getMessage();
     }
     return res;
@@ -77,11 +79,16 @@ public class PaymentController {
       payData.setTitle("Paypal Order");
       payData.setOrderId(paypalOrder.id());
       payDataSaved = this.payDataService.save(payData);
-
+      String createdTime = paypalOrder.createTime();
+      try {
+        payData.setMoment(LocalDateTime.parse(createdTime.substring(0, createdTime.length() - 1)));
+      } catch (DateTimeParseException pe) {
+        payData.setMoment(LocalDateTime.now());
+      }
 
       subscriptionData = this.subscriptionDataService.create();
       subscriptionData.setPaydata(payDataSaved);
-      initMoment = LocalDateTime.now();
+      initMoment = payData.getMoment();
       switch (Integer.parseInt(paypalOrder.purchaseUnits().get(0).referenceId())) {
         case 1:
           subType = SubscriptionType.MONTHLY;
@@ -111,12 +118,13 @@ public class PaymentController {
           "error while saving subscription to the establishment");
 
     } catch (IOException e) {
-      Assert.isTrue(true, "Error getting payment order");
+      Assert.isTrue(false, "Error getting payment order");
     }
 
   }
 
   @PutMapping("")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
   public String updatePayment() {
     return null;
   }
