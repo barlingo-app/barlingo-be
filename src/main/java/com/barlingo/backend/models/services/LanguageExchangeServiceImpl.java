@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -85,8 +84,7 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
-  public LanguageExchange joinUser(
-      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+  public LanguageExchange joinUser(org.springframework.security.core.userdetails.User principal,
       Integer userId, Integer languageExchangeId) {
 
     User user = this.userService.findById(userId);
@@ -129,8 +127,8 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
   @Override
   public LanguageExchange leaveLanguageExchange(
-      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      Integer userId, Integer languageExchangeId) {
+      org.springframework.security.core.userdetails.User principal, Integer userId,
+      Integer languageExchangeId) {
 
     User user = this.userService.findById(userId);
     for (GrantedAuthority authority : principal.getAuthorities()) {
