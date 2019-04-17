@@ -19,8 +19,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
   private static final String USER_NOT_NULL_IN_CREATE_USER_DISCOUNT =
       "User not null in create UserDiscount";
-  private static final String USER_NOT_JOINT_IN_USER_DISCOUNT =
-      "User not joint to the exchange in user discount";
   @Autowired
   private UserDiscountRepository userDiscountRepository;
   @Autowired

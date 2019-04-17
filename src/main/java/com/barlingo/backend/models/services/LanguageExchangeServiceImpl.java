@@ -59,13 +59,14 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
-  public List<LanguageExchange> findAll() {
-    return this.langExchangeRepository.findAll();
-  }
+  public List<LanguageExchange> findAll(LocalDateTime moment) {
+    List<LanguageExchange> res;
 
-  @Override
-  public List<LanguageExchange> findAllActual() {
-    return this.langExchangeRepository.findByMomentAfter(LocalDateTime.now());
+    if (moment != null)
+      res = this.langExchangeRepository.findByMomentAfterOrderByMomentAsc(moment);
+    else
+      res = this.langExchangeRepository.findByOrderByMomentDesc();
+    return res;
   }
 
   @Override
@@ -169,12 +170,25 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
-  public List<LanguageExchange> findByEstId(Integer estId) {
-    return (List<LanguageExchange>) this.langExchangeRepository.findByEstId(estId);
+  public List<LanguageExchange> findByEstId(Integer estId, LocalDateTime moment) {
+
+    List<LanguageExchange> res;
+    if (moment != null)
+      res = (List<LanguageExchange>) this.langExchangeRepository.findByEstIdAndMomentAfter(estId,
+          moment);
+    else
+      res = (List<LanguageExchange>) this.langExchangeRepository.findByEstId(estId);
+    return res;
   }
 
   @Override
-  public List<LanguageExchange> findAllByUserId(Integer userId) {
-    return this.langExchangeRepository.findAllByUserId(userId);
+  public List<LanguageExchange> findAllByUserId(Integer userId, LocalDateTime moment) {
+
+    List<LanguageExchange> res;
+    if (moment != null)
+      res = this.langExchangeRepository.findAllByUserIdAndMomentAfter(userId, moment);
+    else
+      res = this.langExchangeRepository.findAllByUserId(userId);
+    return res;
   }
 }
