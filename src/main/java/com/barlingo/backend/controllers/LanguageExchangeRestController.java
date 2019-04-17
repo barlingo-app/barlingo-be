@@ -1,5 +1,6 @@
 package com.barlingo.backend.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
+import com.barlingo.backend.models.services.EstablishmentServiceImpl;
 import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
 import com.barlingo.backend.models.services.UserServiceImpl;
 
@@ -35,23 +37,35 @@ public class LanguageExchangeRestController {
   private LanguageExchangeMapper langExchangeMapper;
   @Autowired
   private UserServiceImpl userService;
+  @Autowired
+  private EstablishmentServiceImpl establishmentService;
 
   @GetMapping
   public List<LanguageExchangeDetailsDTO> findExchange(
       @RequestParam(value = "estId", required = false) Integer estId,
       @RequestParam(value = "userId", required = false) Integer userId,
-      @RequestParam(value = "date", required = false) Boolean actual) {
+      @RequestParam(value = "date", required = false, defaultValue = "true") Boolean upcoming) {
     List<LanguageExchangeDetailsDTO> result;
+    LocalDateTime moment = null;
+
+    if (upcoming != null && upcoming)
+      moment = LocalDateTime.now();
     if (userId != null) {
       Assert.notNull(this.userService.findById(userId), "user doesn't exist");
-      result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAllByUserId(userId));
-    } else {
-      if (actual != null && actual) {
-        result = this.langExchangeMapper.entitysToDtos(this.langExchangeService.findAllActual());
-      } else {
-        result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll());
-      }
-    }
+      // minus 24 hour till now for grant the users see exchanges of the last 24h and redeem their
+      // discount
+      if (moment != null)
+        moment.minusHours(24);
+
+      result = this.langExchangeMapper
+          .entitysToDtos(langExchangeService.findAllByUserId(userId, moment));
+    } else if (estId != null) {
+      Assert.notNull(this.establishmentService.findById(estId), "establishment doesn't exist");
+      result =
+          this.langExchangeMapper.entitysToDtos(langExchangeService.findByEstId(estId, moment));
+    } else
+      result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll(moment));
+
     return result;
   }
 
