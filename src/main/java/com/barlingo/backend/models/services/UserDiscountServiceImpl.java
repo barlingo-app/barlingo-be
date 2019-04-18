@@ -89,7 +89,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
   @Override
   public UserDiscount findByCode(String code) {
-    // TODO: Catch principal
     // User user = this.userService.findByPrincipal();
     // User user = this.userService.findById(1);
     // Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
@@ -120,7 +119,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
       udSaved = this.userDiscountRepository.save(ud);
     }
 
-    // TODO: confirmar que el intercambio no ha sido canjeado ya.
     // Restrictions
     Assert.isTrue(ud.getVisible(), "User discount not enable yet");
     Assert.isTrue(!ud.getExchanged(), "User discount already exchaged");
@@ -137,10 +135,9 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   @Override
   public UserDiscount redeem(UserDiscount userDiscount) {
     UserDiscount saved;
-    // TODO: Checks current establishment can validate code
 
     Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
-        "language exchange has not yet begun");
+        "language exchange has not begun yet");
     Assert.isTrue(this.isValid(userDiscount), "user discount cant be exchanged");
     userDiscount.setExchanged(true);
     saved = this.save(userDiscount);
@@ -203,8 +200,9 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   @Override
   public Boolean isValid(UserDiscount userDiscount) {
 
-    if (userDiscount.getExchanged() || !userDiscount.getVisible() || userDiscount.getLangExchange()
-        .getMoment().plusSeconds(86400).isBefore(LocalDateTime.now())) {
+    Assert.notNull(userDiscount, "code dont exists");
+    if (userDiscount.getExchanged() || !userDiscount.getVisible()
+        || userDiscount.getLangExchange().getMoment().plusHours(24).isBefore(LocalDateTime.now())) {
       return false;
     }
 

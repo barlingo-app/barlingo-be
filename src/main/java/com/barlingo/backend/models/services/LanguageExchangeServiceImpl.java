@@ -103,17 +103,18 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
         "Event has already taken place");
+    Assert.isTrue(langExchange.getParticipants().size() < langExchange.getNumberMaxParticipants(),
+        "Language exchange is full");
 
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
-      Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You already register");
+      Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You are already registered");
 
       userExchanges.add(langExchange);
       user.setLangsExchanges(userExchanges);
 
       Collection<User> participants = langExchange.getParticipants();
-      Assert.isTrue(!langExchange.getParticipants().contains(user), "You already register");
 
       participants.add(this.userService.save(user));
       langExchange.setParticipants(participants);
