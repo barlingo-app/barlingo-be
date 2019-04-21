@@ -2,11 +2,14 @@ package com.barlingo.backend.controllers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,14 +20,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.barlingo.backend.models.dtos.LanguageExchangeCreateDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
-import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
 import com.barlingo.backend.models.services.EstablishmentServiceImpl;
 import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
 import com.barlingo.backend.models.services.UserServiceImpl;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.Utils;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -96,9 +101,8 @@ public class LanguageExchangeRestController {
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer languageExchangeId) {
 
-    User user = this.userService.findByUsername(principal.getUsername());
-    return this.langExchangeMapper.entityToDto(
-        this.langExchangeService.joinUser(principal, user.getId(), languageExchangeId));
+    return this.langExchangeMapper
+        .entityToDto(this.langExchangeService.joinUser(principal, languageExchangeId));
   }
 
   @PostMapping("/{languageExchangeId}/leave")
@@ -115,25 +119,22 @@ public class LanguageExchangeRestController {
   @PostMapping(consumes = "application/json")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   @ResponseStatus(HttpStatus.CREATED)
-  public LanguageExchangeDetailsDTO create(
+  public ResponseEntity<ResponseBody> create(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      @RequestBody LanguageExchangeGenericDTO langExchangeData) {
-    LanguageExchange langExchange = new LanguageExchange();
-    langExchange.setTitle(langExchangeData.getTitle());
-    langExchange.setDescription(langExchangeData.getDescription());
+      @Valid @RequestBody LanguageExchangeCreateDTO langExchangeData, BindingResult binding) {
 
-    LanguageExchangeDetailsDTO result = null;
+    ResponseBody responseBody = new ResponseBody();
+    if (binding.hasErrors()) {
+      responseBody.setCode(400);
+      responseBody.setSuccess(false);
+      responseBody.setValidationErrors(Utils.convertValidationErrors(binding));
+    } else {
+      responseBody.setCode(200);
+      responseBody.setSuccess(true);
+      responseBody.setContent(this.langExchangeMapper
+          .entityToDto(this.langExchangeService.createAndSave(principal, langExchangeData)));
+    }
 
-    langExchange.setMoment(langExchangeData.getMoment());
-    Integer creatorId = langExchangeData.getCreatorId();
-    Integer establishmentId = langExchangeData.getEstablishmentId();
-    langExchange.setTargetLangs(langExchangeData.getTargetLangs());
-    langExchange.setNumberMaxParticipants(langExchangeData.getNumberOfParticipants());
-    result = this.langExchangeMapper.entityToDto(
-        this.langExchangeService.createAndSave(creatorId, establishmentId, langExchange));
-    // Creator join as a participant
-    this.langExchangeService.joinUser(principal, creatorId, result.getId());
-
-    return result;
+    return ResponseEntity.ok().body(responseBody);
   }
 }

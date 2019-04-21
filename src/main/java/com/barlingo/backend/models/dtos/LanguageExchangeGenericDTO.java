@@ -13,6 +13,6 @@ public class LanguageExchangeGenericDTO {
   private Integer creatorId;
   private Integer establishmentId;
   private Collection<String> targetLangs;
-  private int numberOfParticipants;
+  private Integer numberOfParticipants;
 
 }

@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import com.barlingo.backend.models.dtos.LanguageExchangeCreateDTO;
+import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
@@ -33,9 +35,10 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   private IEstablishmentService establishmentService;
 
   @Override
-  public LanguageExchange createAndSave(Integer creatorId, Integer establishmentId,
-      LanguageExchange langExchange) {
-    User user = this.userService.findById(creatorId);
+  public LanguageExchange createAndSave(
+      org.springframework.security.core.userdetails.User principal,
+      LanguageExchangeCreateDTO langExchange) {
+    User user = this.userService.findByUsername(principal.getUsername());
 
     Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
     Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
@@ -49,13 +52,23 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
     langExch.setDescription(langExchange.getDescription());
     langExch.setMoment(langExchange.getMoment());
     langExch.setParticipants(new LinkedList<User>());
-    langExch.setNumberMaxParticipants(langExchange.getNumberMaxParticipants());
+    langExch.setNumberMaxParticipants(langExchange.getNumberOfParticipants());
     langExch.setExchangeState(ExchangeState.OPEN);
-    langExch.setEstablishment(this.establishmentService.findById(establishmentId));
     langExch.setTargetLangs(langExchange.getTargetLangs());
     langExch.setUserDiscounts(new LinkedList<UserDiscount>());
 
-    return this.langExchangeRepository.save(langExch);
+    // Get establishment and check not null
+    Establishment establishment =
+        this.establishmentService.findById(langExchange.getEstablishmentId());
+    Assert.notNull(establishment, "Establishment can not be null.");
+    langExch.setEstablishment(establishment);
+
+
+    LanguageExchange exchangeSaved = this.langExchangeRepository.save(langExch);
+    // Creator join as a participant
+    this.joinUser(principal, exchangeSaved.getId());
+
+    return exchangeSaved;
   }
 
   @Override
@@ -86,9 +99,9 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
   @Override
   public LanguageExchange joinUser(org.springframework.security.core.userdetails.User principal,
-      Integer userId, Integer languageExchangeId) {
+      Integer languageExchangeId) {
 
-    User user = this.userService.findById(userId);
+    User user = this.userService.findByUsername(principal.getUsername());
     Assert.notNull(user, "User not found.");
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
@@ -120,7 +133,7 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
       langExchange.setParticipants(participants);
 
       // Generate new code to new participant
-      this.userDiscountService.createAndSave(userId, languageExchangeId);
+      this.userDiscountService.createAndSave(user.getId(), languageExchangeId);
     }
     langExchangeSaved = this.save(langExchange);
 

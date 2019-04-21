@@ -2,6 +2,7 @@ package com.barlingo.backend.models.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.barlingo.backend.models.dtos.LanguageExchangeCreateDTO;
 import com.barlingo.backend.models.entities.LanguageExchange;
 
 public interface ILanguageExchangeService {
@@ -15,7 +16,7 @@ public interface ILanguageExchangeService {
   void delete(LanguageExchange exchange);
 
   LanguageExchange joinUser(org.springframework.security.core.userdetails.User principal,
-      Integer userId, Integer languageExchangeId);
+      Integer languageExchangeId);
 
   LanguageExchange leaveLanguageExchange(
       org.springframework.security.core.userdetails.User principal, Integer userId,
@@ -30,8 +31,8 @@ public interface ILanguageExchangeService {
    */
   List<LanguageExchange> findByEstId(Integer estId, LocalDateTime moment);
 
-  LanguageExchange createAndSave(Integer creatorId, Integer establishmentId,
-      LanguageExchange langExchange);
+  LanguageExchange createAndSave(org.springframework.security.core.userdetails.User principal,
+      LanguageExchangeCreateDTO langExchange);
 
   /**
    * Find all language exchanges of an user
