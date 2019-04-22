@@ -95,16 +95,16 @@ public class PaymentController {
       subscriptionData = this.subscriptionDataService.create();
       subscriptionData.setPaydata(payDataSaved);
       initMoment = payData.getMoment();
-      switch (Integer.parseInt(paypalOrder.purchaseUnits().get(0).referenceId())) {
-        case 1:
+      switch (paypalOrder.purchaseUnits().get(0).referenceId()) {
+        case "1":
           subType = SubscriptionType.MONTHLY;
           endMoment = initMoment.plusMonths(1);
           break;
-        case 2:
+        case "2":
           subType = SubscriptionType.TRIMESTRAL;
           endMoment = initMoment.plusMonths(3);
           break;
-        case 3:
+        case "3":
           subType = SubscriptionType.ANNUAL;
           endMoment = initMoment.plusMonths(12);
           break;
