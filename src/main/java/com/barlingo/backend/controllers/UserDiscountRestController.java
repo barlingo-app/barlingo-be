@@ -50,12 +50,7 @@ public class UserDiscountRestController {
       discountList = this.userDiscountService.findAll();
     } else {
       if (code != null) {
-        current = this.establishmentService.findByUsername(principal.getUsername());
-        Assert.notNull(current, "error getting current establishment");
         userDiscount = this.userDiscountService.findByCode(code);
-        Assert.notNull(userDiscount, "code dont exists");
-        Assert.isTrue(userDiscount.getLangExchange().getEstablishment().equals(current),
-            "cannot redeem discounts from other establishments");
 
         if (validate.equals(true)) {
           current = this.establishmentService.findByUsername(principal.getUsername());
