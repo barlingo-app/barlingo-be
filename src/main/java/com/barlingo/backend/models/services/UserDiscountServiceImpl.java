@@ -136,7 +136,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   public UserDiscount redeem(UserDiscount userDiscount) {
     UserDiscount saved;
 
-    Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
+    Assert.isTrue(userDiscount.getLangExchange().getMoment().isAfter(LocalDateTime.now()),
         "language exchange has not begun yet");
     Assert.isTrue(this.isValid(userDiscount), "user discount cant be exchanged");
     userDiscount.setExchanged(true);
