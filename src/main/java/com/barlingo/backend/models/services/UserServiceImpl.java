@@ -1,18 +1,6 @@
 package com.barlingo.backend.models.services;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import com.barlingo.backend.exception.CustomException;
 import com.barlingo.backend.models.dtos.UserEditDTO;
 import com.barlingo.backend.models.dtos.UserSigninDTO;
@@ -25,6 +13,18 @@ import com.barlingo.backend.security.JwtTokenProvider;
 import com.barlingo.backend.security.UserAccount;
 import com.barlingo.backend.security.UserAccountRepository;
 import io.jsonwebtoken.lang.Assert;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 @Service
 @Transactional
@@ -55,7 +55,7 @@ public class UserServiceImpl implements IUserService {
     user.getUserAccount().setRoles(new ArrayList<>());
     user.getUserAccount().getRoles().add(Role.ROLE_USER);
     user.setLangsExchanges(new ArrayList<>());
-    user.setNotifications(new ArrayList<>());
+//    user.setNotifications(new ArrayList<>());
 
     return user;
   }

@@ -1,19 +1,13 @@
 package com.barlingo.backend;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import com.barlingo.backend.models.entities.Actor;
 import com.barlingo.backend.models.entities.Admin;
 import com.barlingo.backend.models.entities.Configuration;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.LanguageExchange;
+import com.barlingo.backend.models.entities.Notification;
+import com.barlingo.backend.models.entities.NotificationPriority;
 import com.barlingo.backend.models.entities.PayData;
 import com.barlingo.backend.models.entities.Role;
 import com.barlingo.backend.models.entities.SubscriptionData;
@@ -24,13 +18,24 @@ import com.barlingo.backend.models.repositories.AdminRepository;
 import com.barlingo.backend.models.repositories.ConfigurationRepository;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
+import com.barlingo.backend.models.repositories.NotificationRepository;
 import com.barlingo.backend.models.repositories.PayDataRepository;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
 import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.security.UserAccount;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -54,6 +59,10 @@ public class DataInitializer implements CommandLineRunner {
   LanguageExchangeRepository languageExchangeRepository;
   @Autowired
   UserDiscountRepository userDiscountRepository;
+
+  @Autowired
+  NotificationRepository notificationRepository;
+
   @Autowired
   PasswordEncoder passwordEncoder;
   @Autowired
@@ -198,6 +207,11 @@ public class DataInitializer implements CommandLineRunner {
       UserDiscount userDiscount7 =
           createUserDiscount("20190121-WERO", false, false, user3, langExchange3);
 
+      log.info("== User Notifications ==");
+      Notification notification = createNotificationList("Alerta Seguridad",
+          "Se ha producido un ataque al sistema", Arrays.asList(user1, user2, user3, user4, user5),
+          user1);
+
       log.info("=== Finalize Populate Database ===");
     }
 
@@ -217,7 +231,6 @@ public class DataInitializer implements CommandLineRunner {
     userAccount.setRoles(Arrays.asList(Role.ROLE_ADMIN));
     userAccount.setActive(true);
     admin.setUserAccount(userAccount);
-    admin.setNotifications(Arrays.asList());
 
     return admin;
   }
@@ -238,7 +251,6 @@ public class DataInitializer implements CommandLineRunner {
     userAccount.setRoles(Arrays.asList(Role.ROLE_USER));
     userAccount.setActive(true);
     user.setUserAccount(userAccount);
-    user.setNotifications(Arrays.asList());
     user.setPersonalPic(personalPic);
     user.setProfileBackPic(profileBackPic);
     user.setAboutMe("");
@@ -267,7 +279,6 @@ public class DataInitializer implements CommandLineRunner {
     userAccount.setRoles(Arrays.asList(Role.ROLE_ESTABLISHMENT));
     userAccount.setActive(true);
     establishment.setUserAccount(userAccount);
-    establishment.setNotifications(Arrays.asList());
     establishment.setEstablishmentName(establishmentName);
     establishment.setDescription("");
     establishment.setAddress(address);
@@ -332,5 +343,22 @@ public class DataInitializer implements CommandLineRunner {
         .build();
     return this.userDiscountRepository.saveAndFlush(userDiscount);
   }
+
+  private Notification createNotificationList(String title, String description,
+      List<Actor> receivers, Actor user) {
+    Notification notification = new Notification();
+    notification.setTitle(title);
+    notification.setDescription(description);
+    notification.setIsRead(false);
+    notification.setMoment(LocalDateTime.now());
+    notification.setPriority(NotificationPriority.TOP);
+
+    for (Actor receiver : receivers) {
+      notification.addReceiver(receiver);
+    }
+
+    return this.notificationRepository.saveAndFlush(notification);
+  }
+
 }
 

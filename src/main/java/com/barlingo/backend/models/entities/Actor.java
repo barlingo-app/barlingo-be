@@ -1,11 +1,14 @@
 package com.barlingo.backend.models.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
@@ -54,8 +57,12 @@ public abstract class Actor extends DomainEntity {
   // Relations //
   ///////////////
   // TODO: add userAccount
-  @OneToMany(fetch = FetchType.LAZY)
-  @NotNull
-  @Valid
-  private Collection<Notification> notifications;
+//  @ManyToMany(mappedBy = "receivers", fetch = FetchType.LAZY)
+//  @NotNull
+//  @Valid
+//  private Collection<Notification> notifications;
+
+//  @OneToMany( mappedBy = "receiver" ,cascade = CascadeType.ALL,
+//      orphanRemoval = true)
+//  private List<NotificationReceiver> notifications = new ArrayList<>();
 }
