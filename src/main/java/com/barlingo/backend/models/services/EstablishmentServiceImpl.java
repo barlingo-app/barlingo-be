@@ -1,5 +1,13 @@
 package com.barlingo.backend.models.services;
 
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.entities.Role;
+import com.barlingo.backend.models.repositories.ConfigurationRepository;
+import com.barlingo.backend.models.repositories.EstablishmentRepository;
+import com.barlingo.backend.security.UserAccount;
+import com.barlingo.backend.security.UserAccountRepository;
+import io.jsonwebtoken.lang.Assert;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.entities.Role;
-import com.barlingo.backend.models.repositories.ConfigurationRepository;
-import com.barlingo.backend.models.repositories.EstablishmentRepository;
-import com.barlingo.backend.security.UserAccount;
-import com.barlingo.backend.security.UserAccountRepository;
-import io.jsonwebtoken.lang.Assert;
 
 @Service
 @Transactional
@@ -93,10 +93,10 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
     /*
      * //Create pay data PayData payData = createPayData(establishmentData);
-     * 
+     *
      * //Create subscription data SubscriptionData subscriptionData =
      * createSubscription(establishmentData,payData);
-     * 
+     *
      * establishment.setSubscription(subscriptionData);
      */
 
@@ -139,7 +139,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setUserAccount(new UserAccount());
     establishment.getUserAccount().setRoles(new ArrayList<>());
     establishment.getUserAccount().getRoles().add(Role.ROLE_ESTABLISHMENT);
-    establishment.setNotifications(new ArrayList<>());
+//    establishment.setNotifications(new ArrayList<>());
 
     return establishment;
   }
@@ -170,28 +170,28 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
    * payData.getMoment().plusMonths(
    * establishmentData.getSubscription().getSubscriptionType().getMonths())) // .build(); return
    * this.subscriptionRepository.saveAndFlush(subscriptionData);
-   * 
+   *
    * }
-   * 
-   * 
+   *
+   *
    * private PayData createPayData(EstablishmentDetailsDTO establishmentData) { //Pay data PayData
    * paydata = PayData.builder() //
    * .title(establishmentData.getSubscription().getPaydata().getTitle()) //
    * .moment(establishmentData.getSubscription().getPaydata().getMoment()) //
    * .payType(establishmentData.getSubscription().getPaydata().getPayType()) // .build();
-   * 
+   *
    * return this.paydataRepository.saveAndFlush(paydata); }
-   * 
+   *
    * private Double calculateSubscriptionPrice(SubscriptionType subscriptionType) { Configuration
    * config = this.configRepository.findAll().get(0); Double price = 0.0;
-   * 
+   *
    * switch (subscriptionType) { case ANNUAL: price = config.getPriceMonthSubscription() -
    * config.getPriceMonthSubscription() * config.getAnnualDiscount(); break; case TRIMESTRAL: price
    * = config.getPriceMonthSubscription() - config.getPriceMonthSubscription() *
    * config.getTrimestralDiscount(); break; default: price = config.getPriceMonthSubscription(); }
-   * 
+   *
    * return price;
-   * 
+   *
    * }
    */
 
