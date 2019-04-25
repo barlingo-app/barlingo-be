@@ -349,7 +349,6 @@ public class DataInitializer implements CommandLineRunner {
     Notification notification = new Notification();
     notification.setTitle(title);
     notification.setDescription(description);
-    notification.setIsRead(false);
     notification.setMoment(LocalDateTime.now());
     notification.setPriority(NotificationPriority.TOP);
 

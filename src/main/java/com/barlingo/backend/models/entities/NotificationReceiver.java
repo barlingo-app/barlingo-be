@@ -32,6 +32,9 @@ public class NotificationReceiver extends DomainEntity {
   @NotNull
   private Notification notification;
 
+  public NotificationReceiver() {
+  }
+
   public NotificationReceiver(
       @NotNull Actor receiver,
       @NotNull Notification notification) {

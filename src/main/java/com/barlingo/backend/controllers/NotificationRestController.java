@@ -10,7 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +45,15 @@ public class NotificationRestController {
   public NotificationDTO sendNotification(
       @RequestBody NotificationDTO notification) {
     return this.notificationService.notify(notification);
+  }
+
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER','ROLE_ESTABLISHMENT')")
+  public void updateNotification(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      @PathVariable Integer id) {
+
+    notificationService.markAsRead(id, principal);
   }
 
 

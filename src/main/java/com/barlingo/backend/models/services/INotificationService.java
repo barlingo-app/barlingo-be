@@ -5,7 +5,11 @@ import java.util.List;
 
 public interface INotificationService {
 
-  NotificationDTO notify(NotificationDTO notification);
+  NotificationDTO notify(NotificationDTO notificationDTO);
+
+  void markAsRead(Integer notificationId, org.springframework.security.core.userdetails.User principal);
+
+  NotificationDTO findById(Integer id);
 
   List<NotificationDTO> getMyNotReadNotifications(
       org.springframework.security.core.userdetails.User principal);
