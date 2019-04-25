@@ -25,7 +25,7 @@ public class NotificationDTO {
   @SafeHtml
   private String description;
 
-  private Boolean isRead;
+//  private Boolean isRead;
 
   @Basic
   @NotNull
