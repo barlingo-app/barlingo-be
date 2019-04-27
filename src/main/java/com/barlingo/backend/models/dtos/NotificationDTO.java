@@ -17,6 +17,8 @@ public class NotificationDTO {
   ////////////////
   // Attributes //
   ////////////////
+  private Integer id;
+
   @NotBlank
   @SafeHtml
   private String title;

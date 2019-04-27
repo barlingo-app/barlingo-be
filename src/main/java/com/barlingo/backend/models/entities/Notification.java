@@ -35,8 +35,6 @@ public class Notification extends DomainEntity {
   @SafeHtml
   private String description;
 
-  private Boolean isRead;
-
   @Basic
   @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
