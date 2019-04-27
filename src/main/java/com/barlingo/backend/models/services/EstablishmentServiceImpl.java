@@ -1,13 +1,5 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.entities.Role;
-import com.barlingo.backend.models.repositories.ConfigurationRepository;
-import com.barlingo.backend.models.repositories.EstablishmentRepository;
-import com.barlingo.backend.security.UserAccount;
-import com.barlingo.backend.security.UserAccountRepository;
-import io.jsonwebtoken.lang.Assert;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.entities.Role;
+import com.barlingo.backend.models.repositories.ConfigurationRepository;
+import com.barlingo.backend.models.repositories.EstablishmentRepository;
+import com.barlingo.backend.security.UserAccount;
+import com.barlingo.backend.security.UserAccountRepository;
+import com.barlingo.backend.utilities.RestError;
+import io.jsonwebtoken.lang.Assert;
 
 @Service
 @Transactional
@@ -46,7 +47,9 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
   @Override
   public Establishment save(Establishment establishment) {
-    return this.establishmentRepository.saveAndFlush(establishment);
+    Establishment saved = this.establishmentRepository.saveAndFlush(establishment);
+    Assert.notNull(saved, RestError.UNSIGNED_ESTABLISHMENT_ERROR_SAVING_ESTABLISHMENT);
+    return saved;
   }
 
   @Override
@@ -107,18 +110,20 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   public Establishment edit(org.springframework.security.core.userdetails.User principal,
       EstablishmentDetailsDTO establishmentData) {
 
+    Assert.notNull(establishmentData,
+        RestError.ESTABLISHMENT_ESTABLISHMENT_ESTABLISHMENT_DATA_NOT_NULL);
     Establishment establishment = this.findById(establishmentData.getId());
-    Assert.notNull(establishment, "Establishment not found");
+    Assert.notNull(establishment, RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_FOUND);
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
         Establishment establishmentPrincipal = this.findByUsername(principal.getUsername());
         Assert.isTrue(establishment.equals(establishmentPrincipal),
-            "You can not modify other users.");
+            RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_MODIFY_OTHER_USER);
       }
     }
 
-    Assert.notNull(establishmentData, "Establishment not found");
+
 
     establishment.setEstablishmentName(establishmentData.getEstablishmentName());
     establishment.setName(establishmentData.getName());
@@ -139,7 +144,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setUserAccount(new UserAccount());
     establishment.getUserAccount().setRoles(new ArrayList<>());
     establishment.getUserAccount().getRoles().add(Role.ROLE_ESTABLISHMENT);
-//    establishment.setNotifications(new ArrayList<>());
+    // establishment.setNotifications(new ArrayList<>());
 
     return establishment;
   }
@@ -153,7 +158,8 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   @Override
   public Establishment activateDeactivateUser(Integer id) {
     final Establishment establishment = this.findById(id);
-    Assert.notNull(establishment, String.format("Establishment with id: %s not found.", id));
+    Assert.notNull(establishment,
+        String.format(RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_FOUND, id));
 
     establishment.getUserAccount().setActive(!establishment.getUserAccount().getActive());
 

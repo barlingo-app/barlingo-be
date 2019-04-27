@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import com.barlingo.backend.models.entities.SubscriptionData;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
+import com.barlingo.backend.utilities.RestError;
 
 @Service
 @Transactional
@@ -32,9 +33,9 @@ public class SubscriptionDataServiceImpl implements ISubscriptionDataService {
   public SubscriptionData save(SubscriptionData subscriptionData) {
     SubscriptionData saved;
 
-    Assert.notNull(subscriptionData.getPaydata(), "paydata cannot be null");
+    Assert.notNull(subscriptionData.getPaydata(), RestError.ESTABLISHMENT_PAYMENT_PAYDATA_NOT_NULL);
     saved = subscriptionDataRepository.save(subscriptionData);
-    Assert.notNull(saved, "subscription data cannot be null");
+    Assert.notNull(saved, RestError.ESTABLISHMENT_PAYMENT_ERROR_SAVING_SUBSCRIPTION_DATA);
     return saved;
   }
 

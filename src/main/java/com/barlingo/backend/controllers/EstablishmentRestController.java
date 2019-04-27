@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +34,7 @@ import com.barlingo.backend.models.services.IEstablishmentService;
 import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.models.validations.RegisterValidation;
 import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,7 +78,7 @@ public class EstablishmentRestController {
       responseBody.setCode(400);
 
       if (this.establishmentService.findByUsername(estData.getUsername()) != null) {
-        responseBody.setMessage("The username already exists.");
+        responseBody.setMessage(RestError.ALL_ESTABLISHMENT_USERNAME_EXISTS);
       } else {
         responseBody.setCode(200);
         responseBody.setSuccess(true);
@@ -129,6 +131,7 @@ public class EstablishmentRestController {
     ResponseBody responseBody = new ResponseBody();
 
     Establishment establishment = this.establishmentService.findById(id);
+    Assert.notNull(establishment, RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_NULL);
     String image = "";
     try {
       image = this.uploadService.copy(file);
@@ -162,7 +165,7 @@ public class EstablishmentRestController {
     try {
       contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
     } catch (IOException ex) {
-      log.info("Could not determine file type.");
+      log.info(RestError.ESTABLISHMENT_ESTABLISHMENT_UNKNOWN_FILETYPE);
     }
 
     return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))

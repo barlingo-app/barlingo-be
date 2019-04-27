@@ -33,6 +33,7 @@ import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.models.services.IUserService;
 import com.barlingo.backend.security.UserAccountSecurityService;
 import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -81,11 +82,11 @@ public class UserRestController {
       @RequestParam(required = false) String username) {
     ResponseBody responseBody = new ResponseBody();
     try {
-      Assert.notNull(username, "The username must be not empty.");
+      Assert.notNull(username, RestError.ALL_USER_USERNAME_EMPTY);
       responseBody.setCode(200);
       responseBody.setSuccess(!this.userAccountService.usernameExists(username));
       if (!responseBody.getSuccess()) {
-        responseBody.setMessage("The username already exists.");
+        responseBody.setMessage(RestError.ALL_USER_USERNAME_EXISTS);
       }
     } catch (Exception e) {
       responseBody.setSuccess(false);
@@ -106,7 +107,7 @@ public class UserRestController {
       responseBody.setCode(400);
 
       if (this.userService.findByUsername(userData.getUsername()) != null) {
-        responseBody.setMessage("The username already exists.");
+        responseBody.setMessage(RestError.ALL_USER_USERNAME_EXISTS);
       } else {
         responseBody.setCode(200);
         responseBody.setSuccess(true);
@@ -164,14 +165,14 @@ public class UserRestController {
     try {
       resource = this.uploadService.load(filename);
     } catch (MalformedURLException e) {
-      log.error(e.getMessage());
+      log.error(RestError.USER_USER_MALFORMED_URL);
     }
 
     String contentType = null;
     try {
       contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
     } catch (IOException ex) {
-      log.info("Could not determine file type.");
+      log.info(RestError.USER_USER_UNKNOWN_FILETYPE);
     }
 
     return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))

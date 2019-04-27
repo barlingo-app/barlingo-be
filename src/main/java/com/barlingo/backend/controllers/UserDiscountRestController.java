@@ -18,6 +18,7 @@ import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.mapper.UserDiscountMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
 import com.barlingo.backend.models.services.IUserDiscountService;
+import com.barlingo.backend.utilities.RestError;
 import io.jsonwebtoken.lang.Assert;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -55,13 +56,14 @@ public class UserDiscountRestController {
         if (validate.equals(true)) {
           current = this.establishmentService.findByUsername(principal.getUsername());
           Assert.isTrue(userDiscount.getLangExchange().getEstablishment().equals(current),
-              "cannot validate discounts from other establishments");
-          Assert.isTrue(this.userDiscountService.isValid(userDiscount), "code is not valid");
+              RestError.SIGNED_USERDISCOUNT_CODE_BELONG_OTHER_ESTABLISHMENT);
+          Assert.isTrue(this.userDiscountService.isValid(userDiscount),
+              RestError.SIGNED_USERDISCOUNT_CODE_NOT_VALID);
         }
       } else {
         userDiscount = this.userDiscountService.findByLangExchangeId(userId, langExchangeId);
       }
-      Assert.notNull(userDiscount, "code dont exists");
+      Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
       discountList.add(userDiscount);
     }
 
@@ -77,11 +79,11 @@ public class UserDiscountRestController {
     Establishment current;
 
     current = this.establishmentService.findByUsername(principal.getUsername());
-    Assert.notNull(current, "error getting current establishment");
+    Assert.notNull(current, RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_FOUND);
     userDiscount = this.userDiscountService.findByCode(code);
-    Assert.notNull(userDiscount, "code dont exists");
+    Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
     Assert.isTrue(userDiscount.getLangExchange().getEstablishment().equals(current),
-        "cannot redeem discounts from other establishments");
+        RestError.SIGNED_USERDISCOUNT_CODE_BELONG_OTHER_ESTABLISHMENT);
     saved = this.userDiscountService.redeem(userDiscount);
     return this.userDiscountMapper.entityToDto(saved);
   }

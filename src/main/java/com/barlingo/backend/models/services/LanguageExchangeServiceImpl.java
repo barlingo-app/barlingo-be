@@ -16,15 +16,12 @@ import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
+import com.barlingo.backend.utilities.RestError;
 
 @Service
 @Transactional
 public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
-  private static final String USER_NOT_NULL_IN_CREATE_USER_DISCOUNT =
-      "User not null in create UserDiscount";
-  private static final String LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT =
-      "Language Exchange can not be null";
   @Autowired
   private LanguageExchangeRepository langExchangeRepository;
   @Autowired
@@ -40,10 +37,10 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
       LanguageExchangeCreateDTO langExchange) {
     User user = this.userService.findByUsername(principal.getUsername());
 
-    Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
-    Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+    Assert.notNull(user, RestError.SIGNED_LANGUAGE_EXCHANGE_USER_NOT_NULL);
+    Assert.notNull(langExchange, RestError.ALL_LANGUAGE_EXCHANGE_NOT_NULL);
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
-        "This moment is past, can't save this exchange");
+        RestError.USER_LANGUAGE_EXCHANGE_CANNOT_SAVE_PAST_EXCHANGE);
 
     LanguageExchange langExch = new LanguageExchange();
 
@@ -60,7 +57,7 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
     // Get establishment and check not null
     Establishment establishment =
         this.establishmentService.findById(langExchange.getEstablishmentId());
-    Assert.notNull(establishment, "Establishment can not be null.");
+    Assert.notNull(establishment, RestError.USER_LANGUAGE_EXCHANGE_ESTABLISHMENT_NOT_NULL);
     langExch.setEstablishment(establishment);
 
 
@@ -84,7 +81,10 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
   @Override
   public LanguageExchange save(LanguageExchange exchange) {
-    return this.langExchangeRepository.save(exchange);
+    LanguageExchange saved;
+    saved = this.langExchangeRepository.save(exchange);
+    Assert.notNull(saved, RestError.USER_LANGUAGE_EXCHANGE_ERROR_SAVING_EXCHANGE);
+    return saved;
   }
 
   @Override
@@ -102,27 +102,29 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
       Integer languageExchangeId) {
 
     User user = this.userService.findByUsername(principal.getUsername());
-    Assert.notNull(user, "User not found.");
+    Assert.notNull(user, RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_FOUND);
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
         User userPrincipal = this.userService.findByUsername(principal.getUsername());
-        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+        Assert.isTrue(user.equals(userPrincipal),
+            RestError.USER_LANGUAGE_EXCHANGE_CANNOT_MODIFY_OTHER_USERS);
       }
     }
 
     LanguageExchange langExchangeSaved;
     LanguageExchange langExchange = this.findById(languageExchangeId);
-    Assert.notNull(langExchange, "Invalid language exchange");
+    Assert.notNull(langExchange, RestError.SIGNED_LANGUAGE_EXCHANGE_NOT_FOUND);
 
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
-        "Event has already taken place");
+        RestError.USER_LANGUAGE_EXCHANGE_EVENT_FINALIZED);
     Assert.isTrue(langExchange.getParticipants().size() < langExchange.getNumberMaxParticipants(),
-        "Language exchange is full");
+        RestError.USER_LANGUAGE_EXCHANGE_IS_FULL);
 
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
-      Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You are already registered");
+      Assert.isTrue(!user.getLangsExchanges().contains(langExchange),
+          RestError.USER_LANGUAGE_EXCHANGE_ALREADY_REGISTERED);
 
       userExchanges.add(langExchange);
       user.setLangsExchanges(userExchanges);
@@ -144,33 +146,34 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   public LanguageExchange leaveLanguageExchange(
       org.springframework.security.core.userdetails.User principal, Integer userId,
       Integer languageExchangeId) {
-
     User user = this.userService.findById(userId);
+    Assert.notNull(user, RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_NULL);
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
         User userPrincipal = this.userService.findByUsername(principal.getUsername());
-        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+        Assert.isTrue(user.equals(userPrincipal),
+            RestError.USER_LANGUAGE_EXCHANGE_CANNOT_MODIFY_OTHER_USERS);
       }
     }
 
     LanguageExchange langExchangeSaved;
     LanguageExchange langExchange = this.findById(languageExchangeId);
-    Assert.notNull(langExchange, "Invalid language exchange");
+    Assert.notNull(langExchange, RestError.SIGNED_LANGUAGE_EXCHANGE_NOT_FOUND);
 
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
-        "Event has already taken place");
+        RestError.USER_LANGUAGE_EXCHANGE_EVENT_FINALIZED);
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
       Assert.isTrue(user.getLangsExchanges().contains(langExchange),
-          "You not register in this language exchange");
+          RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_REGISTERED);
 
       userExchanges.remove(langExchange);
       user.setLangsExchanges(userExchanges);
 
       Collection<User> participants = langExchange.getParticipants();
       Assert.isTrue(langExchange.getParticipants().contains(user),
-          "You not register in this language exchange");
+          RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_REGISTERED);
 
       participants.remove(this.userService.save(user));
       langExchange.setParticipants(participants);

@@ -21,6 +21,7 @@ import com.barlingo.backend.models.services.EstablishmentServiceImpl;
 import com.barlingo.backend.models.services.PayDataServiceImpl;
 import com.barlingo.backend.models.services.SubscriptionDataServiceImpl;
 import com.barlingo.backend.payment.PaymentServiceImpl;
+import com.barlingo.backend.utilities.RestError;
 import com.paypal.orders.Order;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -46,7 +47,7 @@ public class PaymentController {
     try {
       res = paymentService.getStringOrder(orderId);
     } catch (IOException e) {
-      Assert.isTrue(false, "Error getting the order, orderID may be wrong");
+      Assert.isTrue(false, RestError.ESTABLISHMENT_PAYMENT_IO);
       res = e.getMessage();
     }
     return res;
@@ -64,18 +65,20 @@ public class PaymentController {
     LocalDateTime initMoment, endMoment;
 
     establishment = this.establishmentService.findById(estId);
-    Assert.notNull(establishment, "establishment doesn't exists");
+    Assert.notNull(establishment, RestError.ESTABLISHMENT_PAYMENT_ESTABLISHMENT_NOT_EXISTS);
 
-    Assert.isNull(establishment.getSubscription(), "establishment already haves a subscription");
+    Assert.isNull(establishment.getSubscription(),
+        RestError.ESTABLISHMENT_PAYMENT_ESTABLISHMENT_ALREADY_HAVES_SUBSCRIPTION);
     try {
       paypalOrder = this.paymentService.getOrder(orderId);
 
       Assert.isTrue(paypalOrder.status().equals("COMPLETED"),
-          "Error with the payment order, order may not have been paid");
+          RestError.ESTABLISHMENT_PAYMENT_ERROR_PROCESING_ORDER);
       Assert.isTrue(paypalOrder.purchaseUnits().get(0).payee().merchantId().equals("AG3N8JTUR4SNA"),
-          "Payment order is not valid"); // Change this when sandbox vendor change change
+          RestError.ESTABLISHMENT_PAYMENT_ORDER_IS_NOT_VALID); // Change this when sandbox vendor
+                                                               // change change
       Assert.isNull(this.payDataService.findByOrderId(orderId),
-          "that order belongs to another subscription");
+          RestError.ESTABLISHMENT_PAYMENT_ORDER_BELONGS_TO_ANOTHER_SUBSCRIPTION);
 
       payData = this.payDataService.create();
       payData.setTitle("Paypal Order");
@@ -121,10 +124,10 @@ public class PaymentController {
 
       establishment.setSubscription(subscriptionDataSaved);
       Assert.notNull(this.establishmentService.save(establishment),
-          "error while saving subscription to the establishment");
+          RestError.ESTABLISHMENT_PAYMENT_ERROR_SAVING_ESTABLISHMENT);
 
     } catch (IOException e) {
-      Assert.isTrue(false, "Error getting payment order");
+      Assert.isTrue(false, RestError.ESTABLISHMENT_PAYMENT_IO);
     }
 
   }

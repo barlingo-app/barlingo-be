@@ -29,6 +29,7 @@ import com.barlingo.backend.models.services.EstablishmentServiceImpl;
 import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
 import com.barlingo.backend.models.services.UserServiceImpl;
 import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -56,7 +57,8 @@ public class LanguageExchangeRestController {
     if (upcoming != null && upcoming)
       moment = LocalDateTime.now();
     if (userId != null) {
-      Assert.notNull(this.userService.findById(userId), "user doesn't exist");
+      Assert.notNull(this.userService.findById(userId),
+          RestError.SIGNED_LANGUAGE_EXCHANGE_USER_NOT_EXISTS);
       // minus 24 hour till now for grant the users see exchanges of the last 24h and redeem their
       // discount
       if (moment != null)
@@ -65,7 +67,8 @@ public class LanguageExchangeRestController {
       result = this.langExchangeMapper
           .entitysToDtos(langExchangeService.findAllByUserId(userId, moment));
     } else if (estId != null) {
-      Assert.notNull(this.establishmentService.findById(estId), "establishment doesn't exist");
+      Assert.notNull(this.establishmentService.findById(estId),
+          RestError.SIGNED_LANGUAGE_EXCHANGE_ESTABLISHMENT_NOT_EXISTS);
       result =
           this.langExchangeMapper.entitysToDtos(langExchangeService.findByEstId(estId, moment));
     } else
