@@ -12,13 +12,12 @@ import org.springframework.util.Assert;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
+import com.barlingo.backend.utilities.RestError;
 
 @Service
 @Transactional
 public class UserDiscountServiceImpl implements IUserDiscountService {
 
-  private static final String USER_NOT_NULL_IN_CREATE_USER_DISCOUNT =
-      "User not null in create UserDiscount";
   @Autowired
   private UserDiscountRepository userDiscountRepository;
   @Autowired
@@ -38,7 +37,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     // TODO: Catch principal
     // User user = this.userService.findByPrincipal();
     User user = this.userService.findById(userId);
-    Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+    Assert.notNull(user, RestError.SIGNED_USERDISCOUNT_USER_NOT_NULL);
 
     UserDiscount userDiscount = new UserDiscount();
     userDiscount.setCode(this.generateUniqueCode());
@@ -59,16 +58,17 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   @Override
   public UserDiscount save(UserDiscount userDiscount) {
     UserDiscount saved;
-    Assert.notNull(userDiscount, "userDiscount cannot be null");
-    Assert.notNull(userDiscount.getUser(), "user cannot be null");
-    Assert.notNull(userDiscount.getLangExchange(), "language exchange cannot be null");
+    Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_USERDISCOUNT_NOT_NULL);
+    Assert.notNull(userDiscount.getUser(), RestError.SIGNED_USERDISCOUNT_USER_NOT_NULL);
+    Assert.notNull(userDiscount.getLangExchange(),
+        RestError.SIGNED_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_NULL);
 
     /* Comprueba que exista el usuario y el intercambio */
     Assert.isTrue(this.userService.findById(userDiscount.getUser().getId()) != null,
-        "discount user doesnt exist");
+        RestError.SIGNED_USERDISCOUNT_USER_NOT_EXISTS);
     Assert.isTrue(
         this.languageExchangeService.findById(userDiscount.getLangExchange().getId()) != null,
-        "discount exchange doesnt exist");
+        RestError.SIGNED_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_EXITS);
     /*
      * Comprueba que el usuario del descuento se haya unido al intercambio del descuento
      */
@@ -79,11 +79,11 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     UserDiscount duplicate = this.findByCode(userDiscount.getCode());
     if (duplicate != null && userDiscount.getId() > 0) {
       Assert.isTrue(userDiscount.getId() == duplicate.getId(),
-          "this code belongs to another exchange");
+          RestError.SIGNED_USERDISCOUNT_CODE_BELONG_ANOTHER_EXCHANGE);
     }
 
     saved = this.userDiscountRepository.save(userDiscount);
-    Assert.notNull(saved, "error saving the discount in repository");
+    Assert.notNull(saved, RestError.SIGNED_USERDISCOUNT_ERROR_SAVING_DISCOUNT);
     return saved;
   }
 
@@ -102,7 +102,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     // TODO: Catch principal
     // User user = this.userService.findByPrincipal();
     User user = this.userService.findById(userId);
-    Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+    Assert.notNull(user, RestError.SIGNED_USERDISCOUNT_USER_NOT_NULL);
     // Assert.isTrue(this.userService.findById(1).getLangsExchange().contains(
     // this.languageExchangeService.findById(langExchangeId)),
     // USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
@@ -120,8 +120,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     }
 
     // Restrictions
-    Assert.isTrue(ud.getVisible(), "User discount not enable yet");
-    Assert.isTrue(!ud.getExchanged(), "User discount already exchaged");
+    Assert.isTrue(ud.getVisible(), RestError.SIGNED_USERDISCOUNT_NOT_VISIBLE);
 
     return udSaved;
   }
@@ -137,11 +136,12 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     UserDiscount saved;
 
     Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
-        "language exchange has not begun yet");
-    Assert.isTrue(this.isValid(userDiscount), "user discount cant be exchanged");
+        RestError.ESTABLISHMENT_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_STARTED_YET);
+    Assert.isTrue(this.isValid(userDiscount),
+        RestError.ESTABLISHMENT_USERDISCOUNT_CANNOT_BE_EXCHANGED);
     userDiscount.setExchanged(true);
     saved = this.save(userDiscount);
-    Assert.notNull(saved, "error updating users discount in database");
+    Assert.notNull(saved, RestError.SIGNED_USERDISCOUNT_ERROR_SAVING_DISCOUNT);
 
     return saved;
   }
@@ -200,7 +200,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   @Override
   public Boolean isValid(UserDiscount userDiscount) {
 
-    Assert.notNull(userDiscount, "code dont exists");
+    Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
     if (userDiscount.getExchanged() || !userDiscount.getVisible()
         || userDiscount.getLangExchange().getMoment().plusHours(24).isBefore(LocalDateTime.now())) {
       return false;
