@@ -5,6 +5,7 @@ import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import java.util.List;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -20,6 +21,8 @@ public interface LanguageExchangeMapper {
 
   List<LanguageExchangeGenericDTO> entitiesToDtosGeneric(List<LanguageExchange> langsExchanges);
 
+  @Mapping(source = "langExchange.establishment.id", target = "establishmentId")
+  @Mapping(source = "langExchange.establishment.establishmentName", target = "establishmentName")
   LanguageExchangeGenericDTO entityToDtoGeneric(LanguageExchange langExchange);
 
 }

@@ -1,23 +1,33 @@
 package com.barlingo.backend.controllers;
 
+import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
+import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.dtos.UserEditDTO;
+import com.barlingo.backend.models.dtos.UserExchangesDetailsDTO;
 import com.barlingo.backend.models.dtos.UserSigninDTO;
 import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
 import com.barlingo.backend.models.mapper.UserAccountMapper;
 import com.barlingo.backend.models.mapper.UserMapper;
+import com.barlingo.backend.models.services.ILanguageExchangeService;
 import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.models.services.IUserService;
 import com.barlingo.backend.security.UserAccountSecurityService;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -45,6 +55,10 @@ public class UserRestController {
 
   @Autowired
   private IUserService userService;
+
+  @Autowired
+  private ILanguageExchangeService languageExchangeService;
+
   @Autowired
   private UserAccountSecurityService userAccountService;
   @Autowired
@@ -53,6 +67,8 @@ public class UserRestController {
   private UserMapper userMapper;
   @Autowired
   UserAccountMapper userAccountMapper;
+  @Autowired
+  private LanguageExchangeMapper languageExchangeMapper;
 
   @GetMapping("")
   public List<UserDetailsDTO> findUser() {
@@ -228,6 +244,38 @@ public class UserRestController {
         this.userMapper.entityToDetailsDto(this.userService.anonymize(id)));
 
     return ResponseEntity.ok().body(responseBody);
+  }
+
+  @GetMapping("/{id}/download")
+  public void download(
+      @PathVariable Integer id, HttpServletResponse response) {
+    try {
+      UserDetailsDTO userDTO = this.userMapper
+          .entityToDetailsDto(this.userService.findById(id));
+
+      List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
+          .entitiesToDtosGeneric(languageExchangeService.findAllByUserId(id, null));
+
+      UserExchangesDetailsDTO userExchangesDTO = new UserExchangesDetailsDTO();
+      userExchangesDTO.setUserData(userDTO);
+      userExchangesDTO.setLangsExchanges(languageExchangeGenericDTOS);
+
+      ObjectMapper objectMapper = new ObjectMapper();
+      String jsonUserDetailsDTO = objectMapper.writerWithDefaultPrettyPrinter()
+          .writeValueAsString(userExchangesDTO);
+
+      InputStream targetStream = new ByteArrayInputStream(jsonUserDetailsDTO.getBytes());
+
+      // Set the content type and attachment header.
+      response.addHeader("Content-disposition", "attachment;filename=myfilename.txt");
+      response.setContentType("txt/plain");
+
+      IOUtils.copy(targetStream, response.getOutputStream());
+      response.flushBuffer();
+
+    } catch (Exception e) {
+    }
+
   }
 
 }
