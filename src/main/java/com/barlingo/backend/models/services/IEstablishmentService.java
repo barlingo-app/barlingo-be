@@ -28,4 +28,6 @@ public interface IEstablishmentService {
 
   Establishment activateDeactivateUser(Integer id);
 
+  Establishment anonymize (Integer id);
+
 }

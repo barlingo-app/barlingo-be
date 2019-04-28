@@ -1,11 +1,22 @@
 package com.barlingo.backend.controllers;
 
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.mapper.EstablishmentMapper;
+import com.barlingo.backend.models.services.IEstablishmentService;
+import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.validations.RegisterValidation;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
+import com.barlingo.backend.utilities.Utils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -26,17 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.mapper.EstablishmentMapper;
-import com.barlingo.backend.models.services.IEstablishmentService;
-import com.barlingo.backend.models.services.IUploadFileService;
-import com.barlingo.backend.models.validations.RegisterValidation;
-import com.barlingo.backend.utilities.ResponseBody;
-import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -55,10 +55,11 @@ public class EstablishmentRestController {
   public List<EstablishmentGenericDTO> findAllEstablishments(
       @RequestParam(value = "subAct", required = false, defaultValue = "true") Boolean subAct) {
     List<Establishment> establishments;
-    if (subAct)
+    if (subAct) {
       establishments = this.establishmentService.findByDateGreater(LocalDateTime.now());
-    else
+    } else {
       establishments = (List<Establishment>) this.establishmentService.findAll();
+    }
 
     return this.establishmentMapper.establishmentsToDtos(establishments);
   }
@@ -174,5 +175,19 @@ public class EstablishmentRestController {
         .body(resource);
   }
 
+  @PostMapping("/{id}/anonymize")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
+  public ResponseEntity<ResponseBody> anonymize(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      @PathVariable Integer id) {
+    ResponseBody responseBody = new ResponseBody();
+
+    responseBody.setCode(200);
+    responseBody.setSuccess(true);
+    responseBody.setContent(
+        this.establishmentMapper.establishmentToDto(this.establishmentService.anonymize(id)));
+
+    return ResponseEntity.ok().body(responseBody);
+  }
 
 }

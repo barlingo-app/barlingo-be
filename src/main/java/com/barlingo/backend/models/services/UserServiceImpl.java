@@ -1,6 +1,10 @@
 package com.barlingo.backend.models.services;
 
 
+import com.barlingo.backend.utilities.Utils;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,6 +173,28 @@ public class UserServiceImpl implements IUserService {
     Assert.notNull(user, RestError.USER_USER_NOT_FOUND);
 
     user.getUserAccount().setActive(!user.getUserAccount().getActive());
+
+    return this.save(user);
+  }
+
+  @Override
+  public User anonymize(Integer id) {
+    final String anonymousString = "Anonymous_";
+    User user = this.findById(id);
+
+    try {
+      user.setName(anonymousString  + Utils.getHashSha1(user.getName()));
+      user.setSurname(anonymousString + Utils.getHashSha1(user.getSurname()));
+      user.setAboutMe(anonymousString + Utils.getHashSha1(user.getAboutMe()));
+      user.setLocation(anonymousString + Utils.getHashSha1(user.getLocation()));
+      user.setCountry(anonymousString + Utils.getHashSha1(user.getCountry()));
+      user.setCity(anonymousString + Utils.getHashSha1(user.getCity()));
+      user.getUserAccount().setActive(false);
+
+    } catch (NoSuchAlgorithmException e) {
+      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR,
+          HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
     return this.save(user);
   }

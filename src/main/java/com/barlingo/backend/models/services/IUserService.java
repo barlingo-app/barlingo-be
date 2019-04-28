@@ -26,4 +26,6 @@ public interface IUserService {
 
   User activateDeactivateUser(Integer id);
 
+  User anonymize (Integer id);
+
 }
