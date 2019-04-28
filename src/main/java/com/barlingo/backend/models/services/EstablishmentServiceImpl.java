@@ -1,8 +1,21 @@
 package com.barlingo.backend.models.services;
 
 import com.barlingo.backend.exception.CustomException;
-import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
+import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.entities.Role;
+import com.barlingo.backend.models.mapper.EstablishmentMapper;
+import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
+import com.barlingo.backend.models.repositories.ConfigurationRepository;
+import com.barlingo.backend.models.repositories.EstablishmentRepository;
+import com.barlingo.backend.security.UserAccount;
+import com.barlingo.backend.security.UserAccountRepository;
+import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
+import io.jsonwebtoken.lang.Assert;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,15 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.entities.Role;
-import com.barlingo.backend.models.repositories.ConfigurationRepository;
-import com.barlingo.backend.models.repositories.EstablishmentRepository;
-import com.barlingo.backend.security.UserAccount;
-import com.barlingo.backend.security.UserAccountRepository;
-import com.barlingo.backend.utilities.RestError;
-import io.jsonwebtoken.lang.Assert;
 
 @Service
 @Transactional
@@ -34,6 +38,15 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
   @Autowired
   private EstablishmentRepository establishmentRepository;
+
+  @Autowired
+  private EstablishmentMapper establishmentMapper;
+
+  @Autowired
+  private ILanguageExchangeService languageExchangeService;
+
+  @Autowired
+  private LanguageExchangeMapper languageExchangeMapper;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -128,8 +141,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
       }
     }
 
-
-
     establishment.setEstablishmentName(establishmentData.getEstablishmentName());
     establishment.setName(establishmentData.getName());
     establishment.setSurname(establishmentData.getSurname());
@@ -177,11 +188,13 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     Establishment establishment = this.findById(id);
 
     try {
-      establishment.setName(anonymousString  + Utils.getHashSha1(establishment.getName()));
+      establishment.setName(anonymousString + Utils.getHashSha1(establishment.getName()));
       establishment.setSurname(anonymousString + Utils.getHashSha1(establishment.getSurname()));
       establishment.setAddress(anonymousString + Utils.getHashSha1(establishment.getAddress()));
-      establishment.setDescription(anonymousString + Utils.getHashSha1(establishment.getDescription()));
-      establishment.setEstablishmentName(anonymousString + Utils.getHashSha1(establishment.getEstablishmentName()));
+      establishment
+          .setDescription(anonymousString + Utils.getHashSha1(establishment.getDescription()));
+      establishment.setEstablishmentName(
+          anonymousString + Utils.getHashSha1(establishment.getEstablishmentName()));
       establishment.setOffer(anonymousString + Utils.getHashSha1(establishment.getOffer()));
       establishment.setCountry(anonymousString + Utils.getHashSha1(establishment.getCountry()));
       establishment.setCity(anonymousString + Utils.getHashSha1(establishment.getCity()));
@@ -193,6 +206,33 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     }
 
     return this.save(establishment);
+  }
+
+  @Override
+  public EstablishmentExchangesDetailsDTO exportData(
+      org.springframework.security.core.userdetails.User principal, Integer establishmentId) {
+    InputStream targetStream = null;
+
+    EstablishmentDetailsDTO establishmentDetailsDTO = this.establishmentMapper
+        .establishmentToDto(this.findById(establishmentId));
+
+    for (GrantedAuthority authority : principal.getAuthorities()) {
+      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
+        Establishment establishmentPrincipal = this.findByUsername(principal.getUsername());
+        Assert.isTrue(establishmentDetailsDTO.getId().equals(establishmentPrincipal.getId()),
+            RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA);
+      }
+    }
+
+    List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
+        .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
+
+    EstablishmentExchangesDetailsDTO establishmentExchangesDetailsDTO = new EstablishmentExchangesDetailsDTO();
+    establishmentExchangesDetailsDTO.setEstablishmentDetailsDTO(establishmentDetailsDTO);
+    establishmentExchangesDetailsDTO.setLangsExchanges(languageExchangeGenericDTOS);
+
+    return establishmentExchangesDetailsDTO;
+
   }
 
   /*

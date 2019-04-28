@@ -1,10 +1,27 @@
 package com.barlingo.backend.models.services;
 
 
+import com.barlingo.backend.exception.CustomException;
+import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
+import com.barlingo.backend.models.dtos.UserDetailsDTO;
+import com.barlingo.backend.models.dtos.UserEditDTO;
+import com.barlingo.backend.models.dtos.UserExchangesDetailsDTO;
+import com.barlingo.backend.models.dtos.UserSigninDTO;
+import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.entities.Role;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
+import com.barlingo.backend.models.mapper.UserMapper;
+import com.barlingo.backend.models.repositories.ActorRepository;
+import com.barlingo.backend.models.repositories.UserRepository;
+import com.barlingo.backend.security.JwtTokenProvider;
+import com.barlingo.backend.security.UserAccount;
+import com.barlingo.backend.security.UserAccountRepository;
+import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
+import io.jsonwebtoken.lang.Assert;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +34,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import com.barlingo.backend.exception.CustomException;
-import com.barlingo.backend.models.dtos.UserEditDTO;
-import com.barlingo.backend.models.dtos.UserSigninDTO;
-import com.barlingo.backend.models.entities.Actor;
-import com.barlingo.backend.models.entities.Role;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.repositories.ActorRepository;
-import com.barlingo.backend.models.repositories.UserRepository;
-import com.barlingo.backend.security.JwtTokenProvider;
-import com.barlingo.backend.security.UserAccount;
-import com.barlingo.backend.security.UserAccountRepository;
-import com.barlingo.backend.utilities.RestError;
-import io.jsonwebtoken.lang.Assert;
 
 @Service
 @Transactional
@@ -40,6 +44,15 @@ public class UserServiceImpl implements IUserService {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private UserMapper userMapper;
+
+  @Autowired
+  private ILanguageExchangeService languageExchangeService;
+
+  @Autowired
+  private LanguageExchangeMapper languageExchangeMapper;
 
   @Autowired
   private UserAccountRepository userAccountRepository;
@@ -183,7 +196,7 @@ public class UserServiceImpl implements IUserService {
     User user = this.findById(id);
 
     try {
-      user.setName(anonymousString  + Utils.getHashSha1(user.getName()));
+      user.setName(anonymousString + Utils.getHashSha1(user.getName()));
       user.setSurname(anonymousString + Utils.getHashSha1(user.getSurname()));
       user.setAboutMe(anonymousString + Utils.getHashSha1(user.getAboutMe()));
       user.setLocation(anonymousString + Utils.getHashSha1(user.getLocation()));
@@ -200,12 +213,30 @@ public class UserServiceImpl implements IUserService {
   }
 
   @Override
-  public User exportData(Integer id) {
-    User user = this.findById(id);
+  public UserExchangesDetailsDTO exportData(
+      org.springframework.security.core.userdetails.User principal, Integer userId) {
+    InputStream targetStream = null;
 
+    UserDetailsDTO userDTO = this.userMapper
+        .entityToDetailsDto(this.findById(userId));
 
+    for (GrantedAuthority authority : principal.getAuthorities()) {
+      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
+        User userPrincipal = this.findByUsername(principal.getUsername());
+        Assert.isTrue(userDTO.getId().equals(userPrincipal.getId()),
+            RestError.USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA);
+      }
+    }
 
-    return null;
+    List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
+        .entitiesToDtosGeneric(languageExchangeService.findAllByUserId(userId, null));
+
+    UserExchangesDetailsDTO userExchangesDTO = new UserExchangesDetailsDTO();
+    userExchangesDTO.setUserData(userDTO);
+    userExchangesDTO.setLangsExchanges(languageExchangeGenericDTOS);
+
+    return userExchangesDTO;
+
   }
 
 }
