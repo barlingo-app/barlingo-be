@@ -199,4 +199,13 @@ public class UserServiceImpl implements IUserService {
     return this.save(user);
   }
 
+  @Override
+  public User exportData(Integer id) {
+    User user = this.findById(id);
+
+
+
+    return null;
+  }
+
 }

@@ -28,4 +28,6 @@ public interface IUserService {
 
   User anonymize (Integer id);
 
+  User exportData (Integer id);
+
 }
