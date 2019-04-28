@@ -10,13 +10,18 @@ import com.barlingo.backend.models.validations.RegisterValidation;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -188,6 +193,60 @@ public class EstablishmentRestController {
         this.establishmentMapper.establishmentToDto(this.establishmentService.anonymize(id)));
 
     return ResponseEntity.ok().body(responseBody);
+  }
+
+
+  @GetMapping("/{id}/download")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
+  public void download(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      @PathVariable Integer id, HttpServletResponse response) {
+
+    InputStream targetStream = null;
+    try {
+
+      ObjectMapper objectMapper = new ObjectMapper();
+      String jsonUserDetailsDTO = objectMapper.writerWithDefaultPrettyPrinter()
+          .writeValueAsString(this.establishmentService.exportData(principal, id));
+
+      targetStream = new ByteArrayInputStream(jsonUserDetailsDTO.getBytes());
+
+      // Set the content type and attachment header.
+      response.addHeader("Content-disposition", "attachment;filename=myfilename.txt");
+      response.setContentType("txt/plain");
+
+      IOUtils.copy(targetStream, response.getOutputStream());
+      response.flushBuffer();
+
+    } catch (Exception e) {
+      if(e.getMessage().equals(RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA)){
+        InputStream errorStream = new ByteArrayInputStream("Operation Not Authorized".getBytes());
+        // Set the content type and attachment header.
+        response.addHeader("Content-disposition", "attachment;filename=notAuthorized.txt");
+        response.setContentType("txt/plain");
+        try {
+          IOUtils.copy(errorStream, response.getOutputStream());
+          response.flushBuffer();
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }finally{
+          try {
+            if(errorStream!=null)
+              errorStream.close();
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+    }finally{
+      try {
+        if(targetStream!=null)
+          targetStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
   }
 
 }

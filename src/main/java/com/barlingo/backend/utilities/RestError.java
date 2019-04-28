@@ -30,6 +30,8 @@ public final class RestError {
       "Establishment.Establishment.NotFound";
   public static final String ESTABLISHMENT_ESTABLISHMENT_CANNOT_MODIFY_OTHER_USER =
       "Establishment.Establishment.CannotModifyOtherUser";
+  public static final String ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA =
+      "Establishment.Establishment.CannotAccessOtherUsersData";
   public static final String ESTABLISHMENT_ESTABLISHMENT_ESTABLISHMENT_DATA_NOT_NULL =
       "Establishment.Establishment.EstablishmentDataNotNull";
   public static final String ESTABLISHMENT_ESTABLISHMENT_UNKNOWN_FILETYPE =
@@ -52,6 +54,8 @@ public final class RestError {
   public static final String USER_USER_ERROR_SAVING_USER = "User.User.ErrorSavingUser";
   public static final String USER_USER_CANNOT_MODIFY_OTHER_USERS =
       "User.User.CannotModifyOtherUsers";
+  public static final String USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA =
+      "User.User.CannotAccessOtherUsersData";
 
 
   // Upload file service service errors

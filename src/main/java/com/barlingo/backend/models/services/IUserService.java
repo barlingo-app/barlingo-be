@@ -1,5 +1,6 @@
 package com.barlingo.backend.models.services;
 
+import com.barlingo.backend.models.dtos.UserExchangesDetailsDTO;
 import java.util.List;
 import org.springframework.validation.BindingResult;
 import com.barlingo.backend.models.dtos.UserEditDTO;
@@ -28,6 +29,6 @@ public interface IUserService {
 
   User anonymize (Integer id);
 
-  User exportData (Integer id);
+  UserExchangesDetailsDTO exportData (org.springframework.security.core.userdetails.User principal, Integer id);
 
 }

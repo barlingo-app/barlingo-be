@@ -1,6 +1,5 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.dtos.UserEditDTO;
@@ -34,6 +33,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -247,24 +247,19 @@ public class UserRestController {
   }
 
   @GetMapping("/{id}/download")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public void download(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id, HttpServletResponse response) {
+
+    InputStream targetStream = null;
     try {
-      UserDetailsDTO userDTO = this.userMapper
-          .entityToDetailsDto(this.userService.findById(id));
-
-      List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
-          .entitiesToDtosGeneric(languageExchangeService.findAllByUserId(id, null));
-
-      UserExchangesDetailsDTO userExchangesDTO = new UserExchangesDetailsDTO();
-      userExchangesDTO.setUserData(userDTO);
-      userExchangesDTO.setLangsExchanges(languageExchangeGenericDTOS);
 
       ObjectMapper objectMapper = new ObjectMapper();
       String jsonUserDetailsDTO = objectMapper.writerWithDefaultPrettyPrinter()
-          .writeValueAsString(userExchangesDTO);
+          .writeValueAsString(this.userService.exportData(principal, id));
 
-      InputStream targetStream = new ByteArrayInputStream(jsonUserDetailsDTO.getBytes());
+      targetStream = new ByteArrayInputStream(jsonUserDetailsDTO.getBytes());
 
       // Set the content type and attachment header.
       response.addHeader("Content-disposition", "attachment;filename=myfilename.txt");
@@ -274,6 +269,32 @@ public class UserRestController {
       response.flushBuffer();
 
     } catch (Exception e) {
+      if(e.getMessage().equals(RestError.USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA)){
+        InputStream errorStream = new ByteArrayInputStream("Operation Not Authorized".getBytes());
+        // Set the content type and attachment header.
+        response.addHeader("Content-disposition", "attachment;filename=notAuthorized.txt");
+        response.setContentType("txt/plain");
+        try {
+          IOUtils.copy(errorStream, response.getOutputStream());
+          response.flushBuffer();
+        } catch (IOException ex) {
+          ex.printStackTrace();
+        }finally{
+          try {
+            if(errorStream!=null)
+              errorStream.close();
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+    }finally{
+      try {
+        if(targetStream!=null)
+          targetStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
   }
