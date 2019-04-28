@@ -6,6 +6,9 @@ public final class RestError {
     throw new IllegalStateException("Utility class");
   }
 
+  //General errors
+  public static final String ANONYMIZE_PROCESS_ERROR = "Anonymize.ProcessError";
+
   // Establishment controller and service errors
   public static final String ALL_ESTABLISHMENT_MALFORMED_URL = "All.Establishment.MalformedURL";
   public static final String ALL_ESTABLISHMENT_DATE_NOTNULL = "User.Establishment.DateNotNull";

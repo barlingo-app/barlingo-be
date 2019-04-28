@@ -1,9 +1,14 @@
 package com.barlingo.backend.models.services;
 
+import com.barlingo.backend.exception.CustomException;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.utilities.Utils;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -162,6 +167,30 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
         String.format(RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_FOUND, id));
 
     establishment.getUserAccount().setActive(!establishment.getUserAccount().getActive());
+
+    return this.save(establishment);
+  }
+
+  @Override
+  public Establishment anonymize(Integer id) {
+    final String anonymousString = "Anonymous_";
+    Establishment establishment = this.findById(id);
+
+    try {
+      establishment.setName(anonymousString  + Utils.getHashSha1(establishment.getName()));
+      establishment.setSurname(anonymousString + Utils.getHashSha1(establishment.getSurname()));
+      establishment.setAddress(anonymousString + Utils.getHashSha1(establishment.getAddress()));
+      establishment.setDescription(anonymousString + Utils.getHashSha1(establishment.getDescription()));
+      establishment.setEstablishmentName(anonymousString + Utils.getHashSha1(establishment.getEstablishmentName()));
+      establishment.setOffer(anonymousString + Utils.getHashSha1(establishment.getOffer()));
+      establishment.setCountry(anonymousString + Utils.getHashSha1(establishment.getCountry()));
+      establishment.setCity(anonymousString + Utils.getHashSha1(establishment.getCity()));
+      establishment.getUserAccount().setActive(false);
+
+    } catch (NoSuchAlgorithmException e) {
+      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR,
+          HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
     return this.save(establishment);
   }

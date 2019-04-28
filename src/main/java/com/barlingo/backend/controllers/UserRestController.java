@@ -1,10 +1,23 @@
 package com.barlingo.backend.controllers;
 
+import com.barlingo.backend.models.dtos.UserDetailsDTO;
+import com.barlingo.backend.models.dtos.UserEditDTO;
+import com.barlingo.backend.models.dtos.UserSigninDTO;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.mapper.UserAccountMapper;
+import com.barlingo.backend.models.mapper.UserMapper;
+import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.services.IUserService;
+import com.barlingo.backend.security.UserAccountSecurityService;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
+import com.barlingo.backend.utilities.Utils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -23,19 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.barlingo.backend.models.dtos.UserDetailsDTO;
-import com.barlingo.backend.models.dtos.UserEditDTO;
-import com.barlingo.backend.models.dtos.UserSigninDTO;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.mapper.UserAccountMapper;
-import com.barlingo.backend.models.mapper.UserMapper;
-import com.barlingo.backend.models.services.IUploadFileService;
-import com.barlingo.backend.models.services.IUserService;
-import com.barlingo.backend.security.UserAccountSecurityService;
-import com.barlingo.backend.utilities.ResponseBody;
-import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
-import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -211,6 +211,21 @@ public class UserRestController {
     responseBody.setSuccess(true);
     responseBody.setContent(
         this.userMapper.entityToDetailsDto(this.userService.activateDeactivateUser(id)));
+
+    return ResponseEntity.ok().body(responseBody);
+  }
+
+  @PostMapping("/{id}/anonymize")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+  public ResponseEntity<ResponseBody> anonymize(
+      @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
+      @PathVariable Integer id) {
+    ResponseBody responseBody = new ResponseBody();
+
+    responseBody.setCode(200);
+    responseBody.setSuccess(true);
+    responseBody.setContent(
+        this.userMapper.entityToDetailsDto(this.userService.anonymize(id)));
 
     return ResponseEntity.ok().body(responseBody);
   }
