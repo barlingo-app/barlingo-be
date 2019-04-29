@@ -1,26 +1,14 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.mapper.EstablishmentMapper;
-import com.barlingo.backend.models.services.IEstablishmentService;
-import com.barlingo.backend.models.services.IUploadFileService;
-import com.barlingo.backend.models.validations.RegisterValidation;
-import com.barlingo.backend.utilities.ResponseBody;
-import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -31,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,12 +29,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import com.barlingo.backend.models.dtos.EstablishmentCreateDTO;
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.mapper.EstablishmentMapper;
+import com.barlingo.backend.models.services.IEstablishmentService;
+import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/establishments")
-public class EstablishmentRestController {
+public class EstablishmentRestController extends AbstractRestController {
 
   @Autowired
   private IEstablishmentService establishmentService;
@@ -57,53 +55,61 @@ public class EstablishmentRestController {
   private IUploadFileService uploadService;
 
   @GetMapping("")
-  public List<EstablishmentGenericDTO> findAllEstablishments(
+  public ResponseEntity<ResponseBody> findAllEstablishments(
       @RequestParam(value = "subAct", required = false, defaultValue = "true") Boolean subAct) {
-    List<Establishment> establishments;
-    if (subAct) {
-      establishments = this.establishmentService.findByDateGreater(LocalDateTime.now());
-    } else {
-      establishments = (List<Establishment>) this.establishmentService.findAll();
+    ResponseEntity<ResponseBody> result;
+    Collection<EstablishmentGenericDTO> establishments;
+
+    try {
+      if (subAct)
+        establishments = this.establishmentMapper
+            .establishmentsToDtos(this.establishmentService.findByDateGreater(LocalDateTime.now()));
+      else
+        establishments =
+            this.establishmentMapper.establishmentsToDtos(this.establishmentService.findAll());
+      result = this.createResponse(establishments);
+    } catch (Exception e) {
+      result = this.createMessageException(e);
     }
 
-    return this.establishmentMapper.establishmentsToDtos(establishments);
+    return result;
   }
 
   @GetMapping("/{estId}")
-  public EstablishmentDetailsDTO show(@PathVariable int estId) {
-    return this.establishmentMapper.establishmentToDto(this.establishmentService.findById(estId));
+  public ResponseEntity<ResponseBody> show(@PathVariable int estId) {
+    ResponseEntity<ResponseBody> result;
+    try {
+      EstablishmentDetailsDTO establisment = this.establishmentMapper
+          .establishmentToDetailsDto(this.establishmentService.findById(estId));
+      result = this.createResponse(establisment);
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+
+    return result;
   }
 
   @PostMapping("")
-  public ResponseEntity<ResponseBody> register(@Validated({RegisterValidation.class}) @RequestBody(
-      required = false) EstablishmentDetailsDTO estData, BindingResult binding) {
-    ResponseBody responseBody = new ResponseBody();
+  public ResponseEntity<ResponseBody> register(@Valid @RequestBody EstablishmentCreateDTO estData,
+      BindingResult binding) {
+    ResponseEntity<ResponseBody> result;
 
-    try {
-      responseBody.setSuccess(false);
-      responseBody.setCode(400);
-
-      if (this.establishmentService.findByUsername(estData.getUsername()) != null) {
-        responseBody.setMessage(RestError.ALL_ESTABLISHMENT_USERNAME_EXISTS);
-      } else {
-        responseBody.setCode(200);
-        responseBody.setSuccess(true);
-
-        Establishment establish = this.establishmentService.register(estData, binding);
-
-        responseBody.setContent(this.establishmentMapper.establishmentToDto(establish));
-      }
-    } catch (Exception e) {
-      responseBody.setCode(400);
-      responseBody.setSuccess(false);
-      if (binding.hasErrors()) {
-        responseBody.setValidationErrors(Utils.convertValidationErrors(binding));
-      } else {
-        responseBody.setMessage(e.getMessage());
+    if (binding.hasErrors()) {
+      result = this.createResponse(estData, binding);
+    } else {
+      try {
+        // Check if exist username
+        if (this.establishmentService.findByUsername(estData.getUsername()) != null) {
+          Assert.isTrue(false, RestError.ALL_ESTABLISHMENT_USERNAME_EXISTS);
+        }
+        EstablishmentCreateDTO establishment = this.establishmentMapper
+            .establishmentToDto(this.establishmentService.register(estData));
+        result = this.createResponse(establishment);
+      } catch (Exception e) {
+        result = this.createMessageException(e);
       }
     }
-
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 
   @PutMapping("/{id}")
@@ -111,20 +117,21 @@ public class EstablishmentRestController {
   public ResponseEntity<ResponseBody> edit(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @RequestBody @Valid EstablishmentDetailsDTO establishmentData, BindingResult binding) {
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
 
     if (binding.hasErrors()) {
-      responseBody.setCode(400);
-      responseBody.setSuccess(false);
-      responseBody.setValidationErrors(Utils.convertValidationErrors(binding));
+      result = this.createResponse(establishmentData, binding);
     } else {
-      responseBody.setCode(200);
-      responseBody.setSuccess(true);
-      responseBody.setContent(this.establishmentMapper
-          .establishmentToDto(this.establishmentService.edit(principal, establishmentData)));
+      try {
+        EstablishmentDetailsDTO establishment = this.establishmentMapper.establishmentToDetailsDto(
+            this.establishmentService.edit(principal, establishmentData));
+        result = this.createResponse(establishment);
+      } catch (Exception e) {
+        result = this.createMessageException(e);
+      }
     }
 
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 
   @PostMapping("/{id}/upload")
@@ -134,25 +141,21 @@ public class EstablishmentRestController {
       @PathVariable Integer id,
       @RequestParam(name = "imageType", required = false) String imageType,
       @RequestBody(required = true) MultipartFile file) {
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
 
-    Establishment establishment = this.establishmentService.findById(id);
-    Assert.notNull(establishment, RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_NULL);
-    String image = "";
     try {
-      image = this.uploadService.copy(file);
-    } catch (IOException e) {
-      log.error(e.getMessage());
+      Establishment est = this.establishmentService.findByUsername(principal.getUsername());
+      String image = this.uploadService.copy(file);
+      est.setImageProfile(image);
+      EstablishmentDetailsDTO establishment =
+          this.establishmentMapper.establishmentToDetailsDto(this.establishmentService
+              .edit(principal, this.establishmentMapper.establishmentToDetailsDto(est)));
+      result = this.createResponse(establishment);
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+
     }
-
-    establishment.setImageProfile(image);
-
-    responseBody.setCode(200);
-    responseBody.setSuccess(true);
-    responseBody.setContent(this.establishmentMapper.establishmentToDto(this.establishmentService
-        .edit(principal, this.establishmentMapper.establishmentToDto(establishment))));
-
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 
   @GetMapping(value = "/uploads/{filename:.+}")
@@ -219,7 +222,8 @@ public class EstablishmentRestController {
       response.flushBuffer();
 
     } catch (Exception e) {
-      if(e.getMessage().equals(RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA)){
+      if (e.getMessage()
+          .equals(RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA)) {
         InputStream errorStream = new ByteArrayInputStream("Operation Not Authorized".getBytes());
         // Set the content type and attachment header.
         response.addHeader("Content-disposition", "attachment;filename=notAuthorized.txt");
@@ -229,18 +233,18 @@ public class EstablishmentRestController {
           response.flushBuffer();
         } catch (IOException ex) {
           ex.printStackTrace();
-        }finally{
+        } finally {
           try {
-            if(errorStream!=null)
+            if (errorStream != null)
               errorStream.close();
           } catch (IOException ex) {
             ex.printStackTrace();
           }
         }
       }
-    }finally{
+    } finally {
       try {
-        if(targetStream!=null)
+        if (targetStream != null)
           targetStream.close();
       } catch (IOException e) {
         e.printStackTrace();

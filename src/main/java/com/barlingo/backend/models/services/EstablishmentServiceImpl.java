@@ -11,9 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import com.barlingo.backend.exception.CustomException;
+import com.barlingo.backend.models.dtos.EstablishmentCreateDTO;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
@@ -54,9 +53,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   @Autowired
   ConfigurationRepository configRepository;
 
-  @Autowired
-  private Validator validator;
-
 
   @Override
   public List<Establishment> findAll() {
@@ -72,7 +68,10 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
   @Override
   public Establishment findById(Integer id) {
-    return this.establishmentRepository.findById(id).orElse(null);
+    Establishment establishment = this.establishmentRepository.findById(id).orElse(null);
+    Assert.notNull(establishment, "Establishment id not exist.");
+
+    return establishment;
   }
 
   @Override
@@ -90,10 +89,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   }
 
   @Override
-  public Establishment register(EstablishmentDetailsDTO establishmentData, BindingResult binding) {
-
-    validator.validate(establishmentData, binding);
-    Assert.isTrue(!binding.hasErrors());
+  public Establishment register(EstablishmentCreateDTO establishmentData) {
 
     Establishment establishment = create();
 
@@ -130,7 +126,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
     Assert.notNull(establishmentData,
         RestError.ESTABLISHMENT_ESTABLISHMENT_ESTABLISHMENT_DATA_NOT_NULL);
-    Establishment establishment = this.findById(establishmentData.getId());
+    Establishment establishment = this.findByUsername(principal.getUsername());
     Assert.notNull(establishment, RestError.ESTABLISHMENT_ESTABLISHMENT_NOT_FOUND);
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
@@ -143,7 +139,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
     establishment.setEstablishmentName(establishmentData.getEstablishmentName());
     establishment.setName(establishmentData.getName());
-    establishment.setSurname(establishmentData.getSurname());
     establishment.setEmail(establishmentData.getEmail());
     establishment.setCity(establishmentData.getCity());
     establishment.setCountry(establishmentData.getCountry());
@@ -213,7 +208,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     InputStream targetStream = null;
 
     EstablishmentDetailsDTO establishmentDetailsDTO =
-        this.establishmentMapper.establishmentToDto(this.findById(establishmentId));
+        this.establishmentMapper.establishmentToDetailsDto(this.findById(establishmentId));
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
