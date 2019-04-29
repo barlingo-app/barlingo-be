@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import com.barlingo.backend.models.entities.SubscriptionData;
+import com.barlingo.backend.models.entities.SubscriptionType;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.utilities.RestError;
 
@@ -19,9 +20,7 @@ public class SubscriptionDataServiceImpl implements ISubscriptionDataService {
 
   @Override
   public SubscriptionData create() {
-    SubscriptionData res = new SubscriptionData();
-    res.setInitMoment(LocalDateTime.now());
-    return res;
+    return new SubscriptionData();
   }
 
   @Override
@@ -47,6 +46,26 @@ public class SubscriptionDataServiceImpl implements ISubscriptionDataService {
   @Override
   public void delete(SubscriptionData subscriptionData) {
     this.subscriptionDataRepository.delete(subscriptionData);
+  }
+
+  @Override
+  public SubscriptionData create(SubscriptionType subType, LocalDateTime initMoment) {
+    SubscriptionData res = this.create();
+
+    res.setInitMoment(initMoment);
+    res.setSubscriptionType(subType);
+    switch (subType) {
+      case MONTHLY:
+        res.setFinishMoment(initMoment.plusMonths(1));
+        break;
+      case TRIMESTRAL:
+        res.setFinishMoment(initMoment.plusMonths(3));
+        break;
+      case ANNUAL:
+        res.setFinishMoment(initMoment.plusYears(1));
+        break;
+    }
+    return res;
   }
 
 
