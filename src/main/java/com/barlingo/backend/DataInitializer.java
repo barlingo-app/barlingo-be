@@ -1,5 +1,15 @@
 package com.barlingo.backend;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import com.barlingo.backend.models.entities.Actor;
 import com.barlingo.backend.models.entities.Admin;
 import com.barlingo.backend.models.entities.Configuration;
@@ -25,17 +35,7 @@ import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
 import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.security.UserAccount;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -85,6 +85,7 @@ public class DataInitializer implements CommandLineRunner {
           .timeJoinUserToExchange(10) //
           .timeShowBeforeDiscount(4) //
           .timeShowAfterDiscount(24) //
+          .paypalVendorId("AG3N8JTUR4SNA") //
           .build());
 
       log.info("== Admin ==");
@@ -133,20 +134,20 @@ public class DataInitializer implements CommandLineRunner {
           createSubscriptionData(payData1.getMoment(), SubscriptionType.ANNUAL,
               config.getPriceMonthSubscription()
                   - config.getPriceMonthSubscription() * config.getAnnualDiscount(),
-              payData1, payData1.getMoment().plusMonths(SubscriptionType.ANNUAL.getMonths()));
+              payData1, payData1.getMoment().plusMonths(SubscriptionType.ANNUAL.getType()));
       SubscriptionData subscription2 =
           createSubscriptionData(payData2.getMoment(), SubscriptionType.TRIMESTRAL,
               config.getPriceMonthSubscription()
                   - config.getPriceMonthSubscription() * config.getTrimestralDiscount(),
-              payData2, payData2.getMoment().plusMonths(SubscriptionType.TRIMESTRAL.getMonths()));
+              payData2, payData2.getMoment().plusMonths(SubscriptionType.TRIMESTRAL.getType()));
       SubscriptionData subscription3 =
           createSubscriptionData(payData3.getMoment(), SubscriptionType.ANNUAL,
               config.getPriceMonthSubscription()
                   - config.getPriceMonthSubscription() * config.getAnnualDiscount(),
-              payData3, payData3.getMoment().plusMonths(SubscriptionType.ANNUAL.getMonths()));
+              payData3, payData3.getMoment().plusMonths(SubscriptionType.ANNUAL.getType()));
       SubscriptionData subscription4 = createSubscriptionData(payData4.getMoment(),
           SubscriptionType.MONTHLY, config.getPriceMonthSubscription(), payData4,
-          payData4.getMoment().plusMonths(SubscriptionType.MONTHLY.getMonths()));
+          payData4.getMoment().plusMonths(SubscriptionType.MONTHLY.getType()));
 
       log.info("== Establishments ==");
       Establishment establishment1 = createEstablishment("Ruben", "Rodríguez Pérez", "España",
@@ -208,9 +209,9 @@ public class DataInitializer implements CommandLineRunner {
           createUserDiscount("20190121-WERO", false, false, user3, langExchange3);
 
       log.info("== User Notifications ==");
-      Notification notification = createNotificationList("Alerta Seguridad",
-          "Se ha producido un ataque al sistema", Arrays.asList(user1, user2, user3, user4, user5),
-          user1);
+      Notification notification =
+          createNotificationList("Alerta Seguridad", "Se ha producido un ataque al sistema",
+              Arrays.asList(user1, user2, user3, user4, user5), user1);
 
       log.info("=== Finalize Populate Database ===");
     }

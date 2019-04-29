@@ -6,7 +6,7 @@ public final class RestError {
     throw new IllegalStateException("Utility class");
   }
 
-  //General errors
+  // General errors
   public static final String ANONYMIZE_PROCESS_ERROR = "Anonymize.ProcessError";
 
   // Establishment controller and service errors
@@ -104,6 +104,8 @@ public final class RestError {
       "Establishment.Payment.EstablishmentAlreadyHavesSubscription";
   public static final String ESTABLISHMENT_PAYMENT_ERROR_PROCESING_ORDER =
       "Establishment.Payment.ErrorProcesingOrder";
+  public static final String ESTABLISHMENT_PAYMENT_ERROR_PROCESING_SUBSCRIPTION =
+      "Establishment.Payment.ErrorProcesingSubscription";
   public static final String ESTABLISHMENT_PAYMENT_ORDER_IS_NOT_VALID =
       "Establishment.Payment.OrderIsNotValid";
   public static final String ESTABLISHMENT_PAYMENT_ORDER_BELONGS_TO_ANOTHER_SUBSCRIPTION =

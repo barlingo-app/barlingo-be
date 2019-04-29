@@ -1,5 +1,18 @@
 package com.barlingo.backend.models.services;
 
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import com.barlingo.backend.exception.CustomException;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
@@ -15,19 +28,6 @@ import com.barlingo.backend.security.UserAccountRepository;
 import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 import io.jsonwebtoken.lang.Assert;
-import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 
 @Service
 @Transactional
@@ -66,7 +66,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   @Override
   public Establishment save(Establishment establishment) {
     Establishment saved = this.establishmentRepository.saveAndFlush(establishment);
-    Assert.notNull(saved, RestError.UNSIGNED_ESTABLISHMENT_ERROR_SAVING_ESTABLISHMENT);
+    Assert.notNull(saved, RestError.ESTABLISHMENT_ESTABLISHMENT_ERROR_SAVING_ESTABLISHMENT);
     return saved;
   }
 
@@ -201,8 +201,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
       establishment.getUserAccount().setActive(false);
 
     } catch (NoSuchAlgorithmException e) {
-      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR,
-          HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.save(establishment);
@@ -213,8 +212,8 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
       org.springframework.security.core.userdetails.User principal, Integer establishmentId) {
     InputStream targetStream = null;
 
-    EstablishmentDetailsDTO establishmentDetailsDTO = this.establishmentMapper
-        .establishmentToDto(this.findById(establishmentId));
+    EstablishmentDetailsDTO establishmentDetailsDTO =
+        this.establishmentMapper.establishmentToDto(this.findById(establishmentId));
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
@@ -227,7 +226,8 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
         .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
 
-    EstablishmentExchangesDetailsDTO establishmentExchangesDetailsDTO = new EstablishmentExchangesDetailsDTO();
+    EstablishmentExchangesDetailsDTO establishmentExchangesDetailsDTO =
+        new EstablishmentExchangesDetailsDTO();
     establishmentExchangesDetailsDTO.setEstablishmentDetailsDTO(establishmentDetailsDTO);
     establishmentExchangesDetailsDTO.setLangsExchanges(languageExchangeGenericDTOS);
 

@@ -1,8 +1,6 @@
 package com.barlingo.backend.controllers;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
@@ -14,15 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.entities.PayData;
-import com.barlingo.backend.models.entities.SubscriptionData;
-import com.barlingo.backend.models.entities.SubscriptionType;
 import com.barlingo.backend.models.services.EstablishmentServiceImpl;
-import com.barlingo.backend.models.services.PayDataServiceImpl;
-import com.barlingo.backend.models.services.SubscriptionDataServiceImpl;
 import com.barlingo.backend.payment.PaymentServiceImpl;
 import com.barlingo.backend.utilities.RestError;
-import com.paypal.orders.Order;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -34,12 +26,6 @@ public class PaymentController {
 
   @Autowired
   private EstablishmentServiceImpl establishmentService;
-
-  @Autowired
-  private SubscriptionDataServiceImpl subscriptionDataService;
-
-  @Autowired
-  private PayDataServiceImpl payDataService;
 
   @GetMapping("")
   public String getOrder(@RequestParam("orderId") String orderId) {
@@ -58,76 +44,12 @@ public class PaymentController {
       @RequestParam("orderId") String orderId) {
 
     Establishment establishment;
-    SubscriptionData subscriptionData, subscriptionDataSaved;
-    SubscriptionType subType;
-    PayData payData, payDataSaved;
-    Order paypalOrder;
-    LocalDateTime initMoment, endMoment;
 
     establishment = this.establishmentService.findById(estId);
-    Assert.notNull(establishment, RestError.ESTABLISHMENT_PAYMENT_ESTABLISHMENT_NOT_EXISTS);
-
-    Assert.isNull(establishment.getSubscription(),
-        RestError.ESTABLISHMENT_PAYMENT_ESTABLISHMENT_ALREADY_HAVES_SUBSCRIPTION);
     try {
-      paypalOrder = this.paymentService.getOrder(orderId);
-
-      Assert.isTrue(paypalOrder.status().equals("COMPLETED"),
-          RestError.ESTABLISHMENT_PAYMENT_ERROR_PROCESING_ORDER);
-      Assert.isTrue(paypalOrder.purchaseUnits().get(0).payee().merchantId().equals("AG3N8JTUR4SNA"),
-          RestError.ESTABLISHMENT_PAYMENT_ORDER_IS_NOT_VALID); // Change this when sandbox vendor
-                                                               // change change
-      Assert.isNull(this.payDataService.findByOrderId(orderId),
-          RestError.ESTABLISHMENT_PAYMENT_ORDER_BELONGS_TO_ANOTHER_SUBSCRIPTION);
-
-      payData = this.payDataService.create();
-      payData.setTitle("Paypal Order");
-      payData.setOrderId(paypalOrder.id());
-      payDataSaved = this.payDataService.save(payData);
-      String createdTime = paypalOrder.createTime();
-
-      payData.setMoment(LocalDateTime.now());
-      try {
-        if (createdTime != null)
-          payData
-              .setMoment(LocalDateTime.parse(createdTime.substring(0, createdTime.length() - 1)));
-      } catch (DateTimeParseException pe) {
-        payData.setMoment(LocalDateTime.now());
-      }
-
-      subscriptionData = this.subscriptionDataService.create();
-      subscriptionData.setPaydata(payDataSaved);
-      initMoment = payData.getMoment();
-      switch (paypalOrder.purchaseUnits().get(0).referenceId()) {
-        case "1":
-          subType = SubscriptionType.MONTHLY;
-          endMoment = initMoment.plusMonths(1);
-          break;
-        case "2":
-          subType = SubscriptionType.TRIMESTRAL;
-          endMoment = initMoment.plusMonths(3);
-          break;
-        case "3":
-          subType = SubscriptionType.ANNUAL;
-          endMoment = initMoment.plusMonths(12);
-          break;
-        default:
-          subType = SubscriptionType.MONTHLY;
-          endMoment = initMoment.plusMonths(1);
-      }
-      subscriptionData.setSubscriptionType(subType);
-      subscriptionData.setInitMoment(initMoment);
-      subscriptionData.setFinishMoment(endMoment);
-      subscriptionData
-          .setPrice(Double.valueOf(paypalOrder.purchaseUnits().get(0).amount().value()));
-      subscriptionDataSaved = this.subscriptionDataService.save(subscriptionData);
-
-      establishment.setSubscription(subscriptionDataSaved);
-      Assert.notNull(this.establishmentService.save(establishment),
-          RestError.ESTABLISHMENT_PAYMENT_ERROR_SAVING_ESTABLISHMENT);
-
-    } catch (IOException e) {
-      Assert.isTrue(false, RestError.ESTABLISHMENT_PAYMENT_IO);
+      this.paymentService.createAndSave(establishment, orderId);
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
     }
 
   }

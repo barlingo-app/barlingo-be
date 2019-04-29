@@ -18,6 +18,7 @@ public class PayDataServiceImpl implements IPayDataService {
   public PayData create() {
     PayData res = new PayData();
     res.setMoment(LocalDateTime.now());
+    res.setTitle("PayPal Order");
     res.setPayType("Paypal");
     return res;
   }
@@ -51,6 +52,19 @@ public class PayDataServiceImpl implements IPayDataService {
   public PayData findByOrderId(String orderId) {
     Assert.notNull(orderId, RestError.ESTABLISHMENT_PAYMENT_ORDER_ID_NOT_NULL);
     return this.payDataRepository.findByOrderId(orderId);
+  }
+
+  @Override
+  public PayData create(LocalDateTime createTime, String orderId) {
+    PayData res = this.create();
+
+    if (createTime == null)
+      createTime = LocalDateTime.now();
+
+    res.setMoment(createTime);
+    res.setOrderId(orderId);
+
+    return res;
   }
 
 
