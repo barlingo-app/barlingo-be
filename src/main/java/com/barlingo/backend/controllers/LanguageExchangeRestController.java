@@ -28,7 +28,6 @@ import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
 import com.barlingo.backend.models.services.UserServiceImpl;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController

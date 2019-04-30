@@ -5,7 +5,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import com.barlingo.backend.models.dtos.EstablishmentCreateDTO;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
 import com.barlingo.backend.models.entities.Establishment;
@@ -18,8 +17,6 @@ public interface EstablishmentMapper {
   List<EstablishmentGenericDTO> establishmentsToDtos(Collection<Establishment> establishments);
 
   @Mapping(target = "username", source = "establishment.userAccount.username")
-  EstablishmentCreateDTO establishmentToDto(Establishment establishment);
-  
-  EstablishmentDetailsDTO establishmentToDetailsDto(Establishment establishment);
+  EstablishmentDetailsDTO establishmentToDto(Establishment establishment);
 
 }

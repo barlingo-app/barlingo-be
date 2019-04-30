@@ -79,8 +79,8 @@ public class EstablishmentRestController extends AbstractRestController {
   public ResponseEntity<ResponseBody> show(@PathVariable int estId) {
     ResponseEntity<ResponseBody> result;
     try {
-      EstablishmentDetailsDTO establisment = this.establishmentMapper
-          .establishmentToDetailsDto(this.establishmentService.findById(estId));
+      EstablishmentDetailsDTO establisment =
+          this.establishmentMapper.establishmentToDto(this.establishmentService.findById(estId));
       result = this.createResponse(establisment);
     } catch (Exception e) {
       result = this.createMessageException(e);
@@ -102,7 +102,7 @@ public class EstablishmentRestController extends AbstractRestController {
         if (this.establishmentService.findByUsername(estData.getUsername()) != null) {
           Assert.isTrue(false, RestError.ALL_ESTABLISHMENT_USERNAME_EXISTS);
         }
-        EstablishmentCreateDTO establishment = this.establishmentMapper
+        EstablishmentDetailsDTO establishment = this.establishmentMapper
             .establishmentToDto(this.establishmentService.register(estData));
         result = this.createResponse(establishment);
       } catch (Exception e) {
@@ -123,8 +123,8 @@ public class EstablishmentRestController extends AbstractRestController {
       result = this.createResponse(establishmentData, binding);
     } else {
       try {
-        EstablishmentDetailsDTO establishment = this.establishmentMapper.establishmentToDetailsDto(
-            this.establishmentService.edit(principal, establishmentData));
+        EstablishmentDetailsDTO establishment = this.establishmentMapper
+            .establishmentToDto(this.establishmentService.edit(principal, establishmentData));
         result = this.createResponse(establishment);
       } catch (Exception e) {
         result = this.createMessageException(e);
@@ -148,8 +148,8 @@ public class EstablishmentRestController extends AbstractRestController {
       String image = this.uploadService.copy(file);
       est.setImageProfile(image);
       EstablishmentDetailsDTO establishment =
-          this.establishmentMapper.establishmentToDetailsDto(this.establishmentService
-              .edit(principal, this.establishmentMapper.establishmentToDetailsDto(est)));
+          this.establishmentMapper.establishmentToDto(this.establishmentService.edit(principal,
+              this.establishmentMapper.establishmentToDto(est)));
       result = this.createResponse(establishment);
     } catch (Exception e) {
       result = this.createMessageException(e);

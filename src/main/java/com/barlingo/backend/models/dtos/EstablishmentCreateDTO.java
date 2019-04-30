@@ -11,10 +11,10 @@ import lombok.Data;
 public class EstablishmentCreateDTO {
 
   private Integer id;
-  @NotBlank()
+  @NotBlank 
   @SafeHtml
   private String username;
-  @NotBlank()
+  @NotBlank
   @SafeHtml
   private String password;
   @NotBlank

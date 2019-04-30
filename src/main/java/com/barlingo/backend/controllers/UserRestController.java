@@ -1,22 +1,5 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
-import com.barlingo.backend.models.dtos.UserDetailsDTO;
-import com.barlingo.backend.models.dtos.UserEditDTO;
-import com.barlingo.backend.models.dtos.UserExchangesDetailsDTO;
-import com.barlingo.backend.models.dtos.UserSigninDTO;
-import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
-import com.barlingo.backend.models.mapper.UserAccountMapper;
-import com.barlingo.backend.models.mapper.UserMapper;
-import com.barlingo.backend.models.services.ILanguageExchangeService;
-import com.barlingo.backend.models.services.IUploadFileService;
-import com.barlingo.backend.models.services.IUserService;
-import com.barlingo.backend.security.UserAccountSecurityService;
-import com.barlingo.backend.utilities.ResponseBody;
-import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +8,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -33,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -46,18 +27,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.UserDetailsDTO;
+import com.barlingo.backend.models.dtos.UserEditDTO;
+import com.barlingo.backend.models.dtos.UserSigninDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.mapper.UserAccountMapper;
+import com.barlingo.backend.models.mapper.UserMapper;
+import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.services.IUserService;
+import com.barlingo.backend.security.UserAccountSecurityService;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
+import com.barlingo.backend.utilities.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserRestController {
+public class UserRestController extends AbstractRestController {
 
   @Autowired
   private IUserService userService;
-
-  @Autowired
-  private ILanguageExchangeService languageExchangeService;
 
   @Autowired
   private UserAccountSecurityService userAccountService;
@@ -67,23 +61,41 @@ public class UserRestController {
   private UserMapper userMapper;
   @Autowired
   UserAccountMapper userAccountMapper;
-  @Autowired
-  private LanguageExchangeMapper languageExchangeMapper;
 
   @GetMapping("")
-  public List<UserDetailsDTO> findUser() {
-    List<User> userList = userService.findAll();
-    return this.userMapper.entitysToDetailsDtos(userList);
+  public ResponseEntity<ResponseBody> findUser() {
+    ResponseEntity<ResponseBody> result;
+    try {
+      List<UserDetailsDTO> users = this.userMapper.entitysToDetailsDtos(userService.findAll());
+      result = this.createResponse(users);
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
   @GetMapping("/{id}")
-  public UserDetailsDTO show(@PathVariable Integer id) {
-    return this.userMapper.entityToDetailsDto(this.userService.findById(id));
+  public ResponseEntity<ResponseBody> show(@PathVariable Integer id) {
+    ResponseEntity<ResponseBody> result;
+    try {
+      UserDetailsDTO user = this.userMapper.entityToDetailsDto(this.userService.findById(id));
+      result = this.createResponse(user);
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
   @GetMapping("/username/{username}")
-  public UserDetailsDTO findByUsername(@PathVariable String username) {
-    return this.userMapper.entityToDetailsDto(this.userService.findByUsername(username));
+  public ResponseEntity<ResponseBody> findByUsername(@PathVariable String username) {
+    ResponseEntity<ResponseBody> result;
+    try {
+      result = this.createResponse(
+          this.userMapper.entityToDetailsDto(this.userService.findByUsername(username)));
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
   @PostMapping("/signin")
@@ -115,32 +127,24 @@ public class UserRestController {
 
   @PostMapping(value = "/register")
   public ResponseEntity<ResponseBody> register(
-      @RequestBody(required = false) UserSigninDTO userData, BindingResult binding) {
-    ResponseBody responseBody = new ResponseBody();
+      @Valid @RequestBody(required = false) UserSigninDTO userData, BindingResult binding) {
+    ResponseEntity<ResponseBody> result;
 
-    try {
-      responseBody.setSuccess(false);
-      responseBody.setCode(400);
-
-      if (this.userService.findByUsername(userData.getUsername()) != null) {
-        responseBody.setMessage(RestError.ALL_USER_USERNAME_EXISTS);
-      } else {
-        responseBody.setCode(200);
-        responseBody.setSuccess(true);
-        responseBody.setContent(
-            this.userMapper.entityToDetailsDto(this.userService.register(userData, binding)));
-      }
-    } catch (Exception e) {
-      responseBody.setCode(400);
-      responseBody.setSuccess(false);
-      if (binding.hasErrors()) {
-        responseBody.setValidationErrors(Utils.convertValidationErrors(binding));
-      } else {
-        responseBody.setMessage(e.getMessage());
+    if (binding.hasErrors()) {
+      result = this.createResponse(userData, binding);
+    } else {
+      try {
+        // Check if exist username
+        if (this.userService.findByUsername(userData.getUsername()) != null) {
+          Assert.isTrue(false, RestError.ALL_USER_USERNAME_EXISTS);
+        }
+        UserSigninDTO user = this.userMapper.entityToSigninDTO(this.userService.register(userData));
+        result = this.createResponse(user);
+      } catch (Exception e) {
+        result = this.createMessageException(e);
       }
     }
-
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 
   @PostMapping("/{id}/upload")
@@ -150,26 +154,24 @@ public class UserRestController {
       @PathVariable Integer id,
       @RequestParam(name = "imageType", required = false) String imageType,
       @RequestBody(required = true) MultipartFile file) {
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
 
-    User user = this.userService.findById(id);
-    String image = "";
     try {
-      image = this.uploadService.copy(file);
-    } catch (IOException e) {
-      log.error(e.getMessage());
-    }
-    if (imageType != null && imageType.equals("personal")) {
-      user.setPersonalPic(image);
-    } else {
-      user.setProfileBackPic(image);
-    }
-    responseBody.setCode(200);
-    responseBody.setSuccess(true);
-    responseBody.setContent(this.userMapper.entityToDetailsDto(
-        this.userService.edit(principal, this.userMapper.entityToEditDTO(user))));
+      User user = this.userService.findByUsername(principal.getUsername());
+      String image = this.uploadService.copy(file);
+      if (imageType != null && imageType.equals("personal")) {
+        user.setPersonalPic(image);
+      } else {
+        user.setProfileBackPic(image);
+      }
 
-    return ResponseEntity.ok().body(responseBody);
+      result = this.createResponse(this.userMapper.entityToDetailsDto(
+          this.userService.edit(principal, this.userMapper.entityToEditDTO(user))));
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+
+    }
+    return result;
   }
 
   @GetMapping(value = "/uploads/{filename:.+}")
@@ -202,33 +204,32 @@ public class UserRestController {
   public ResponseEntity<ResponseBody> edit(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @RequestBody @Valid UserEditDTO userData, BindingResult binding) {
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
 
     if (binding.hasErrors()) {
-      responseBody.setCode(400);
-      responseBody.setSuccess(false);
-      responseBody.setValidationErrors(Utils.convertValidationErrors(binding));
+      result = this.createResponse(userData, binding);
     } else {
-      responseBody.setCode(200);
-      responseBody.setSuccess(true);
-      responseBody.setContent(
-          this.userMapper.entityToDetailsDto(this.userService.edit(principal, userData)));
+      try {
+        result = this.createResponse(
+            this.userMapper.entityToDetailsDto(this.userService.edit(principal, userData)));
+      } catch (Exception e) {
+        result = this.createMessageException(e);
+      }
     }
-
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 
   @PostMapping("/{id}/ban")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
   public ResponseEntity<ResponseBody> activateDeactivate(@PathVariable Integer id) {
-    ResponseBody responseBody = new ResponseBody();
-
-    responseBody.setCode(200);
-    responseBody.setSuccess(true);
-    responseBody.setContent(
-        this.userMapper.entityToDetailsDto(this.userService.activateDeactivateUser(id)));
-
-    return ResponseEntity.ok().body(responseBody);
+    ResponseEntity<ResponseBody> result;
+    try {
+      result = this.createResponse(
+          this.userMapper.entityToDetailsDto(this.userService.activateDeactivateUser(id)));
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
   @PostMapping("/{id}/anonymize")
@@ -236,14 +237,14 @@ public class UserRestController {
   public ResponseEntity<ResponseBody> anonymize(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id) {
-    ResponseBody responseBody = new ResponseBody();
-
-    responseBody.setCode(200);
-    responseBody.setSuccess(true);
-    responseBody.setContent(
-        this.userMapper.entityToDetailsDto(this.userService.anonymize(id)));
-
-    return ResponseEntity.ok().body(responseBody);
+    ResponseEntity<ResponseBody> result;
+    try {
+      result =
+          this.createResponse(this.userMapper.entityToDetailsDto(this.userService.anonymize(id)));
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
   @GetMapping("/{id}/download")
@@ -269,7 +270,7 @@ public class UserRestController {
       response.flushBuffer();
 
     } catch (Exception e) {
-      if(e.getMessage().equals(RestError.USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA)){
+      if (e.getMessage().equals(RestError.USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA)) {
         InputStream errorStream = new ByteArrayInputStream("Operation Not Authorized".getBytes());
         // Set the content type and attachment header.
         response.addHeader("Content-disposition", "attachment;filename=notAuthorized.txt");
@@ -279,18 +280,18 @@ public class UserRestController {
           response.flushBuffer();
         } catch (IOException ex) {
           ex.printStackTrace();
-        }finally{
+        } finally {
           try {
-            if(errorStream!=null)
+            if (errorStream != null)
               errorStream.close();
           } catch (IOException ex) {
             ex.printStackTrace();
           }
         }
       }
-    }finally{
+    } finally {
       try {
-        if(targetStream!=null)
+        if (targetStream != null)
           targetStream.close();
       } catch (IOException e) {
         e.printStackTrace();

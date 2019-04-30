@@ -1,6 +1,19 @@
 package com.barlingo.backend.models.services;
 
 
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.barlingo.backend.exception.CustomException;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
@@ -20,20 +33,6 @@ import com.barlingo.backend.security.UserAccountRepository;
 import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 import io.jsonwebtoken.lang.Assert;
-import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
 @Service
 @Transactional
@@ -157,7 +156,7 @@ public class UserServiceImpl implements IUserService {
   }
 
   @Override
-  public User register(UserSigninDTO userData, BindingResult binding) {
+  public User register(UserSigninDTO userData) {
 
     User user = create();
     User saved;

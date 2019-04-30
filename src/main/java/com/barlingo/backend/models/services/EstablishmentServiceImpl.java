@@ -208,7 +208,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     InputStream targetStream = null;
 
     EstablishmentDetailsDTO establishmentDetailsDTO =
-        this.establishmentMapper.establishmentToDetailsDto(this.findById(establishmentId));
+        this.establishmentMapper.establishmentToDto(this.findById(establishmentId));
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {

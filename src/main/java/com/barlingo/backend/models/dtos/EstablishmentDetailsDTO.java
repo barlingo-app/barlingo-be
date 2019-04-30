@@ -11,6 +11,12 @@ import lombok.Data;
 public class EstablishmentDetailsDTO {
 
   private Integer id;
+  @NotBlank 
+  @SafeHtml
+  private String username;
+  @NotBlank
+  @SafeHtml
+  private String password;
   @NotBlank
   @SafeHtml
   private String name;
@@ -23,13 +29,13 @@ public class EstablishmentDetailsDTO {
   @NotBlank
   @SafeHtml
   private String city;
-  @NotBlank
-  @SafeHtml
-  private String establishmentName;
   @Email
   @NotBlank
   @SafeHtml
   private String email;
+  @NotBlank
+  @SafeHtml
+  private String establishmentName;
   @SafeHtml
   private String description;
   @SafeHtml
@@ -40,10 +46,10 @@ public class EstablishmentDetailsDTO {
   private Collection<String> images;
   @SafeHtml
   private String offer;
-//  private SubscriptionData subscription;
+  private SubscriptionData subscription;
+  @NotBlank
   @SafeHtml
   private String workingHours;
 
-//  private UserAccountGenericDTO userAccount;
-
+  private UserAccountGenericDTO userAccount;
 }
