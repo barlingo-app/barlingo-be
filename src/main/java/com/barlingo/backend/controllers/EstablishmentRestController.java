@@ -6,6 +6,7 @@ import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
 import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.validations.EditionValidation;
 import com.barlingo.backend.models.validations.RegisterValidation;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
@@ -110,7 +111,7 @@ public class EstablishmentRestController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
   public ResponseEntity<ResponseBody> edit(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      @RequestBody @Valid EstablishmentDetailsDTO establishmentData, BindingResult binding) {
+      @Validated({EditionValidation.class}) @RequestBody @Valid EstablishmentDetailsDTO establishmentData, BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
 
     if (binding.hasErrors()) {
