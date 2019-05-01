@@ -1,8 +1,10 @@
 package com.barlingo.backend.models.dtos;
 
+import com.barlingo.backend.models.validations.EditionValidation;
 import java.util.Collection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
 import com.barlingo.backend.models.entities.SubscriptionData;
 import com.barlingo.backend.models.validations.RegisterValidation;
@@ -11,34 +13,36 @@ import lombok.Data;
 @Data
 public class EstablishmentDetailsDTO {
 
+  @NotNull(message = "required", groups = {EditionValidation.class})
   private Integer id;
-  @NotBlank(groups = {RegisterValidation.class})
+  @NotBlank(message = "required", groups = {RegisterValidation.class})
   @SafeHtml
   private String username;
-  @NotBlank(groups = {RegisterValidation.class})
+  @NotBlank(message = "required", groups = {RegisterValidation.class})
   @SafeHtml
   private String password;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String name;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String surname;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String country;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String city;
   @Email
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String email;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String establishmentName;
   @SafeHtml
   private String description;
+  @NotBlank(message = "required")
   private String address;
   @SafeHtml
   private String imageProfile;
@@ -46,7 +50,7 @@ public class EstablishmentDetailsDTO {
   @SafeHtml
   private String offer;
   private SubscriptionData subscription;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String workingHours;
 
