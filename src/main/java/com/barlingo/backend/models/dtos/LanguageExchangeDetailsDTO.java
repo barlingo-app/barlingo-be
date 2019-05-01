@@ -1,8 +1,8 @@
 package com.barlingo.backend.models.dtos;
 
-import com.barlingo.backend.models.entities.ExchangeState;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import com.barlingo.backend.models.entities.ExchangeState;
 import lombok.Data;
 
 @Data
@@ -15,6 +15,7 @@ public class LanguageExchangeDetailsDTO {
   private UserDetailsDTO creator;
   private EstablishmentDetailsDTO establishment;
   private ExchangeState exchangeState;
+  private Integer numberMaxParticipants;
   private Collection<String> targetLangs;
   private Collection<ParticipantDTO> participants;
 
