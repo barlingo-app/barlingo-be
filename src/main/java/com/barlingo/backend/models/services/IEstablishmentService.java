@@ -1,12 +1,11 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
-import com.barlingo.backend.models.dtos.UserExchangesDetailsDTO;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.validation.BindingResult;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
 import com.barlingo.backend.models.entities.Establishment;
 
 public interface IEstablishmentService {
@@ -30,8 +29,9 @@ public interface IEstablishmentService {
 
   Establishment activateDeactivateUser(Integer id);
 
-  Establishment anonymize (Integer id);
+  Establishment anonymize(Integer id);
 
-  EstablishmentExchangesDetailsDTO exportData(org.springframework.security.core.userdetails.User principal, Integer userId);
+  EstablishmentExchangesDetailsDTO exportData(
+      org.springframework.security.core.userdetails.User principal, Integer userId);
 
 }
