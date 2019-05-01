@@ -8,7 +8,7 @@ import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.Utils;
 
 @ControllerAdvice
-public class AbstractController {
+public class AbstractRestController {
 
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ResponseBody> createMessageException(Throwable oops) {
