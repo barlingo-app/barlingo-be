@@ -202,7 +202,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
 
     Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
     if (userDiscount.getExchanged() || !userDiscount.getVisible()
-        || userDiscount.getLangExchange().getMoment().plusHours(24).isBefore(LocalDateTime.now())) {
+        || userDiscount.getLangExchange().getMoment().plusHours(48).isBefore(LocalDateTime.now())) {
       return false;
     }
 
