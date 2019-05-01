@@ -156,11 +156,10 @@ public final class RestError {
 
 
   // UserAccount service errors
-  public static final String SIGNED_USERACCOUNT_USERNAME_EMPTY = "Signed.UserAccount.UsernameEmpty";
+  public static final String SIGNED_USERACCOUNT_NOT_NULL = "Signed.UserAccount.NotNull";
   public static final String SIGNED_USERACCOUNT_SECRET_EMPTY = "Signed.UserAccount.SecretEmpty";
   public static final String SIGNED_USERACCOUNT_NOT_EXISTS = "Signed.UserAccount.NotExists";
-  public static final String SIGNED_USERACCOUNT_CANNOT_MODIFY_OTHER_USERS =
-      "Signed.UserAccount.CannotModifyOtherUsers";
+  public static final String SIGNED_USERACCOUNT_ERROR_DECODING = "Signed.UserAccount.ErrorDecoding";
   public static final String SIGNED_USERACCOUNT_ERROR_SAVING_ACCOUNT =
       "Signed.UserAccount.ErrorSavingAccount";
 
