@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -57,9 +56,6 @@ public class EstablishmentRestController {
   private EstablishmentMapper establishmentMapper;
   @Autowired
   private IUploadFileService uploadService;
-
-  @Autowired
-  private ServletContext servletContext;
 
   @GetMapping("")
   public List<EstablishmentGenericDTO> findAllEstablishments(
