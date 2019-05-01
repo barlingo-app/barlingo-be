@@ -16,7 +16,9 @@ public class UserAccountSecurityService implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     final UserAccount user = userAccountRepository.findByUsername(username);
 
-    if (user == null) {
+
+
+    if (user == null || !user.getActive()) {
       throw new UsernameNotFoundException("User '" + username + "' not found");
     }
 
