@@ -1,9 +1,34 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.dtos.UserEditDTO;
-import com.barlingo.backend.models.dtos.UserExchangesDetailsDTO;
 import com.barlingo.backend.models.dtos.UserSigninDTO;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
@@ -17,35 +42,7 @@ import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.util.Assert;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
@@ -240,8 +237,7 @@ public class UserRestController {
 
     responseBody.setCode(200);
     responseBody.setSuccess(true);
-    responseBody.setContent(
-        this.userMapper.entityToDetailsDto(this.userService.anonymize(id)));
+    responseBody.setContent(this.userMapper.entityToDetailsDto(this.userService.anonymize(id)));
 
     return ResponseEntity.ok().body(responseBody);
   }
@@ -269,7 +265,7 @@ public class UserRestController {
       response.flushBuffer();
 
     } catch (Exception e) {
-      if(e.getMessage().equals(RestError.USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA)){
+      if (e.getMessage().equals(RestError.USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA)) {
         InputStream errorStream = new ByteArrayInputStream("Operation Not Authorized".getBytes());
         // Set the content type and attachment header.
         response.addHeader("Content-disposition", "attachment;filename=notAuthorized.txt");
@@ -279,18 +275,18 @@ public class UserRestController {
           response.flushBuffer();
         } catch (IOException ex) {
           ex.printStackTrace();
-        }finally{
+        } finally {
           try {
-            if(errorStream!=null)
+            if (errorStream != null)
               errorStream.close();
           } catch (IOException ex) {
             ex.printStackTrace();
           }
         }
       }
-    }finally{
+    } finally {
       try {
-        if(targetStream!=null)
+        if (targetStream != null)
           targetStream.close();
       } catch (IOException e) {
         e.printStackTrace();

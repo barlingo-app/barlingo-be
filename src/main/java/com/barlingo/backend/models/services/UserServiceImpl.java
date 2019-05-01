@@ -1,6 +1,20 @@
 package com.barlingo.backend.models.services;
 
 
+import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import com.barlingo.backend.exception.CustomException;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
@@ -20,20 +34,6 @@ import com.barlingo.backend.security.UserAccountRepository;
 import com.barlingo.backend.utilities.RestError;
 import com.barlingo.backend.utilities.Utils;
 import io.jsonwebtoken.lang.Assert;
-import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
 @Service
 @Transactional
@@ -205,8 +205,7 @@ public class UserServiceImpl implements IUserService {
       user.getUserAccount().setActive(false);
 
     } catch (NoSuchAlgorithmException e) {
-      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR,
-          HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.save(user);
@@ -217,8 +216,7 @@ public class UserServiceImpl implements IUserService {
       org.springframework.security.core.userdetails.User principal, Integer userId) {
     InputStream targetStream = null;
 
-    UserDetailsDTO userDTO = this.userMapper
-        .entityToDetailsDto(this.findById(userId));
+    UserDetailsDTO userDTO = this.userMapper.entityToDetailsDto(this.findById(userId));
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
@@ -236,7 +234,6 @@ public class UserServiceImpl implements IUserService {
     userExchangesDTO.setLangsExchanges(languageExchangeGenericDTOS);
 
     return userExchangesDTO;
-
   }
 
 }

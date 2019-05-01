@@ -21,7 +21,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -43,6 +42,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
+import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
+import com.barlingo.backend.models.entities.Establishment;
+import com.barlingo.backend.models.mapper.EstablishmentMapper;
+import com.barlingo.backend.models.services.IEstablishmentService;
+import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.validations.RegisterValidation;
+import com.barlingo.backend.utilities.ResponseBody;
+import com.barlingo.backend.utilities.RestError;
+import com.barlingo.backend.utilities.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -220,7 +231,8 @@ public class EstablishmentRestController {
       response.flushBuffer();
 
     } catch (Exception e) {
-      if(e.getMessage().equals(RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA)){
+      if (e.getMessage()
+          .equals(RestError.ESTABLISHMENT_ESTABLISHMENT_CANNOT_ACCESS_OTHER_USERS_DATA)) {
         InputStream errorStream = new ByteArrayInputStream("Operation Not Authorized".getBytes());
         // Set the content type and attachment header.
         response.addHeader("Content-disposition", "attachment;filename=notAuthorized.txt");
@@ -230,18 +242,18 @@ public class EstablishmentRestController {
           response.flushBuffer();
         } catch (IOException ex) {
           ex.printStackTrace();
-        }finally{
+        } finally {
           try {
-            if(errorStream!=null)
+            if (errorStream != null)
               errorStream.close();
           } catch (IOException ex) {
             ex.printStackTrace();
           }
         }
       }
-    }finally{
+    } finally {
       try {
-        if(targetStream!=null)
+        if (targetStream != null)
           targetStream.close();
       } catch (IOException e) {
         e.printStackTrace();
