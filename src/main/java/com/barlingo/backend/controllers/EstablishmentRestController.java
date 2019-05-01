@@ -1,23 +1,12 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
-import com.barlingo.backend.models.entities.Establishment;
-import com.barlingo.backend.models.mapper.EstablishmentMapper;
-import com.barlingo.backend.models.services.IEstablishmentService;
-import com.barlingo.backend.models.services.IUploadFileService;
-import com.barlingo.backend.models.validations.EditionValidation;
-import com.barlingo.backend.models.validations.RegisterValidation;
-import com.barlingo.backend.utilities.ResponseBody;
-import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -48,6 +37,7 @@ import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
 import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.validations.EditionValidation;
 import com.barlingo.backend.models.validations.RegisterValidation;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
@@ -67,6 +57,9 @@ public class EstablishmentRestController {
   private EstablishmentMapper establishmentMapper;
   @Autowired
   private IUploadFileService uploadService;
+
+  @Autowired
+  private ServletContext servletContext;
 
   @GetMapping("")
   public List<EstablishmentGenericDTO> findAllEstablishments(
@@ -122,7 +115,9 @@ public class EstablishmentRestController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
   public ResponseEntity<ResponseBody> edit(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      @Validated({EditionValidation.class}) @RequestBody @Valid EstablishmentDetailsDTO establishmentData, BindingResult binding) {
+      @Validated({
+          EditionValidation.class}) @RequestBody @Valid EstablishmentDetailsDTO establishmentData,
+      BindingResult binding) {
     ResponseBody responseBody = new ResponseBody();
 
     if (binding.hasErrors()) {
@@ -141,7 +136,7 @@ public class EstablishmentRestController {
 
   @PostMapping("/{id}/upload")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
-  public ResponseEntity<ResponseBody> uploadFile(
+  public ResponseEntity<ResponseBody> uploadFile(HttpServletRequest request,
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id,
       @RequestParam(name = "imageType", required = false) String imageType,
@@ -157,7 +152,8 @@ public class EstablishmentRestController {
       log.error(e.getMessage());
     }
 
-    establishment.setImageProfile(image);
+    establishment.setImageProfile(request.getRequestURL().toString().split("establishments")[0]
+        + "establishments/uploads/" + image);
 
     responseBody.setCode(200);
     responseBody.setSuccess(true);

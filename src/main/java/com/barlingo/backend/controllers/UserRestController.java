@@ -142,7 +142,7 @@ public class UserRestController {
 
   @PostMapping("/{id}/upload")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-  public ResponseEntity<ResponseBody> uploadFile(
+  public ResponseEntity<ResponseBody> uploadFile(HttpServletRequest request,
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id,
       @RequestParam(name = "imageType", required = false) String imageType,
@@ -157,9 +157,11 @@ public class UserRestController {
       log.error(e.getMessage());
     }
     if (imageType != null && imageType.equals("personal")) {
-      user.setPersonalPic(image);
+      user.setPersonalPic(
+          request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
     } else {
-      user.setProfileBackPic(image);
+      user.setProfileBackPic(
+          request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
     }
     responseBody.setCode(200);
     responseBody.setSuccess(true);
