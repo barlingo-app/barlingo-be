@@ -1,8 +1,9 @@
 package com.barlingo.backend.security;
 
+import java.io.IOException;
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,22 +53,21 @@ public class UserAccountSecurityService implements UserDetailsService, IUserAcco
 
   @Override
   public void changePassword(org.springframework.security.core.userdetails.User principal,
-      String username, String secret) {
+      String secret) throws IOException {
     UserAccount account;
     UserAccount saved;
 
-    Assert.isTrue(!username.isEmpty(), RestError.SIGNED_USERACCOUNT_USERNAME_EMPTY);
+
+    Assert.notNull(principal, RestError.SIGNED_USERACCOUNT_NOT_NULL);
+    Assert.notNull(secret, RestError.SIGNED_USERACCOUNT_SECRET_EMPTY);
     Assert.isTrue(!secret.isEmpty(), RestError.SIGNED_USERACCOUNT_SECRET_EMPTY);
-    account = this.userAccountRepository.findByUsername(username);
+    account = this.userAccountRepository.findByUsername(principal.getUsername());
     Assert.notNull(account, RestError.SIGNED_USERACCOUNT_NOT_EXISTS);
-
-    for (GrantedAuthority authority : principal.getAuthorities()) {
-      if (!authority.getAuthority().equals("ROLE_ADMIN")) {
-        Assert.isTrue(account.getUsername().equals(principal.getUsername()),
-            RestError.SIGNED_USERACCOUNT_CANNOT_MODIFY_OTHER_USERS);
-      }
+    try {
+      secret = new String(Base64.getDecoder().decode(secret));
+    } catch (Exception e) {
+      throw new IOException(RestError.SIGNED_USERACCOUNT_ERROR_DECODING);
     }
-
     account.setPassword(passwordEncoder.encode(secret));
     saved = this.userAccountRepository.save(account);
     Assert.notNull(saved, RestError.SIGNED_USERACCOUNT_ERROR_SAVING_ACCOUNT);
