@@ -3,45 +3,43 @@ package com.barlingo.backend.models.dtos;
 import java.util.Collection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
 import com.barlingo.backend.models.entities.SubscriptionData;
 import lombok.Data;
 
 @Data
-public class EstablishmentDetailsDTO {
+public class EstablishmentCreateDTO {
 
-  @NotNull(message = "required")
   private Integer id;
-  @NotBlank(message = "required")
+  @NotBlank 
   @SafeHtml
   private String username;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String password;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String name;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String surname;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String country;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String city;
   @Email
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String email;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String establishmentName;
   @SafeHtml
   private String description;
   @SafeHtml
-  @NotBlank(message = "required")
+  @NotBlank
   private String address;
   @SafeHtml
   private String imageProfile;
@@ -49,9 +47,10 @@ public class EstablishmentDetailsDTO {
   @SafeHtml
   private String offer;
   private SubscriptionData subscription;
-  @NotBlank(message = "required")
+  @NotBlank
   @SafeHtml
   private String workingHours;
 
   private UserAccountGenericDTO userAccount;
+
 }

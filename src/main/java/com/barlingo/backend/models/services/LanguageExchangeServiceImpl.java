@@ -89,7 +89,9 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
   @Override
   public LanguageExchange findById(Integer id) {
-    return this.langExchangeRepository.findById(id).orElse(null);
+    LanguageExchange exchange = this.langExchangeRepository.findById(id).orElse(null);
+    Assert.notNull(exchange, "Exchange not exists.");
+    return exchange;
   }
 
   @Override
