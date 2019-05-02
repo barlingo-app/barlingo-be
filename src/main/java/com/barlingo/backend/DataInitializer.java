@@ -2,8 +2,10 @@ package com.barlingo.backend;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,27 +98,32 @@ public class DataInitializer implements CommandLineRunner {
       User user1 = createUser("Cristina Alba", "Kuroiwa", "España", "Sevilla",
           "username1@gmail.com", "username1", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/EKZ9QLRKFC.jpg", LocalDate.of(1993, 8, 27),
+          "https://cdn.stocksnap.io/img-thumbs/280h/EKZ9QLRKFC.jpg",
+          Date.from(LocalDate.of(1993, 8, 27).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en", "de"), "es");
       User user2 = createUser("David", "Rodríguez Pérez", "España", "Sevilla",
           "username2@gmail.com", "username2", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/2SFV3ZUNWZ.jpg", LocalDate.of(1991, 2, 26),
+          "https://cdn.stocksnap.io/img-thumbs/280h/2SFV3ZUNWZ.jpg",
+          Date.from(LocalDate.of(1991, 2, 26).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en", "de"), "es");
       User user3 = createUser("David", "Panadero Molina", "España", "Sevilla",
           "username3@gmail.com", "username3", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/7_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/8BK8Y8YQLH.jpg", LocalDate.of(1990, 2, 26),
+          "https://cdn.stocksnap.io/img-thumbs/280h/8BK8Y8YQLH.jpg",
+          Date.from(LocalDate.of(1990, 2, 26).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en", "de", "fr"), "es");
       User user4 = createUser("Francisco Javier", "Toucedo Campos", "España", "Sevilla",
           "username4@gmail.com", "username4", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/12_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/HWWGZ3RNXT.jpg", LocalDate.of(1991, 7, 12),
+          "https://cdn.stocksnap.io/img-thumbs/280h/HWWGZ3RNXT.jpg",
+          Date.from(LocalDate.of(1991, 7, 12).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en"), "es");
       User user5 = createUser("María", "Muñoz de Burgos", "España", "Sevilla",
           "username5@gmail.com", "username5", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/DHQEELXOQZ.jpg", LocalDate.of(1991, 12, 21),
+          "https://cdn.stocksnap.io/img-thumbs/280h/DHQEELXOQZ.jpg",
+          Date.from(LocalDate.of(1991, 12, 21).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en"), "es");
 
       log.info("== PayData ==");
@@ -237,9 +244,8 @@ public class DataInitializer implements CommandLineRunner {
   }
 
   private User createUser(String name, String surname, String country, String city, String email,
-      String username, String password, String personalPic, String profileBackPic,
-      LocalDate birthday, Collection<String> speakLangs, Collection<String> langsToLearn,
-      String motherTongue) {
+      String username, String password, String personalPic, String profileBackPic, Date birthday,
+      Collection<String> speakLangs, Collection<String> langsToLearn, String motherTongue) {
     User user = new User();
     user.setName(name);
     user.setSurname(surname);

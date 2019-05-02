@@ -1,7 +1,7 @@
 package com.barlingo.backend.models.dtos;
 
-import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.ElementCollection;
 import javax.validation.constraints.Email;
@@ -27,7 +27,7 @@ public class UserEditDTO {
   @Basic
   @NotNull(message = "required")
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate birthdate;
+  private Date birthdate;
   @NotBlank(message = "required")
   private String country;
   @NotBlank(message = "required")

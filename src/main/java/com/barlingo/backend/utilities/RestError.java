@@ -38,8 +38,11 @@ public final class RestError {
       "Establishment.Establishment.UnknownFileType";
   public static final String ESTABLISHMENT_ESTABLISHMENT_VALIDATION_ERRORS =
       "Establishment.Establishment.ValidationErrors";
+  public static final String ESTABLISHMENT_ESTABLISHMENT_SECRET_NOT_EMPTY =
+      "Establishment.Establishment.SecretNotEmpty";
   public static final String SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE =
       "Signed.Establishment.ErrorLoadingImage";
+
 
 
   // User controller and service errors
@@ -56,6 +59,7 @@ public final class RestError {
       "User.User.CannotModifyOtherUsers";
   public static final String USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA =
       "User.User.CannotAccessOtherUsersData";
+  public static final String USER_USER_SECRET_NOT_EMPTY = "User.User.SecretNotEmpty";
 
 
   // Upload file service service errors
@@ -94,7 +98,6 @@ public final class RestError {
 
 
   // Payment controller and service errors
-
   public static final String ESTABLISHMENT_PAYMENT_IO = "Establishment.Payment.IO";
   public static final String ESTABLISHMENT_PAYMENT_ORDER_ID_NOT_NULL =
       "Establishment.Payment.OrderIdNotNull";
@@ -122,7 +125,6 @@ public final class RestError {
       "Establishment.Payment.ErrorPayDataNotNull";
 
   // UserDiscount controller and service errors
-
   public static final String SIGNED_USERDISCOUNT_CODE_NOT_VALID =
       "Signed.UserDiscount.CodeNotValid";
   public static final String SIGNED_USERDISCOUNT_CODE_NOT_EXISTS =
@@ -152,6 +154,14 @@ public final class RestError {
   public static final String ESTABLISHMENT_USERDISCOUNT_ERROR_UPDATING_DISCOUNT =
       "Establishment.UserDiscount.ErrorUpdatingDiscount";
 
+
+  // UserAccount service errors
+  public static final String SIGNED_USERACCOUNT_NOT_NULL = "Signed.UserAccount.NotNull";
+  public static final String SIGNED_USERACCOUNT_SECRET_EMPTY = "Signed.UserAccount.SecretEmpty";
+  public static final String SIGNED_USERACCOUNT_NOT_EXISTS = "Signed.UserAccount.NotExists";
+  public static final String SIGNED_USERACCOUNT_ERROR_DECODING = "Signed.UserAccount.ErrorDecoding";
+  public static final String SIGNED_USERACCOUNT_ERROR_SAVING_ACCOUNT =
+      "Signed.UserAccount.ErrorSavingAccount";
 
 
 }

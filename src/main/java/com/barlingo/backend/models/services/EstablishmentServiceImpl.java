@@ -142,10 +142,22 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setEmail(establishmentData.getEmail());
     establishment.setCity(establishmentData.getCity());
     establishment.setCountry(establishmentData.getCountry());
-    establishment.setWorkingHours(establishmentData.getWorkingHours());
-    establishment.setAddress(establishmentData.getAddress());
-    establishment.setDescription(establishmentData.getDescription());
-    establishment.setOffer(establishmentData.getOffer());
+    establishment.setWorkingHours(
+        establishmentData.getWorkingHours() != null ? establishmentData.getWorkingHours()
+            : establishment.getWorkingHours());
+    establishment.setAddress(establishmentData.getAddress() != null ? establishmentData.getAddress()
+        : establishment.getAddress());
+    establishment.setDescription(
+        establishmentData.getDescription() != null ? establishmentData.getDescription()
+            : establishment.getDescription());
+    establishment.setOffer(establishmentData.getOffer() != null ? establishmentData.getOffer()
+        : establishment.getOffer());
+    establishment.setImageProfile(
+        establishmentData.getImageProfile() != null ? establishmentData.getImageProfile()
+            : establishment.getImageProfile());
+    if (establishmentData.getImages() != null) {
+      establishment.setImages(establishmentData.getImages());
+    }
 
     return save(establishment);
   }

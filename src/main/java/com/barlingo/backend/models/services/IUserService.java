@@ -26,8 +26,9 @@ public interface IUserService {
 
   User activateDeactivateUser(Integer id);
 
-  User anonymize (Integer id);
+  User anonymize(Integer id);
 
-  UserExchangesDetailsDTO exportData (org.springframework.security.core.userdetails.User principal, Integer id);
+  UserExchangesDetailsDTO exportData(org.springframework.security.core.userdetails.User principal,
+      Integer id);
 
 }

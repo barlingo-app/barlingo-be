@@ -145,12 +145,15 @@ public class UserServiceImpl implements IUserService {
     user.setEmail(userData.getEmail());
     user.setCity(userData.getCity());
     user.setCountry(userData.getCountry());
-    user.setAboutMe(userData.getAboutMe());
+    user.setAboutMe(userData.getAboutMe() != null ? userData.getAboutMe() : user.getAboutMe());
     user.setBirthday(userData.getBirthdate());
     user.setSpeakLangs(userData.getSpeakLanguages());
     user.setLangsToLearn(userData.getLearnLanguages());
     user.setMotherTongue(userData.getMotherTongue());
-    user.setPersonalPic(userData.getPersonalPic());
+    user.setPersonalPic(
+        userData.getPersonalPic() != null ? userData.getPersonalPic() : user.getPersonalPic());
+    user.setProfileBackPic(userData.getProfileBackPic() != null ? userData.getProfileBackPic()
+        : user.getProfileBackPic());
 
     return save(user);
   }
@@ -204,8 +207,7 @@ public class UserServiceImpl implements IUserService {
       user.getUserAccount().setActive(false);
 
     } catch (NoSuchAlgorithmException e) {
-      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR,
-          HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new CustomException(RestError.ANONYMIZE_PROCESS_ERROR, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return this.save(user);
@@ -216,8 +218,7 @@ public class UserServiceImpl implements IUserService {
       org.springframework.security.core.userdetails.User principal, Integer userId) {
     InputStream targetStream = null;
 
-    UserDetailsDTO userDTO = this.userMapper
-        .entityToDetailsDto(this.findById(userId));
+    UserDetailsDTO userDTO = this.userMapper.entityToDetailsDto(this.findById(userId));
 
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
@@ -235,7 +236,6 @@ public class UserServiceImpl implements IUserService {
     userExchangesDTO.setLangsExchanges(languageExchangeGenericDTOS);
 
     return userExchangesDTO;
-
   }
 
 }

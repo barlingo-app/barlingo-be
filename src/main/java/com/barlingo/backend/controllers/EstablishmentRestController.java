@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -130,30 +131,35 @@ public class EstablishmentRestController extends AbstractRestController {
         result = this.createMessageException(e);
       }
     }
-
     return result;
   }
 
   @PostMapping("/{id}/upload")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
-  public ResponseEntity<ResponseBody> uploadFile(
+  public ResponseEntity<ResponseBody> uploadFile(HttpServletRequest request,
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id,
-      @RequestParam(name = "imageType", required = false) String imageType,
+      @RequestParam(name = "imageType", required = false,
+          defaultValue = "profile") String imageType,
       @RequestBody(required = true) MultipartFile file) {
     ResponseEntity<ResponseBody> result;
 
     try {
       Establishment est = this.establishmentService.findByUsername(principal.getUsername());
       String image = this.uploadService.copy(file);
-      est.setImageProfile(image);
+      if (imageType.equals("background")) {
+        est.setImages(Arrays.asList(request.getRequestURL().toString().split("establishments")[0]
+            + "establishments/uploads/" + image));
+      } else if (imageType.equals("profile")) {
+        est.setImageProfile(request.getRequestURL().toString().split("establishments")[0]
+            + "establishments/uploads/" + image);
+      }
       EstablishmentDetailsDTO establishment =
           this.establishmentMapper.establishmentToDto(this.establishmentService.edit(principal,
               this.establishmentMapper.establishmentToDto(est)));
       result = this.createResponse(establishment);
     } catch (Exception e) {
       result = this.createMessageException(e);
-
     }
     return result;
   }
@@ -188,14 +194,16 @@ public class EstablishmentRestController extends AbstractRestController {
   public ResponseEntity<ResponseBody> anonymize(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id) {
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
 
-    responseBody.setCode(200);
-    responseBody.setSuccess(true);
-    responseBody.setContent(
-        this.establishmentMapper.establishmentToDto(this.establishmentService.anonymize(id)));
-
-    return ResponseEntity.ok().body(responseBody);
+    try {
+      EstablishmentDetailsDTO establishment =
+          this.establishmentMapper.establishmentToDto(this.establishmentService.anonymize(id));
+      result = this.createResponse(establishment);
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
 

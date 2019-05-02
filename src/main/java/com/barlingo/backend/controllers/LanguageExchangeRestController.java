@@ -94,35 +94,6 @@ public class LanguageExchangeRestController extends AbstractRestController {
     return result;
   }
 
-  // @PutMapping("/{id}")
-  // @ResponseStatus(HttpStatus.CREATED)
-  // public ResponseEntity<ResponseBody> update(
-  // @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-  // @Valid @RequestBody LanguageExchangeCreateDTO exchangeData, BindingResult binding) {
-  // ResponseEntity<ResponseBody> result;
-  // // TODO revisar si el dto cumple con todas las restricciones
-  // if (binding.hasErrors()) {
-  // result = this.createResponse(exchangeData, binding);
-  // } else {
-  // try {
-  // LanguageExchangeCreateDTO exchange = this.langExchangeMapper.entityToDtoCreate(
-  // this.langExchangeService.save(this.langExchangeMapper.dtoCreateToEntity(exchangeData)));
-  // result = this.createResponse(exchange);
-  // } catch (Exception e) {
-  // result = this.createMessageException(e);
-  // }
-  // }
-  // return result;
-  // }
-
-  // @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-  // @ResponseStatus(HttpStatus.NO_CONTENT)
-  // public void delete(@PathVariable Integer id) {
-  // LanguageExchange currentLangExchange = this.langExchangeService.findById(id);
-  // this.langExchangeService.delete(currentLangExchange);
-  // }
-
   @PostMapping("/{languageExchangeId}/join")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
   public ResponseEntity<ResponseBody> joinUser(

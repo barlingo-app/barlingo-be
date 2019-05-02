@@ -1,7 +1,7 @@
 package com.barlingo.backend.models.entities;
 
-import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Basic;
@@ -39,7 +39,7 @@ public class User extends Actor {
   @Basic
   @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private LocalDate birthday;
+  private Date birthday;
 
   @SafeHtml
   private String location;

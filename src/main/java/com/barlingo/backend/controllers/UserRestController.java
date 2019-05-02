@@ -27,11 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.dtos.UserEditDTO;
 import com.barlingo.backend.models.dtos.UserSigninDTO;
-import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.mapper.UserAccountMapper;
 import com.barlingo.backend.models.mapper.UserMapper;
@@ -40,7 +38,6 @@ import com.barlingo.backend.models.services.IUserService;
 import com.barlingo.backend.security.UserAccountSecurityService;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
-import com.barlingo.backend.utilities.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,30 +96,33 @@ public class UserRestController extends AbstractRestController {
   }
 
   @PostMapping("/signin")
-  public String login(//
+  public ResponseEntity<ResponseBody> login(//
       @RequestParam String username, //
       @RequestParam String password) {
-    return userService.login(username, password);
+    ResponseEntity<ResponseBody> result;
+    try {
+      result = this.createResponse(this.userService.login(username, password));
+    } catch (Exception e) {
+      result = this.createMessageException(e);
+    }
+    return result;
   }
 
   @GetMapping("/checkUsername")
   public ResponseEntity<ResponseBody> checkUsername(
       @RequestParam(required = false) String username) {
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
     try {
-      Assert.notNull(username, RestError.ALL_USER_USERNAME_EMPTY);
-      responseBody.setCode(200);
-      responseBody.setSuccess(!this.userAccountService.usernameExists(username));
-      if (!responseBody.getSuccess()) {
-        responseBody.setMessage(RestError.ALL_USER_USERNAME_EXISTS);
+      Boolean usernameExist = this.userAccountService.usernameExists(username);
+      if (usernameExist) {
+        Assert.isTrue(false, RestError.ALL_USER_USERNAME_EXISTS);
       }
+      result = this.createResponse("username.available");
     } catch (Exception e) {
-      responseBody.setSuccess(false);
-      responseBody.setCode(400);
-      responseBody.setMessage(e.getMessage());
+      result = this.createMessageException(e);
     }
 
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 
   @PostMapping(value = "/register")
@@ -149,7 +149,7 @@ public class UserRestController extends AbstractRestController {
 
   @PostMapping("/{id}/upload")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-  public ResponseEntity<ResponseBody> uploadFile(
+  public ResponseEntity<ResponseBody> uploadFile(HttpServletRequest request,
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id,
       @RequestParam(name = "imageType", required = false) String imageType,
@@ -160,9 +160,11 @@ public class UserRestController extends AbstractRestController {
       User user = this.userService.findByUsername(principal.getUsername());
       String image = this.uploadService.copy(file);
       if (imageType != null && imageType.equals("personal")) {
-        user.setPersonalPic(image);
+        user.setPersonalPic(
+            request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
       } else {
-        user.setProfileBackPic(image);
+        user.setProfileBackPic(
+            request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
       }
 
       result = this.createResponse(this.userMapper.entityToDetailsDto(
@@ -171,11 +173,12 @@ public class UserRestController extends AbstractRestController {
       result = this.createMessageException(e);
 
     }
+
     return result;
   }
 
   @GetMapping(value = "/uploads/{filename:.+}")
-  public ResponseEntity<Resource> verFoto(@PathVariable String filename,
+  public ResponseEntity<Resource> seePhoto(@PathVariable String filename,
       HttpServletRequest request) {
 
     Resource resource = null;
