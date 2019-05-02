@@ -2,8 +2,8 @@ package com.barlingo.backend.controllers;
 
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.services.EstablishmentServiceImpl;
 import com.barlingo.backend.payment.PaymentServiceImpl;
+import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
@@ -28,30 +29,41 @@ public class PaymentController {
   private EstablishmentServiceImpl establishmentService;
 
   @GetMapping("")
-  public String getOrder(@RequestParam("orderId") String orderId) {
+  public ResponseEntity<ResponseBody> getOrder(@RequestParam("orderId") String orderId) {
+    ResponseBody responseBody = new ResponseBody();
     String res;
+
     try {
       res = paymentService.getStringOrder(orderId);
+      responseBody.setCode(200);
+      responseBody.setSuccess(true);
+      responseBody.setContent(res);
     } catch (IOException e) {
-      Assert.isTrue(false, RestError.ESTABLISHMENT_PAYMENT_IO);
-      res = e.getMessage();
+      responseBody.setCode(500);
+      responseBody.setSuccess(false);
+      responseBody.setMessage(RestError.ESTABLISHMENT_PAYMENT_IO);
     }
-    return res;
+    return ResponseEntity.ok().body(responseBody);
   }
 
   @PostMapping("")
-  public void createPayment(@RequestParam("estId") Integer estId,
+  public ResponseEntity<ResponseBody> createPayment(@RequestParam("estId") Integer estId,
       @RequestParam("orderId") String orderId) {
-
+    ResponseBody responseBody = new ResponseBody();
     Establishment establishment;
 
     establishment = this.establishmentService.findById(estId);
     try {
       this.paymentService.createAndSave(establishment, orderId);
+      responseBody.setCode(200);
+      responseBody.setSuccess(true);
     } catch (Exception e) {
-      System.err.println(e.getMessage());
+      responseBody.setCode(500);
+      responseBody.setSuccess(false);
+      responseBody.setMessage(e.getMessage());
     }
 
+    return ResponseEntity.ok().body(responseBody);
   }
 
   @PutMapping("")

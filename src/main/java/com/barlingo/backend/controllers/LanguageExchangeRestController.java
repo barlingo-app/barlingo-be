@@ -73,7 +73,8 @@ public class LanguageExchangeRestController {
           this.langExchangeMapper.entitysToDtos(langExchangeService.findByEstId(estId, moment));
     } else
       result = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll(moment));
-
+    if (result.size() > 0)
+      System.out.println("Fecha de la quedada: " + result.get(0).getMoment().toString());
     return result;
   }
 
