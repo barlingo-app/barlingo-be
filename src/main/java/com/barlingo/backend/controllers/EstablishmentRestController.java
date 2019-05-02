@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -135,7 +136,8 @@ public class EstablishmentRestController {
   public ResponseEntity<ResponseBody> uploadFile(HttpServletRequest request,
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @PathVariable Integer id,
-      @RequestParam(name = "imageType", required = false) String imageType,
+      @RequestParam(name = "imageType", required = false,
+          defaultValue = "profile") String imageType,
       @RequestBody(required = true) MultipartFile file) {
     ResponseBody responseBody = new ResponseBody();
 
@@ -148,8 +150,14 @@ public class EstablishmentRestController {
       log.error(e.getMessage());
     }
 
-    establishment.setImageProfile(request.getRequestURL().toString().split("establishments")[0]
-        + "establishments/uploads/" + image);
+    if (imageType.equals("background")) {
+      establishment
+          .setImages(Arrays.asList(request.getRequestURL().toString().split("establishments")[0]
+              + "establishments/uploads/" + image));
+    } else if (imageType.equals("profile")) {
+      establishment.setImageProfile(request.getRequestURL().toString().split("establishments")[0]
+          + "establishments/uploads/" + image);
+    }
 
     responseBody.setCode(200);
     responseBody.setSuccess(true);
