@@ -14,26 +14,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 public class NotificationDTO {
 
-  ////////////////
-  // Attributes //
-  ////////////////
   private Integer id;
-
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String title;
-
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String description;
-
   private Boolean isRead;
-
   @Basic
-  @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
   private LocalDateTime moment;
-
+  @NotNull(message = "required")
   @Enumerated(EnumType.STRING)
   private NotificationPriority priority;
 

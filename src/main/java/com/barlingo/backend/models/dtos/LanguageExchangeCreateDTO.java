@@ -15,23 +15,23 @@ import lombok.Data;
 @Data
 public class LanguageExchangeCreateDTO {
 
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String title;
-  @NotBlank
+  @NotBlank(message = "required")
   @SafeHtml
   private String description;
   @Basic
-  @NotNull
+  @NotNull(message = "required")
   @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
   private LocalDateTime moment;
   private Integer creatorId;
-  @NotNull
+  @NotNull(message = "required")
   private Integer establishmentId;
-  @NotEmpty
+  @NotEmpty(message = "required")
   @ElementCollection
   private Collection<String> targetLangs;
-  @NotNull
+  @NotNull(message = "required")
   @Min(2)
   private Integer numberOfParticipants;
 
