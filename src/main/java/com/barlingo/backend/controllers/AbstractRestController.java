@@ -42,5 +42,4 @@ public class AbstractRestController {
 
     return ResponseEntity.ok(responseBody);
   }
-
 }

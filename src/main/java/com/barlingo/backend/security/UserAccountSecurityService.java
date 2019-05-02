@@ -46,6 +46,7 @@ public class UserAccountSecurityService implements UserDetailsService, IUserAcco
   }
 
   public Boolean usernameExists(String username) {
+    Assert.notNull(username, RestError.ALL_USER_USERNAME_EMPTY);
     final UserAccount user = userAccountRepository.findByUsername(username);
 
     return user != null;

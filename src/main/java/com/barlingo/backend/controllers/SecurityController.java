@@ -16,7 +16,7 @@ import com.barlingo.backend.utilities.ResponseBody;
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/security")
-public class SecurityController {
+public class SecurityController extends AbstractRestController {
 
   @Autowired
   UserAccountSecurityService userAccountSecurityService;
@@ -26,19 +26,15 @@ public class SecurityController {
   public ResponseEntity<ResponseBody> changePassword(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
       @RequestBody(required = true) Map<String, String> secret) {
-
-    ResponseBody responseBody = new ResponseBody();
+    ResponseEntity<ResponseBody> result;
 
     try {
       this.userAccountSecurityService.changePassword(principal, secret.get("secret"));
-      responseBody.setCode(200);
-      responseBody.setSuccess(true);
+      result = this.createResponse("Password.changed");
     } catch (Exception e) {
-      responseBody.setCode(500);
-      responseBody.setSuccess(false);
-      responseBody.setMessage(e.getMessage());
+      result = this.createMessageException(e);
     }
 
-    return ResponseEntity.ok().body(responseBody);
+    return result;
   }
 }

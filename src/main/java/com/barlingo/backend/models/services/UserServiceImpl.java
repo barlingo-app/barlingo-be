@@ -14,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import com.barlingo.backend.exception.CustomException;
 import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
@@ -146,18 +145,21 @@ public class UserServiceImpl implements IUserService {
     user.setEmail(userData.getEmail());
     user.setCity(userData.getCity());
     user.setCountry(userData.getCountry());
-    user.setAboutMe(userData.getAboutMe());
+    user.setAboutMe(userData.getAboutMe() != null ? userData.getAboutMe() : user.getAboutMe());
     user.setBirthday(userData.getBirthdate());
     user.setSpeakLangs(userData.getSpeakLanguages());
     user.setLangsToLearn(userData.getLearnLanguages());
     user.setMotherTongue(userData.getMotherTongue());
-    user.setPersonalPic(userData.getPersonalPic());
+    user.setPersonalPic(
+        userData.getPersonalPic() != null ? userData.getPersonalPic() : user.getPersonalPic());
+    user.setProfileBackPic(userData.getProfileBackPic() != null ? userData.getProfileBackPic()
+        : user.getProfileBackPic());
 
     return save(user);
   }
 
   @Override
-  public User register(UserSigninDTO userData, BindingResult binding) {
+  public User register(UserSigninDTO userData) {
 
     User user = create();
     User saved;

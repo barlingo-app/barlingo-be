@@ -12,7 +12,7 @@ public class Utils {
   public static final Map<String, String> convertValidationErrors(BindingResult binding) {
     Map<String, String> errors = new LinkedHashMap<>();
 
-    binding.getAllErrors().forEach((error) -> {
+    binding.getAllErrors().forEach(error -> {
       String fieldName = ((FieldError) error).getField();
       String errorMessage = error.getDefaultMessage();
       errors.put(fieldName, errorMessage);
