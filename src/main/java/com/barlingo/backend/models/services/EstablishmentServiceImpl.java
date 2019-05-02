@@ -1,5 +1,6 @@
 package com.barlingo.backend.models.services;
 
+import com.barlingo.backend.models.dtos.LanguageExchangeRestrictedDTO;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -235,8 +236,11 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
       }
     }
 
-    List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
-        .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
+//    List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
+//        .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
+
+    List<LanguageExchangeRestrictedDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
+        .entitysToRestrictedDtos(languageExchangeService.findByEstId(establishmentId, null));
 
     EstablishmentExchangesDetailsDTO establishmentExchangesDetailsDTO =
         new EstablishmentExchangesDetailsDTO();

@@ -7,6 +7,6 @@ import lombok.Data;
 public class EstablishmentExchangesDetailsDTO {
 
   private EstablishmentDetailsDTO establishmentDetailsDTO;
-  private Collection<LanguageExchangeGenericDTO> langsExchanges;
+  private Collection<LanguageExchangeRestrictedDTO> langsExchanges;
 
 }
