@@ -136,6 +136,8 @@ public final class RestError {
       "Signed.UserDiscount.UserDiscountNotNull";
   public static final String SIGNED_USERDISCOUNT_ESTABLISHMENT_NOT_NULL =
       "Signed.UserDiscount.EstablishmentNotNull";
+  public static final String SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN =
+      "Signed.UserDiscount.AccessForbidden";
   public static final String SIGNED_USERDISCOUNT_NOT_VISIBLE = "Signed.UserDiscount.NotVisible";
   public static final String SIGNED_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_NULL =
       "Signed.UserDiscount.LanguageExchangeNotNull";

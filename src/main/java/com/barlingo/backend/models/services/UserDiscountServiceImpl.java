@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
@@ -24,6 +26,8 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   private IUserService userService;
   @Autowired
   private ILanguageExchangeService languageExchangeService;
+  @Autowired
+  private IEstablishmentService establishmentService;
 
   @Override
   public List<UserDiscount> findAll() {
@@ -97,26 +101,41 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   }
 
   @Override
-  public UserDiscount findByLangExchangeId(Integer userId, Integer langExchangeId) {
+  public UserDiscount findByLangExchangeId(
+      org.springframework.security.core.userdetails.User principal, Integer userId,
+      Integer langExchangeId) throws Exception {
     UserDiscount udSaved = null;
-    // TODO: Catch principal
-    // User user = this.userService.findByPrincipal();
+    LanguageExchange exchange;
+    Actor current;
+    Assert.notNull(userId, RestError.SIGNED_USERDISCOUNT_USER_NOT_NULL);
+    Assert.notNull(langExchangeId, RestError.SIGNED_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_NULL);
+    current = this.userService.findByUsername(principal.getUsername());
+    if (current == null)
+      current = this.establishmentService.findByUsername(principal.getUsername());
+
+    exchange = this.languageExchangeService.findById(langExchangeId);
+    Assert.notNull(exchange, RestError.SIGNED_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_NULL);
+
+    if (current.getId() != userId && current.getId() != exchange.getEstablishment().getId())
+      throw new Exception(RestError.SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN);
+
     User user = this.userService.findById(userId);
     Assert.notNull(user, RestError.SIGNED_USERDISCOUNT_USER_NOT_NULL);
-    // Assert.isTrue(this.userService.findById(1).getLangsExchange().contains(
-    // this.languageExchangeService.findById(langExchangeId)),
-    // USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+
 
     UserDiscount ud =
         this.userDiscountRepository.findByUserIdAndLangExchangeId(userId, langExchangeId);
+    Assert.notNull(ud, RestError.SIGNED_USERDISCOUNT_USERDISCOUNT_NOT_NULL);
     // Refresh isVisible 4hours before that languageExchange
-    if (ud.getLangExchange().getMoment().minusSeconds(14400).isBefore(LocalDateTime.now())
-        && ud.getLangExchange().getMoment().plusSeconds(86400).isAfter(LocalDateTime.now())) {
+    if (ud.getLangExchange().getMoment().minusHours(4).isBefore(LocalDateTime.now())
+        && ud.getLangExchange().getMoment().plusHours(48).isAfter(LocalDateTime.now())) {
       ud.setVisible(true);
       udSaved = this.userDiscountRepository.save(ud);
+      Assert.notNull(udSaved, RestError.SIGNED_USERDISCOUNT_ERROR_SAVING_DISCOUNT);
     } else if (ud.getVisible()) {
       ud.setVisible(false);
       udSaved = this.userDiscountRepository.save(ud);
+      Assert.notNull(udSaved, RestError.SIGNED_USERDISCOUNT_ERROR_SAVING_DISCOUNT);
     }
 
     // Restrictions
@@ -132,12 +151,13 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
    * @return saved UserDiscount updated with attrib exchanged set to true
    */
   @Override
-  public UserDiscount redeem(UserDiscount userDiscount) {
+  public UserDiscount redeem(org.springframework.security.core.userdetails.User principal,
+      UserDiscount userDiscount) {
     UserDiscount saved;
 
     Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
         RestError.ESTABLISHMENT_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_STARTED_YET);
-    Assert.isTrue(this.isValid(userDiscount),
+    Assert.isTrue(this.isValid(principal, userDiscount),
         RestError.ESTABLISHMENT_USERDISCOUNT_CANNOT_BE_EXCHANGED);
     userDiscount.setExchanged(true);
     saved = this.save(userDiscount);
@@ -198,15 +218,28 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
    * @return True if the discount code is valid, False in other case
    */
   @Override
-  public Boolean isValid(UserDiscount userDiscount) {
+  public Boolean isValid(org.springframework.security.core.userdetails.User principal,
+      UserDiscount userDiscount) {
+    Actor current;
 
     Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
+
+    current = this.userService.findByUsername(principal.getUsername());
+    if (current != null) {
+      Assert.isTrue(userDiscount.getLangExchange().getParticipants().contains(current),
+          RestError.SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN);
+    } else {
+      current = this.establishmentService.findByUsername(principal.getUsername());
+      Assert.isTrue(userDiscount.getLangExchange().getEstablishment().equals(current),
+          RestError.SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN);
+    }
+
     if (userDiscount.getExchanged() || !userDiscount.getVisible()
         || userDiscount.getLangExchange().getMoment().plusHours(48).isBefore(LocalDateTime.now())) {
       return false;
     }
 
     return true;
-  }
 
+  }
 }
