@@ -140,6 +140,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
 
     establishment.setEstablishmentName(establishmentData.getEstablishmentName());
     establishment.setName(establishmentData.getName());
+    establishment.setSurname(establishmentData.getSurname());
     establishment.setEmail(establishmentData.getEmail());
     establishment.setCity(establishmentData.getCity());
     establishment.setCountry(establishmentData.getCountry());

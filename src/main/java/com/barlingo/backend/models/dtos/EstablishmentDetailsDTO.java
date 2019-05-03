@@ -1,5 +1,7 @@
 package com.barlingo.backend.models.dtos;
 
+import com.barlingo.backend.models.validations.EditionValidation;
+import com.barlingo.backend.models.validations.RegisterValidation;
 import java.util.Collection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,13 +12,12 @@ import lombok.Data;
 
 @Data
 public class EstablishmentDetailsDTO {
-
-  @NotNull(message = "required")
+  @NotNull(message = "required", groups = {EditionValidation.class})
   private Integer id;
-  @NotBlank(message = "required")
+  @NotBlank(message = "required", groups = {RegisterValidation.class})
   @SafeHtml
   private String username;
-  @NotBlank(message = "required")
+  @NotBlank(message = "required", groups = {RegisterValidation.class})
   @SafeHtml
   private String password;
   @NotBlank(message = "required")

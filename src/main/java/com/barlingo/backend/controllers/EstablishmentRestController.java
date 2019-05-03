@@ -1,5 +1,7 @@
 package com.barlingo.backend.controllers;
 
+import com.barlingo.backend.models.validations.EditionValidation;
+import com.barlingo.backend.models.validations.RegisterValidation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +12,7 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -20,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -117,7 +121,7 @@ public class EstablishmentRestController extends AbstractRestController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
   public ResponseEntity<ResponseBody> edit(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      @RequestBody @Valid EstablishmentDetailsDTO establishmentData, BindingResult binding) {
+      @Validated({EditionValidation.class, Default.class}) @RequestBody EstablishmentDetailsDTO establishmentData, BindingResult binding) {
     ResponseEntity<ResponseBody> result;
 
     if (binding.hasErrors()) {
