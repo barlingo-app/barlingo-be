@@ -175,7 +175,14 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   @Override
   public List<Establishment> findByDateGreater(LocalDateTime date) {
     Assert.notNull(date);
-    return this.establishmentRepository.findByDateGreater(date);
+    List<Establishment> establishments = this.establishmentRepository.findByDateGreater(date);
+
+    for (Establishment est : establishments) {
+      if (!est.getUserAccount().getActive()) {
+        establishments.remove(est);
+      }
+    }
+    return establishments;
   }
 
   @Override
