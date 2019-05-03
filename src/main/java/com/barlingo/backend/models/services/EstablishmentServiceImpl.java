@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.dtos.LanguageExchangeRestrictedDTO;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -13,10 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.barlingo.backend.exception.CustomException;
-import com.barlingo.backend.models.dtos.EstablishmentCreateDTO;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
-import com.barlingo.backend.models.dtos.LanguageExchangeGenericDTO;
+import com.barlingo.backend.models.dtos.LanguageExchangeRestrictedDTO;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.Role;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
@@ -90,7 +88,7 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   }
 
   @Override
-  public Establishment register(EstablishmentCreateDTO establishmentData) {
+  public Establishment register(EstablishmentDetailsDTO establishmentData) {
 
     Establishment establishment = create();
 
@@ -232,8 +230,8 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
       }
     }
 
-//    List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
-//        .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
+    // List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
+    // .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
 
     List<LanguageExchangeRestrictedDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
         .entitysToRestrictedDtos(languageExchangeService.findByEstId(establishmentId, null));
