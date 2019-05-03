@@ -166,6 +166,10 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
     return saved;
   }
 
+  @Override
+  public void delete(UserDiscount discount) {
+    this.userDiscountRepository.delete(discount);
+  }
 
   ///////////////////////
   // Auxiliary Methods //
