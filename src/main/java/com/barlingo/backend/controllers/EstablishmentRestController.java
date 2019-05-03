@@ -1,7 +1,5 @@
 package com.barlingo.backend.controllers;
 
-import com.barlingo.backend.models.validations.EditionValidation;
-import com.barlingo.backend.models.validations.RegisterValidation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import javax.validation.groups.Default;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.barlingo.backend.models.dtos.EstablishmentCreateDTO;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentGenericDTO;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.mapper.EstablishmentMapper;
 import com.barlingo.backend.models.services.IEstablishmentService;
 import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.validations.EditionValidation;
+import com.barlingo.backend.models.validations.RegisterValidation;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.RestError;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -95,8 +93,8 @@ public class EstablishmentRestController extends AbstractRestController {
   }
 
   @PostMapping("")
-  public ResponseEntity<ResponseBody> register(@Valid @RequestBody EstablishmentCreateDTO estData,
-      BindingResult binding) {
+  public ResponseEntity<ResponseBody> register(@Validated({RegisterValidation.class}) @RequestBody(
+      required = false) EstablishmentDetailsDTO estData, BindingResult binding) {
     ResponseEntity<ResponseBody> result;
 
     if (binding.hasErrors()) {
@@ -121,7 +119,9 @@ public class EstablishmentRestController extends AbstractRestController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ESTABLISHMENT')")
   public ResponseEntity<ResponseBody> edit(
       @AuthenticationPrincipal org.springframework.security.core.userdetails.User principal,
-      @Validated({EditionValidation.class, Default.class}) @RequestBody EstablishmentDetailsDTO establishmentData, BindingResult binding) {
+      @Validated({EditionValidation.class,
+          Default.class}) @RequestBody EstablishmentDetailsDTO establishmentData,
+      BindingResult binding) {
     ResponseEntity<ResponseBody> result;
 
     if (binding.hasErrors()) {

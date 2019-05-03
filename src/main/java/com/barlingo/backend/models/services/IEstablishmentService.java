@@ -3,7 +3,6 @@ package com.barlingo.backend.models.services;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import com.barlingo.backend.models.dtos.EstablishmentCreateDTO;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
 import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
 import com.barlingo.backend.models.entities.Establishment;
@@ -20,7 +19,7 @@ public interface IEstablishmentService {
 
   Establishment findByUsername(String username);
 
-  Establishment register(EstablishmentCreateDTO establishmentData);
+  Establishment register(EstablishmentDetailsDTO establishmentData);
 
   Establishment edit(org.springframework.security.core.userdetails.User principal,
       EstablishmentDetailsDTO userData);
