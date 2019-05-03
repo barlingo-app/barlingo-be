@@ -180,8 +180,18 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
       participants.remove(this.userService.save(user));
       langExchange.setParticipants(participants);
 
-      // Generate new code to new participant
-      this.userDiscountService.createAndSave(userId, languageExchangeId);
+      // Delete new code to new participant
+      try {
+        Collection<UserDiscount> discounts = this.userDiscountService.findAll();
+        for (UserDiscount discount : discounts) {
+          if (discount.getUser().getId() == userId
+              && discount.getLangExchange().getId() == langExchange.getId()) {
+            this.userDiscountService.delete(discount);
+          }
+        }
+      } catch (Exception e) {
+        Assert.isTrue(false, RestError.SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN);
+      }
     }
     langExchangeSaved = this.save(langExchange);
 

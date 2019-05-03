@@ -22,4 +22,6 @@ public interface IUserDiscountService {
   UserDiscount redeem(org.springframework.security.core.userdetails.User principal,
       UserDiscount userDiscount);
 
+  void delete(UserDiscount discount);
+
 }
