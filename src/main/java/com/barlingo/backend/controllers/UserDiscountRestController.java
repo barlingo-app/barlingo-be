@@ -58,11 +58,12 @@ public class UserDiscountRestController extends AbstractRestController {
             current = this.establishmentService.findByUsername(principal.getUsername());
             Assert.isTrue(userDiscount.getLangExchange().getEstablishment().equals(current),
                 RestError.SIGNED_USERDISCOUNT_CODE_BELONG_OTHER_ESTABLISHMENT);
-            Assert.isTrue(this.userDiscountService.isValid(userDiscount),
+            Assert.isTrue(this.userDiscountService.isValid(principal, userDiscount),
                 RestError.SIGNED_USERDISCOUNT_CODE_NOT_VALID);
           }
         } else {
-          userDiscount = this.userDiscountService.findByLangExchangeId(userId, langExchangeId);
+          userDiscount =
+              this.userDiscountService.findByLangExchangeId(principal, userId, langExchangeId);
         }
         Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
         discountList.add(userDiscount);
@@ -90,7 +91,7 @@ public class UserDiscountRestController extends AbstractRestController {
       Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
       Assert.isTrue(userDiscount.getLangExchange().getEstablishment().equals(current),
           RestError.SIGNED_USERDISCOUNT_CODE_BELONG_OTHER_ESTABLISHMENT);
-      saved = this.userDiscountService.redeem(userDiscount);
+      saved = this.userDiscountService.redeem(principal, userDiscount);
 
       result = this.createResponse(this.userDiscountMapper.entityToDto(saved));
     } catch (Exception e) {
