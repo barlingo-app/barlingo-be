@@ -1,7 +1,7 @@
 package com.barlingo.backend.models.services;
 
-import com.barlingo.backend.models.entities.UserDiscount;
 import java.util.List;
+import com.barlingo.backend.models.entities.UserDiscount;
 
 public interface IUserDiscountService {
 
@@ -11,12 +11,17 @@ public interface IUserDiscountService {
 
   UserDiscount findByCode(String code);
 
-  UserDiscount findByLangExchangeId(Integer userId, Integer langExchangeId);
+  UserDiscount findByLangExchangeId(org.springframework.security.core.userdetails.User principal,
+      Integer userId, Integer langExchangeId) throws Exception;
 
   UserDiscount save(UserDiscount userDiscount);
 
-  Boolean isValid(UserDiscount userDiscount);
+  Boolean isValid(org.springframework.security.core.userdetails.User principal,
+      UserDiscount userDiscount);
 
-  UserDiscount redeem(UserDiscount userDiscount);
+  UserDiscount redeem(org.springframework.security.core.userdetails.User principal,
+      UserDiscount userDiscount);
+
+  void delete(UserDiscount discount);
 
 }

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import com.barlingo.backend.models.entities.SubscriptionData;
+import com.barlingo.backend.models.entities.SubscriptionType;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
+import com.barlingo.backend.utilities.RestError;
 
 @Service
 @Transactional
@@ -18,9 +20,7 @@ public class SubscriptionDataServiceImpl implements ISubscriptionDataService {
 
   @Override
   public SubscriptionData create() {
-    SubscriptionData res = new SubscriptionData();
-    res.setInitMoment(LocalDateTime.now());
-    return res;
+    return new SubscriptionData();
   }
 
   @Override
@@ -32,9 +32,9 @@ public class SubscriptionDataServiceImpl implements ISubscriptionDataService {
   public SubscriptionData save(SubscriptionData subscriptionData) {
     SubscriptionData saved;
 
-    Assert.notNull(subscriptionData.getPaydata(), "paydata cannot be null");
+    Assert.notNull(subscriptionData.getPaydata(), RestError.ESTABLISHMENT_PAYMENT_PAYDATA_NOT_NULL);
     saved = subscriptionDataRepository.save(subscriptionData);
-    Assert.notNull(saved, "subscription data cannot be null");
+    Assert.notNull(saved, RestError.ESTABLISHMENT_PAYMENT_ERROR_SAVING_SUBSCRIPTION_DATA);
     return saved;
   }
 
@@ -46,6 +46,26 @@ public class SubscriptionDataServiceImpl implements ISubscriptionDataService {
   @Override
   public void delete(SubscriptionData subscriptionData) {
     this.subscriptionDataRepository.delete(subscriptionData);
+  }
+
+  @Override
+  public SubscriptionData create(SubscriptionType subType, LocalDateTime initMoment) {
+    SubscriptionData res = this.create();
+
+    res.setInitMoment(initMoment);
+    res.setSubscriptionType(subType);
+    switch (subType) {
+      case MONTHLY:
+        res.setFinishMoment(initMoment.plusMonths(1));
+        break;
+      case TRIMESTRAL:
+        res.setFinishMoment(initMoment.plusMonths(3));
+        break;
+      case ANNUAL:
+        res.setFinishMoment(initMoment.plusYears(1));
+        break;
+    }
+    return res;
   }
 
 

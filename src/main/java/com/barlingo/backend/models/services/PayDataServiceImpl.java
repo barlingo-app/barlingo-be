@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.barlingo.backend.models.entities.PayData;
 import com.barlingo.backend.models.repositories.PayDataRepository;
+import com.barlingo.backend.utilities.RestError;
 import io.jsonwebtoken.lang.Assert;
 
 @Service
@@ -17,6 +18,7 @@ public class PayDataServiceImpl implements IPayDataService {
   public PayData create() {
     PayData res = new PayData();
     res.setMoment(LocalDateTime.now());
+    res.setTitle("PayPal Order");
     res.setPayType("Paypal");
     return res;
   }
@@ -32,7 +34,7 @@ public class PayDataServiceImpl implements IPayDataService {
   @Override
   public PayData save(PayData payData) {
     PayData save = this.payDataRepository.save(payData);
-    Assert.notNull(save);
+    Assert.notNull(save, RestError.ESTABLISHMENT_PAYMENT_ERROR_SAVING_PAYDATA);
     return save;
   }
 
@@ -48,8 +50,21 @@ public class PayDataServiceImpl implements IPayDataService {
 
   @Override
   public PayData findByOrderId(String orderId) {
-    Assert.notNull(orderId);
+    Assert.notNull(orderId, RestError.ESTABLISHMENT_PAYMENT_ORDER_ID_NOT_NULL);
     return this.payDataRepository.findByOrderId(orderId);
+  }
+
+  @Override
+  public PayData create(LocalDateTime createTime, String orderId) {
+    PayData res = this.create();
+
+    if (createTime == null)
+      createTime = LocalDateTime.now();
+
+    res.setMoment(createTime);
+    res.setOrderId(orderId);
+
+    return res;
   }
 
 

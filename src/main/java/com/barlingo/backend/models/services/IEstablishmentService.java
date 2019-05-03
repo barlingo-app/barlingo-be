@@ -3,9 +3,8 @@ package com.barlingo.backend.models.services;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.validation.BindingResult;
 import com.barlingo.backend.models.dtos.EstablishmentDetailsDTO;
-import com.barlingo.backend.models.entities.Actor;
+import com.barlingo.backend.models.dtos.EstablishmentExchangesDetailsDTO;
 import com.barlingo.backend.models.entities.Establishment;
 
 public interface IEstablishmentService {
@@ -18,9 +17,9 @@ public interface IEstablishmentService {
 
   void delete(Establishment establishment);
 
-  Actor findByUsername(String username);
+  Establishment findByUsername(String username);
 
-  Establishment register(EstablishmentDetailsDTO establishmentData, BindingResult binding);
+  Establishment register(EstablishmentDetailsDTO establishmentData);
 
   Establishment edit(org.springframework.security.core.userdetails.User principal,
       EstablishmentDetailsDTO userData);
@@ -28,5 +27,10 @@ public interface IEstablishmentService {
   List<Establishment> findByDateGreater(LocalDateTime date);
 
   Establishment activateDeactivateUser(Integer id);
+
+  Establishment anonymize(Integer id);
+
+  EstablishmentExchangesDetailsDTO exportData(
+      org.springframework.security.core.userdetails.User principal, Integer userId);
 
 }

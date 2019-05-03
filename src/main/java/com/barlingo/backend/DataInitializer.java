@@ -2,18 +2,24 @@ package com.barlingo.backend;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import com.barlingo.backend.models.entities.Actor;
 import com.barlingo.backend.models.entities.Admin;
 import com.barlingo.backend.models.entities.Configuration;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.LanguageExchange;
+import com.barlingo.backend.models.entities.Notification;
+import com.barlingo.backend.models.entities.NotificationPriority;
 import com.barlingo.backend.models.entities.PayData;
 import com.barlingo.backend.models.entities.Role;
 import com.barlingo.backend.models.entities.SubscriptionData;
@@ -24,6 +30,7 @@ import com.barlingo.backend.models.repositories.AdminRepository;
 import com.barlingo.backend.models.repositories.ConfigurationRepository;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
+import com.barlingo.backend.models.repositories.NotificationRepository;
 import com.barlingo.backend.models.repositories.PayDataRepository;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
@@ -54,6 +61,10 @@ public class DataInitializer implements CommandLineRunner {
   LanguageExchangeRepository languageExchangeRepository;
   @Autowired
   UserDiscountRepository userDiscountRepository;
+
+  @Autowired
+  NotificationRepository notificationRepository;
+
   @Autowired
   PasswordEncoder passwordEncoder;
   @Autowired
@@ -76,6 +87,7 @@ public class DataInitializer implements CommandLineRunner {
           .timeJoinUserToExchange(10) //
           .timeShowBeforeDiscount(4) //
           .timeShowAfterDiscount(24) //
+          .paypalVendorId("AG3N8JTUR4SNA") //
           .build());
 
       log.info("== Admin ==");
@@ -86,27 +98,32 @@ public class DataInitializer implements CommandLineRunner {
       User user1 = createUser("Cristina Alba", "Kuroiwa", "España", "Sevilla",
           "username1@gmail.com", "username1", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/EKZ9QLRKFC.jpg", LocalDate.of(1993, 8, 27),
+          "https://cdn.stocksnap.io/img-thumbs/280h/EKZ9QLRKFC.jpg",
+          Date.from(LocalDate.of(1993, 8, 27).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en", "de"), "es");
       User user2 = createUser("David", "Rodríguez Pérez", "España", "Sevilla",
           "username2@gmail.com", "username2", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/10_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/2SFV3ZUNWZ.jpg", LocalDate.of(1991, 2, 26),
+          "https://cdn.stocksnap.io/img-thumbs/280h/2SFV3ZUNWZ.jpg",
+          Date.from(LocalDate.of(1991, 2, 26).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en", "de"), "es");
       User user3 = createUser("David", "Panadero Molina", "España", "Sevilla",
           "username3@gmail.com", "username3", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/7_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/8BK8Y8YQLH.jpg", LocalDate.of(1990, 2, 26),
+          "https://cdn.stocksnap.io/img-thumbs/280h/8BK8Y8YQLH.jpg",
+          Date.from(LocalDate.of(1990, 2, 26).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en", "de", "fr"), "es");
       User user4 = createUser("Francisco Javier", "Toucedo Campos", "España", "Sevilla",
           "username4@gmail.com", "username4", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/12_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/HWWGZ3RNXT.jpg", LocalDate.of(1991, 7, 12),
+          "https://cdn.stocksnap.io/img-thumbs/280h/HWWGZ3RNXT.jpg",
+          Date.from(LocalDate.of(1991, 7, 12).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en"), "es");
       User user5 = createUser("María", "Muñoz de Burgos", "España", "Sevilla",
           "username5@gmail.com", "username5", "username",
           "https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/3_avatar-128.png",
-          "https://cdn.stocksnap.io/img-thumbs/280h/DHQEELXOQZ.jpg", LocalDate.of(1991, 12, 21),
+          "https://cdn.stocksnap.io/img-thumbs/280h/DHQEELXOQZ.jpg",
+          Date.from(LocalDate.of(1991, 12, 21).atStartOfDay(ZoneId.of("UTC")).toInstant()),
           Arrays.asList("es"), Arrays.asList("en"), "es");
 
       log.info("== PayData ==");
@@ -124,20 +141,20 @@ public class DataInitializer implements CommandLineRunner {
           createSubscriptionData(payData1.getMoment(), SubscriptionType.ANNUAL,
               config.getPriceMonthSubscription()
                   - config.getPriceMonthSubscription() * config.getAnnualDiscount(),
-              payData1, payData1.getMoment().plusMonths(SubscriptionType.ANNUAL.getMonths()));
+              payData1, payData1.getMoment().plusMonths(SubscriptionType.ANNUAL.getType()));
       SubscriptionData subscription2 =
           createSubscriptionData(payData2.getMoment(), SubscriptionType.TRIMESTRAL,
               config.getPriceMonthSubscription()
                   - config.getPriceMonthSubscription() * config.getTrimestralDiscount(),
-              payData2, payData2.getMoment().plusMonths(SubscriptionType.TRIMESTRAL.getMonths()));
+              payData2, payData2.getMoment().plusMonths(SubscriptionType.TRIMESTRAL.getType()));
       SubscriptionData subscription3 =
           createSubscriptionData(payData3.getMoment(), SubscriptionType.ANNUAL,
               config.getPriceMonthSubscription()
                   - config.getPriceMonthSubscription() * config.getAnnualDiscount(),
-              payData3, payData3.getMoment().plusMonths(SubscriptionType.ANNUAL.getMonths()));
+              payData3, payData3.getMoment().plusMonths(SubscriptionType.ANNUAL.getType()));
       SubscriptionData subscription4 = createSubscriptionData(payData4.getMoment(),
           SubscriptionType.MONTHLY, config.getPriceMonthSubscription(), payData4,
-          payData4.getMoment().plusMonths(SubscriptionType.MONTHLY.getMonths()));
+          payData4.getMoment().plusMonths(SubscriptionType.MONTHLY.getType()));
 
       log.info("== Establishments ==");
       Establishment establishment1 = createEstablishment("Ruben", "Rodríguez Pérez", "España",
@@ -146,27 +163,31 @@ public class DataInitializer implements CommandLineRunner {
           Arrays
               .asList("https://media-cdn.tripadvisor.com/media/photo-f/16/5e/b9/05/photo0jpg.jpg"),
           "https://media-cdn.tripadvisor.com/media/photo-f/16/5e/b9/05/photo0jpg.jpg",
-          "06:00 - 00:00", "Cerveceza y tapa 1.50€", subscription1);
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00",
+          "Cerveceza y tapa 1.50€", subscription1);
       Establishment establishment2 = createEstablishment("Juan Miguel", "Luza León", "España",
           "Sevilla", "establishment2@gmail.com", "establishment2", "establishment",
           "Ronda el Alamillo", "Ronda el Alamillo",
           Arrays
               .asList("https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024"),
           "https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024",
-          "06:00 - 00:00", "Cerveceza 0.90€", subscription2);
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
+          subscription2);
       Establishment establishment3 = createEstablishment("Evaristo", "Ramírez Calvo", "España",
           "Sevilla", "establishment1@gmail.com", "establishment3", "establishment",
           "MONTECRISTO TERRAZA-BAR", "Calle Albareda, 16",
           Arrays.asList("http://media.tilllate.es/images/locations/ri_locbild1439178.jpg"),
-          "http://media.tilllate.es/images/locations/ri_locbild1439178.jpg", "06:00 - 00:00",
-          "Cerveceza 0.90€", subscription3);
+          "http://media.tilllate.es/images/locations/ri_locbild1439178.jpg",
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
+          subscription3);
       Establishment establishment4 = createEstablishment("Eduardo", "Pérez Gonzalez", "España",
           "Sevilla", "establishment1@gmail.com", "establishment4", "establishment",
           "O'Neill's Irish Pub", "Calle Adriano, 34",
           Arrays.asList(
               "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
           "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
-          "06:00 - 00:00", "Cerveceza 0.90€", subscription4);
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
+          subscription4);
 
       log.info("== Language Exchanges ==");
       LanguageExchange langExchange1 = createLanguageExchange("Quedada en Los Palacios",
@@ -198,6 +219,11 @@ public class DataInitializer implements CommandLineRunner {
       UserDiscount userDiscount7 =
           createUserDiscount("20190121-WERO", false, false, user3, langExchange3);
 
+      log.info("== User Notifications ==");
+      Notification notification =
+          createNotificationList("Alerta Seguridad", "Se ha producido un ataque al sistema",
+              Arrays.asList(user1, user2, user3, user4, user5), user1);
+
       log.info("=== Finalize Populate Database ===");
     }
 
@@ -217,15 +243,13 @@ public class DataInitializer implements CommandLineRunner {
     userAccount.setRoles(Arrays.asList(Role.ROLE_ADMIN));
     userAccount.setActive(true);
     admin.setUserAccount(userAccount);
-    admin.setNotifications(Arrays.asList());
 
     return admin;
   }
 
   private User createUser(String name, String surname, String country, String city, String email,
-      String username, String password, String personalPic, String profileBackPic,
-      LocalDate birthday, Collection<String> speakLangs, Collection<String> langsToLearn,
-      String motherTongue) {
+      String username, String password, String personalPic, String profileBackPic, Date birthday,
+      Collection<String> speakLangs, Collection<String> langsToLearn, String motherTongue) {
     User user = new User();
     user.setName(name);
     user.setSurname(surname);
@@ -238,7 +262,6 @@ public class DataInitializer implements CommandLineRunner {
     userAccount.setRoles(Arrays.asList(Role.ROLE_USER));
     userAccount.setActive(true);
     user.setUserAccount(userAccount);
-    user.setNotifications(Arrays.asList());
     user.setPersonalPic(personalPic);
     user.setProfileBackPic(profileBackPic);
     user.setAboutMe("");
@@ -267,7 +290,6 @@ public class DataInitializer implements CommandLineRunner {
     userAccount.setRoles(Arrays.asList(Role.ROLE_ESTABLISHMENT));
     userAccount.setActive(true);
     establishment.setUserAccount(userAccount);
-    establishment.setNotifications(Arrays.asList());
     establishment.setEstablishmentName(establishmentName);
     establishment.setDescription("");
     establishment.setAddress(address);
@@ -332,5 +354,21 @@ public class DataInitializer implements CommandLineRunner {
         .build();
     return this.userDiscountRepository.saveAndFlush(userDiscount);
   }
+
+  private Notification createNotificationList(String title, String description,
+      List<Actor> receivers, Actor user) {
+    Notification notification = new Notification();
+    notification.setTitle(title);
+    notification.setDescription(description);
+    notification.setMoment(LocalDateTime.now());
+    notification.setPriority(NotificationPriority.TOP);
+
+    for (Actor receiver : receivers) {
+      notification.addReceiver(receiver);
+    }
+
+    return this.notificationRepository.saveAndFlush(notification);
+  }
+
 }
 
