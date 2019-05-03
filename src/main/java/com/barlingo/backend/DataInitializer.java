@@ -163,27 +163,31 @@ public class DataInitializer implements CommandLineRunner {
           Arrays
               .asList("https://media-cdn.tripadvisor.com/media/photo-f/16/5e/b9/05/photo0jpg.jpg"),
           "https://media-cdn.tripadvisor.com/media/photo-f/16/5e/b9/05/photo0jpg.jpg",
-          "06:00 - 00:00", "Cerveceza y tapa 1.50€", subscription1);
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00",
+          "Cerveceza y tapa 1.50€", subscription1);
       Establishment establishment2 = createEstablishment("Juan Miguel", "Luza León", "España",
           "Sevilla", "establishment2@gmail.com", "establishment2", "establishment",
           "Ronda el Alamillo", "Ronda el Alamillo",
           Arrays
               .asList("https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024"),
           "https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024",
-          "06:00 - 00:00", "Cerveceza 0.90€", subscription2);
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
+          subscription2);
       Establishment establishment3 = createEstablishment("Evaristo", "Ramírez Calvo", "España",
           "Sevilla", "establishment1@gmail.com", "establishment3", "establishment",
           "MONTECRISTO TERRAZA-BAR", "Calle Albareda, 16",
           Arrays.asList("http://media.tilllate.es/images/locations/ri_locbild1439178.jpg"),
-          "http://media.tilllate.es/images/locations/ri_locbild1439178.jpg", "06:00 - 00:00",
-          "Cerveceza 0.90€", subscription3);
+          "http://media.tilllate.es/images/locations/ri_locbild1439178.jpg",
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
+          subscription3);
       Establishment establishment4 = createEstablishment("Eduardo", "Pérez Gonzalez", "España",
           "Sevilla", "establishment1@gmail.com", "establishment4", "establishment",
           "O'Neill's Irish Pub", "Calle Adriano, 34",
           Arrays.asList(
               "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
           "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
-          "06:00 - 00:00", "Cerveceza 0.90€", subscription4);
+          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
+          subscription4);
 
       log.info("== Language Exchanges ==");
       LanguageExchange langExchange1 = createLanguageExchange("Quedada en Los Palacios",
