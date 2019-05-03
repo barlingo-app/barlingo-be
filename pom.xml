@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.barlingo</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>${packaging.format}</packaging>
 
 	<name>Barlingo BE</name>
@@ -68,8 +68,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.6</version>
-		</dependency>
+			</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>

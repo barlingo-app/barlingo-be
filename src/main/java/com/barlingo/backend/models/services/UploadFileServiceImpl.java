@@ -13,6 +13,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+import com.barlingo.backend.utilities.RestError;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -30,7 +31,8 @@ public class UploadFileServiceImpl implements IUploadFileService {
     Resource recurso = new UrlResource(pathFoto.toUri());
 
     if (!recurso.exists() || !recurso.isReadable()) {
-      throw new RuntimeException("Error: no se puede cargar la imagen: " + pathFoto.toString());
+      // throw new RuntimeException("Error: no se puede cargar la imagen: " + pathFoto.toString());
+      throw new RuntimeException(RestError.SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE);
     }
     return recurso;
   }

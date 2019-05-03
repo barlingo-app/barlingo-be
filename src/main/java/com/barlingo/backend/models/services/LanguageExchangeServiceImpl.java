@@ -9,20 +9,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import com.barlingo.backend.models.dtos.LanguageExchangeCreateDTO;
+import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
 import com.barlingo.backend.models.entities.LanguageExchange;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
+import com.barlingo.backend.utilities.RestError;
 
 @Service
 @Transactional
 public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
-  private static final String USER_NOT_NULL_IN_CREATE_USER_DISCOUNT =
-      "User not null in create UserDiscount";
-  private static final String LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT =
-      "Language Exchange can not be null";
   @Autowired
   private LanguageExchangeRepository langExchangeRepository;
   @Autowired
@@ -33,14 +32,15 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   private IEstablishmentService establishmentService;
 
   @Override
-  public LanguageExchange createAndSave(Integer creatorId, Integer establishmentId,
-      LanguageExchange langExchange) {
-    User user = this.userService.findById(creatorId);
+  public LanguageExchange createAndSave(
+      org.springframework.security.core.userdetails.User principal,
+      LanguageExchangeCreateDTO langExchange) {
+    User user = this.userService.findByUsername(principal.getUsername());
 
-    Assert.notNull(user, USER_NOT_NULL_IN_CREATE_USER_DISCOUNT);
-    Assert.notNull(langExchange, LANGEXCHANGE_NOT_NULL_IN_CREATE_USER_DISCOUNT);
+    Assert.notNull(user, RestError.SIGNED_LANGUAGE_EXCHANGE_USER_NOT_NULL);
+    Assert.notNull(langExchange, RestError.ALL_LANGUAGE_EXCHANGE_NOT_NULL);
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
-        "This moment is past, can't save this exchange");
+        RestError.USER_LANGUAGE_EXCHANGE_CANNOT_SAVE_PAST_EXCHANGE);
 
     LanguageExchange langExch = new LanguageExchange();
 
@@ -49,33 +49,49 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
     langExch.setDescription(langExchange.getDescription());
     langExch.setMoment(langExchange.getMoment());
     langExch.setParticipants(new LinkedList<User>());
-    langExch.setNumberMaxParticipants(langExchange.getNumberMaxParticipants());
+    langExch.setNumberMaxParticipants(langExchange.getNumberOfParticipants());
     langExch.setExchangeState(ExchangeState.OPEN);
-    langExch.setEstablishment(this.establishmentService.findById(establishmentId));
     langExch.setTargetLangs(langExchange.getTargetLangs());
     langExch.setUserDiscounts(new LinkedList<UserDiscount>());
 
-    return this.langExchangeRepository.save(langExch);
+    // Get establishment and check not null
+    Establishment establishment =
+        this.establishmentService.findById(langExchange.getEstablishmentId());
+    Assert.notNull(establishment, RestError.USER_LANGUAGE_EXCHANGE_ESTABLISHMENT_NOT_NULL);
+    langExch.setEstablishment(establishment);
+
+
+    LanguageExchange exchangeSaved = this.langExchangeRepository.save(langExch);
+    // Creator join as a participant
+    this.joinUser(principal, exchangeSaved.getId());
+
+    return exchangeSaved;
   }
 
   @Override
-  public List<LanguageExchange> findAll() {
-    return this.langExchangeRepository.findAll();
-  }
+  public List<LanguageExchange> findAll(LocalDateTime moment) {
+    List<LanguageExchange> res;
 
-  @Override
-  public List<LanguageExchange> findAllActual() {
-    return this.langExchangeRepository.findByMomentAfter(LocalDateTime.now());
+    if (moment != null)
+      res = this.langExchangeRepository.findByMomentAfterOrderByMomentAsc(moment);
+    else
+      res = this.langExchangeRepository.findByOrderByMomentDesc();
+    return res;
   }
 
   @Override
   public LanguageExchange save(LanguageExchange exchange) {
-    return this.langExchangeRepository.save(exchange);
+    LanguageExchange saved;
+    saved = this.langExchangeRepository.save(exchange);
+    Assert.notNull(saved, RestError.USER_LANGUAGE_EXCHANGE_ERROR_SAVING_EXCHANGE);
+    return saved;
   }
 
   @Override
   public LanguageExchange findById(Integer id) {
-    return this.langExchangeRepository.findById(id).orElse(null);
+    LanguageExchange exchange = this.langExchangeRepository.findById(id).orElse(null);
+    Assert.notNull(exchange, "Exchange not exists.");
+    return exchange;
   }
 
   @Override
@@ -85,40 +101,43 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
 
   @Override
   public LanguageExchange joinUser(org.springframework.security.core.userdetails.User principal,
-      Integer userId, Integer languageExchangeId) {
+      Integer languageExchangeId) {
 
-    User user = this.userService.findById(userId);
-    Assert.notNull(user, "User not found.");
+    User user = this.userService.findByUsername(principal.getUsername());
+    Assert.notNull(user, RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_FOUND);
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
         User userPrincipal = this.userService.findByUsername(principal.getUsername());
-        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+        Assert.isTrue(user.equals(userPrincipal),
+            RestError.USER_LANGUAGE_EXCHANGE_CANNOT_MODIFY_OTHER_USERS);
       }
     }
 
     LanguageExchange langExchangeSaved;
     LanguageExchange langExchange = this.findById(languageExchangeId);
-    Assert.notNull(langExchange, "Invalid language exchange");
+    Assert.notNull(langExchange, RestError.SIGNED_LANGUAGE_EXCHANGE_NOT_FOUND);
 
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
-        "Event has already taken place");
+        RestError.USER_LANGUAGE_EXCHANGE_EVENT_FINALIZED);
+    Assert.isTrue(langExchange.getParticipants().size() < langExchange.getNumberMaxParticipants(),
+        RestError.USER_LANGUAGE_EXCHANGE_IS_FULL);
 
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
-      Assert.isTrue(!user.getLangsExchanges().contains(langExchange), "You already register");
+      Assert.isTrue(!user.getLangsExchanges().contains(langExchange),
+          RestError.USER_LANGUAGE_EXCHANGE_ALREADY_REGISTERED);
 
       userExchanges.add(langExchange);
       user.setLangsExchanges(userExchanges);
 
       Collection<User> participants = langExchange.getParticipants();
-      Assert.isTrue(!langExchange.getParticipants().contains(user), "You already register");
 
       participants.add(this.userService.save(user));
       langExchange.setParticipants(participants);
 
       // Generate new code to new participant
-      this.userDiscountService.createAndSave(userId, languageExchangeId);
+      this.userDiscountService.createAndSave(user.getId(), languageExchangeId);
     }
     langExchangeSaved = this.save(langExchange);
 
@@ -129,39 +148,50 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   public LanguageExchange leaveLanguageExchange(
       org.springframework.security.core.userdetails.User principal, Integer userId,
       Integer languageExchangeId) {
-
     User user = this.userService.findById(userId);
+    Assert.notNull(user, RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_NULL);
     for (GrantedAuthority authority : principal.getAuthorities()) {
       if (!authority.getAuthority().equals("ROLE_ADMIN")) {
         User userPrincipal = this.userService.findByUsername(principal.getUsername());
-        Assert.isTrue(user.equals(userPrincipal), "You can not modify other users.");
+        Assert.isTrue(user.equals(userPrincipal),
+            RestError.USER_LANGUAGE_EXCHANGE_CANNOT_MODIFY_OTHER_USERS);
       }
     }
 
     LanguageExchange langExchangeSaved;
     LanguageExchange langExchange = this.findById(languageExchangeId);
-    Assert.notNull(langExchange, "Invalid language exchange");
+    Assert.notNull(langExchange, RestError.SIGNED_LANGUAGE_EXCHANGE_NOT_FOUND);
 
     Assert.isTrue(langExchange.getMoment().isAfter(LocalDateTime.now()),
-        "Event has already taken place");
+        RestError.USER_LANGUAGE_EXCHANGE_EVENT_FINALIZED);
 
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
       Assert.isTrue(user.getLangsExchanges().contains(langExchange),
-          "You not register in this language exchange");
+          RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_REGISTERED);
 
       userExchanges.remove(langExchange);
       user.setLangsExchanges(userExchanges);
 
       Collection<User> participants = langExchange.getParticipants();
       Assert.isTrue(langExchange.getParticipants().contains(user),
-          "You not register in this language exchange");
+          RestError.USER_LANGUAGE_EXCHANGE_USER_NOT_REGISTERED);
 
       participants.remove(this.userService.save(user));
       langExchange.setParticipants(participants);
 
-      // Generate new code to new participant
-      this.userDiscountService.createAndSave(userId, languageExchangeId);
+      // Delete new code to new participant
+      try {
+        Collection<UserDiscount> discounts = this.userDiscountService.findAll();
+        for (UserDiscount discount : discounts) {
+          if (discount.getUser().getId() == userId
+              && discount.getLangExchange().getId() == langExchange.getId()) {
+            this.userDiscountService.delete(discount);
+          }
+        }
+      } catch (Exception e) {
+        Assert.isTrue(false, RestError.SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN);
+      }
     }
     langExchangeSaved = this.save(langExchange);
 
@@ -169,12 +199,25 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
   }
 
   @Override
-  public List<LanguageExchange> findByEstId(Integer estId) {
-    return (List<LanguageExchange>) this.langExchangeRepository.findByEstId(estId);
+  public List<LanguageExchange> findByEstId(Integer estId, LocalDateTime moment) {
+
+    List<LanguageExchange> res;
+    if (moment != null)
+      res = (List<LanguageExchange>) this.langExchangeRepository.findByEstIdAndMomentAfter(estId,
+          moment);
+    else
+      res = (List<LanguageExchange>) this.langExchangeRepository.findByEstId(estId);
+    return res;
   }
 
   @Override
-  public List<LanguageExchange> findAllByUserId(Integer userId) {
-    return this.langExchangeRepository.findAllByUserId(userId);
+  public List<LanguageExchange> findAllByUserId(Integer userId, LocalDateTime moment) {
+
+    List<LanguageExchange> res;
+    if (moment != null)
+      res = this.langExchangeRepository.findAllByUserIdAndMomentAfter(userId, moment);
+    else
+      res = this.langExchangeRepository.findAllByUserId(userId);
+    return res;
   }
 }
