@@ -1,20 +1,12 @@
 package com.barlingo.backend.models.entities;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.SafeHtml;
 import com.barlingo.backend.security.UserAccount;
 import lombok.Data;
@@ -56,13 +48,4 @@ public abstract class Actor extends DomainEntity {
   ///////////////
   // Relations //
   ///////////////
-  // TODO: add userAccount
-//  @ManyToMany(mappedBy = "receivers", fetch = FetchType.LAZY)
-//  @NotNull
-//  @Valid
-//  private Collection<Notification> notifications;
-
-//  @OneToMany( mappedBy = "receiver" ,cascade = CascadeType.ALL,
-//      orphanRemoval = true)
-//  private List<NotificationReceiver> notifications = new ArrayList<>();
 }
