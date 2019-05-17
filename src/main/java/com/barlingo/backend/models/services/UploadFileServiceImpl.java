@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.barlingo.backend.utilities.RestError;
@@ -21,18 +22,22 @@ import lombok.extern.slf4j.Slf4j;
 public class UploadFileServiceImpl implements IUploadFileService {
 
   @Value("${folder.uploads}")
-  private String UPLOADS_FOLDER;
+  private String uploadsFolder;
 
   @Override
-  public Resource load(String filename) throws MalformedURLException {
+  public Resource load(String filename) {
     Path pathFoto = getPath(filename);
     log.info("pathFoto: " + pathFoto);
 
-    Resource recurso = new UrlResource(pathFoto.toUri());
+    Resource recurso = null;
+    try {
+      recurso = new UrlResource(pathFoto.toUri());
 
-    if (!recurso.exists() || !recurso.isReadable()) {
-      // throw new RuntimeException("Error: no se puede cargar la imagen: " + pathFoto.toString());
-      throw new RuntimeException(RestError.SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE);
+      Assert.isTrue(!recurso.exists() || !recurso.isReadable(),
+          RestError.SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE);
+
+    } catch (MalformedURLException e) {
+      Assert.isTrue(false, RestError.SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE);
     }
     return recurso;
   }
@@ -64,20 +69,20 @@ public class UploadFileServiceImpl implements IUploadFileService {
   }
 
   public Path getPath(String filename) {
-    return Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
+    return Paths.get(this.uploadsFolder).resolve(filename).toAbsolutePath();
   }
 
   @Override
   public void deleteAll() {
-    FileSystemUtils.deleteRecursively(Paths.get(UPLOADS_FOLDER).toFile());
+    FileSystemUtils.deleteRecursively(Paths.get(this.uploadsFolder).toFile());
 
   }
 
   @Override
   public void init() throws IOException {
     try {
-      if (!Paths.get(UPLOADS_FOLDER).toFile().exists()) {
-        Files.createDirectory(Paths.get(UPLOADS_FOLDER));
+      if (!Paths.get(this.uploadsFolder).toFile().exists()) {
+        Files.createDirectory(Paths.get(this.uploadsFolder));
       }
     } catch (Exception e) {
       log.error(e.getMessage());
