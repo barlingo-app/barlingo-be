@@ -6,14 +6,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.barlingo.backend.utilities.ResponseBody;
 import com.barlingo.backend.utilities.Utils;
+import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
+@Slf4j
 public class AbstractRestController {
 
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<ResponseBody> createMessageException(Throwable oops) {
     ResponseBody responseBody = new ResponseBody();
 
+    log.debug("There was an error", oops);
     responseBody.setSuccess(false);
     responseBody.setCode(500);
     responseBody.setMessage(oops.getMessage());
