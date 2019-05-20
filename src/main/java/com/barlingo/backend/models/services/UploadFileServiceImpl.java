@@ -33,7 +33,7 @@ public class UploadFileServiceImpl implements IUploadFileService {
     try {
       recurso = new UrlResource(pathFoto.toUri());
 
-      Assert.isTrue(!recurso.exists() || !recurso.isReadable(),
+      Assert.isTrue(recurso.exists() && recurso.isReadable(),
           RestError.SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE);
 
     } catch (MalformedURLException e) {
