@@ -160,10 +160,10 @@ public class UserRestController extends AbstractRestController {
       String image = this.uploadService.copy(file);
       if (imageType != null && imageType.equals("personal")) {
         user.setPersonalPic(
-            request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
+            request.getRequestURL().toString().split("users")[0] + "static/images/" + image);
       } else {
         user.setProfileBackPic(
-            request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
+            request.getRequestURL().toString().split("users")[0] + "static/images/" + image);
       }
       result = this.createResponse(this.userMapper.entityToDetailsDto(
           this.userService.edit(principal, this.userMapper.entityToEditDTO(user))));
