@@ -152,10 +152,10 @@ public class EstablishmentRestController extends AbstractRestController {
       String image = this.uploadService.copy(file);
       if (imageType.equals("background")) {
         est.setImages(Arrays.asList(request.getRequestURL().toString().split("establishments")[0]
-            + "establishments/uploads/" + image));
+            + "static/images" + image));
       } else if (imageType.equals("profile")) {
         est.setImageProfile(request.getRequestURL().toString().split("establishments")[0]
-            + "establishments/uploads/" + image);
+            + "static/images/" + image);
       }
       EstablishmentDetailsDTO establishment =
           this.establishmentMapper.establishmentToDto(this.establishmentService.edit(principal,
