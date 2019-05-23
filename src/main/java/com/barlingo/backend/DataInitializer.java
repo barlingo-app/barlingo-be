@@ -199,7 +199,7 @@ public class DataInitializer implements CommandLineRunner {
           Arrays.asList("es", "en"), establishment1, user3, Arrays.asList(user3, user2),
           Arrays.asList());
       LanguageExchange langExchange3 = createLanguageExchange("¿Quién se apunta?",
-          "Language Exchange 3", LocalDateTime.of(2019, 5, 21, 10, 00), ExchangeState.OPEN, 3,
+          "Language Exchange 3", LocalDateTime.of(2019, 6, 21, 10, 00), ExchangeState.OPEN, 3,
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2, user4),
           Arrays.asList());
 
@@ -222,7 +222,7 @@ public class DataInitializer implements CommandLineRunner {
       log.info("== User Notifications ==");
       Notification notification =
           createNotificationList("Alerta Seguridad", "Se ha producido un ataque al sistema",
-              Arrays.asList(user1, user2, user3, user4, user5), user1);
+              Arrays.asList(user1, user2, user3, user4, user5, establishment1, establishment2, establishment3, establishment4), user1);
 
       log.info("=== Finalize Populate Database ===");
     }

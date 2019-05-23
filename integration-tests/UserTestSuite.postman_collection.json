@@ -56,12 +56,8 @@
 				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
-					"raw": "http://localhost:8080/users/signin?username=username2&password=username",
+					"raw": "http://localhost:8080/users/signin?username=username1&password=username",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -74,7 +70,7 @@
 					"query": [
 						{
 							"key": "username",
-							"value": "username2"
+							"value": "username1"
 						},
 						{
 							"key": "password",
@@ -129,10 +125,6 @@
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/users",
 					"host": [
@@ -147,7 +139,7 @@
 			"response": []
 		},
 		{
-			"name": "Get User By Id Test",
+			"name": "Get user by Id Test",
 			"event": [
 				{
 					"listen": "test",
@@ -195,10 +187,6 @@
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/users/4",
 					"host": [
@@ -208,6 +196,70 @@
 					"path": [
 						"users",
 						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by username Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eecb3aa4-29e4-4bfb-a208-40badf00243a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Username is username1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.userAccount.username).to.eql('username1');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/username/username1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"username",
+						"username1"
 					]
 				}
 			},
@@ -258,21 +310,10 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJ1c2VySWQiOjQsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNTU4MjY1MDU3LCJleHAiOjE1NTgyNjg2NTd9.RngmGvQErye_I6IyCdfcGYim_t5P6Wlhp_qTLc6vYSw",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/users/checkUsername?username=username1xz@",
 					"host": [
@@ -331,17 +372,13 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJ1c2VySWQiOjQsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNTU4MjY1MzQ5LCJleHAiOjE1NTgyNjg5NDl9.G9Nc76eZcHIHheUplHxJZUDIg50o8Jm0W90bsz0IW7c",
+							"value": "{{token_username1}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/users/4/download",
 					"host": [
@@ -419,7 +456,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJ1c2VySWQiOjQsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNTU4MjY1MDU3LCJleHAiOjE1NTgyNjg2NTd9.RngmGvQErye_I6IyCdfcGYim_t5P6Wlhp_qTLc6vYSw",
+							"value": "{{token_username1}}",
 							"type": "string"
 						}
 					]
@@ -590,17 +627,13 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJ1c2VySWQiOjQsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfVVNFUiJ9XSwiaWF0IjoxNTU4MjY4ODcxLCJleHAiOjE1NTgyNzI0NzF9.f0tjMf_D3o_vcKIb0JzKpiGjJ3qyjHeW18PV4P9Lakw",
+							"value": "{{token_username1}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/users/4/anonymize",
 					"host": [
@@ -620,10 +653,140 @@
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
+						"url": {
+							"raw": "localhost:8080/users/4/anonymize",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"4",
+								"anonymize"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
 						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 May 2019 12:27:35 GMT"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Ban User Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "beda2210-374f-4abf-9d88-c8f5fba515cc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Username is username1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.userAccount.username).to.eql('username1');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_admin}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/4/ban",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"4",
+						"ban"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Anonymize User Test",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
 						"url": {
 							"raw": "localhost:8080/users/4/anonymize",
 							"host": [

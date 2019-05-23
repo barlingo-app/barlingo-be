@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Get establishment list Test",
+			"name": "Get active subs establishment list Test",
 			"event": [
 				{
 					"listen": "test",
@@ -50,10 +50,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:8080/establishments",
 					"protocol": "http",
@@ -63,6 +59,71 @@
 					"port": "8080",
 					"path": [
 						"establishments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all establishment list Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0046f6cd-1c3f-40f6-be5a-6b3c3455491e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Number of establishments > 0\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.length).not.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/establishments?subAct=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments"
+					],
+					"query": [
+						{
+							"key": "subAct",
+							"value": "false"
+						}
 					]
 				}
 			},
@@ -119,10 +180,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:8080/establishments/22",
 					"protocol": "http",
@@ -184,10 +241,6 @@
 			"request": {
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:8080/users/signin?username=establishment1&password=establishment",
 					"protocol": "http",
@@ -281,7 +334,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlc3RhYmxpc2htZW50MSIsInVzZXJJZCI6MjIsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfRVNUQUJMSVNITUVOVCJ9XSwiaWF0IjoxNTU4MjcyMDA3LCJleHAiOjE1NTgyNzU2MDd9.-03mmqYTxhI9WlYg607GZ5rxQDVI6izj_Al116O2_-s",
+							"value": "{{token_establishment1}}",
 							"type": "string"
 						}
 					]
@@ -501,17 +554,13 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlc3RhYmxpc2htZW50MSIsInVzZXJJZCI6MjIsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfRVNUQUJMSVNITUVOVCJ9XSwiaWF0IjoxNTU4MjgwMTI3LCJleHAiOjE1NTgyODM3Mjd9.l0GAzM87GlX4lQi3pwtU00B0qsKEEo-EsUKKPvmvwr4",
+							"value": "{{token_establishment1}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/establishments/22/download",
 					"host": [
@@ -588,17 +637,13 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlc3RhYmxpc2htZW50MSIsInVzZXJJZCI6MjIsImF1dGgiOlt7ImF1dGhvcml0eSI6IlJPTEVfRVNUQUJMSVNITUVOVCJ9XSwiaWF0IjoxNTU4MjgwMTI3LCJleHAiOjE1NTgyODM3Mjd9.l0GAzM87GlX4lQi3pwtU00B0qsKEEo-EsUKKPvmvwr4",
+							"value": "{{token_establishment1}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:8080/establishments/22/anonymize",
 					"protocol": "http",
