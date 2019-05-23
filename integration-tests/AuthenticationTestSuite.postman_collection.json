@@ -1,18 +1,21 @@
 {
 	"info": {
-		"_postman_id": "72413d3c-b8ee-4c3f-819e-2a76630798ed",
-		"name": "LanguageExchangesTestSuite",
+		"_postman_id": "f3bffb8e-8570-4edf-99cf-0a057ab76a81",
+		"name": "AuthenticationTestSuite",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Public Language Exchanges Test",
+			"name": "Authenticate Establishment1 Test",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "84ad6667-f25f-4a8e-a9ff-87ff122896a0",
+						"id": "65425154-6717-44cc-8098-a6f23f36d927",
 						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_establishment1\", tokenData.content);",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -38,9 +41,10 @@
 							"    pm.expect(jsonData.code).to.eql(200);",
 							"});",
 							"",
-							"pm.test(\"Number of languages exchanges > 0\", function () {",
+							"pm.test(\"Is token generated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.length).not.eql(0);",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
 							"});"
 						],
 						"type": "text/javascript"
@@ -48,33 +52,28 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/exchanges",
-					"protocol": "http",
+					"raw": "{{url_token_establishment1}}",
 					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"exchanges"
+						"{{url_token_establishment1}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Public Language Exchanges By Id Test",
+			"name": "Authenticate Establishment2 Test",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "d8882121-e0c1-4ace-9858-15850a1dc803",
+						"id": "65425154-6717-44cc-8098-a6f23f36d927",
 						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_establishment2\", tokenData.content);",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -100,27 +99,10 @@
 							"    pm.expect(jsonData.code).to.eql(200);",
 							"});",
 							"",
-							"pm.test(\"Content id is 32\", function () {",
+							"pm.test(\"Is token generated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.id).to.eql(32);",
-							"});",
-							"",
-							"pm.test(\"Main content is correct\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.title).to.eql('¿Quién se apunta?');",
-							"    pm.expect(jsonData.content.description).to.eql('Language Exchange 3');",
-							"});",
-							"",
-							"pm.test(\"Has creator\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.creator).not.eql(null);",
-							"    pm.expect(jsonData.content.creator.id).to.eql(4);",
-							"});",
-							"",
-							"pm.test(\"Has establishment\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.establishment).not.eql(null);",
-							"    pm.expect(jsonData.content.establishment.id).to.eql(22);",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
 							"});"
 						],
 						"type": "text/javascript"
@@ -128,34 +110,28 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/exchanges/32",
-					"protocol": "http",
+					"raw": "{{url_token_establishment2}}",
 					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"exchanges",
-						"32"
+						"{{url_token_establishment2}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Create a language exchange Test",
+			"name": "Authenticate admin Test",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "9bd401e4-3e7b-4ae0-9243-0eb720c3832c",
+						"id": "782bdaa8-39e9-4e95-bcca-0d775dc406b7",
 						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_admin\", tokenData.content);",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -181,22 +157,10 @@
 							"    pm.expect(jsonData.code).to.eql(200);",
 							"});",
 							"",
-							"pm.test(\"Main data is created\", function () {",
+							"pm.test(\"Is token generated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.title).to.eql('Intercambio de idiomas en verano');",
-							"    pm.expect(jsonData.content.description).to.eql('Aprovechamos el verano para mejorar el idioma');",
-							"});",
-							"",
-							"pm.test(\"Has creator\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.creator).not.eql(null);",
-							"    pm.expect(jsonData.content.creator.id).to.eql(4);",
-							"});",
-							"",
-							"pm.test(\"Has establishment\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.establishment).not.eql(null);",
-							"    pm.expect(jsonData.content.establishment.id).to.eql(22);",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
 							"});"
 						],
 						"type": "text/javascript"
@@ -204,51 +168,28 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token_username1}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n\t\"title\": \"Intercambio de idiomas en verano\",\r\n\t\"description\": \"Aprovechamos el verano para mejorar el idioma\",\r\n\t\"moment\": \"2019-06-21T23:28:56.782Z\",\r\n\t\"establishmentId\":22,\r\n\t\"targetLangs\": [ \"en\",\"es\"],\r\n\t\"numberOfParticipants\": 3\r\n}"
-				},
+				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/exchanges",
-					"protocol": "http",
+					"raw": "{{url_token_admin}}",
 					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"exchanges"
+						"{{url_token_admin}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Join a language exchange Test",
+			"name": "Authenticate Username1 Test",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "0d6a5b36-0b83-47ff-ba6b-cb39b8f0687e",
+						"id": "3cf6c918-11e4-40d0-9650-36446d0c6567",
 						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_username1\", tokenData.content);",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -274,121 +215,12 @@
 							"    pm.expect(jsonData.code).to.eql(200);",
 							"});",
 							"",
-							"pm.test(\"Content id is 32\", function () {",
+							"pm.test(\"Is token generated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.id).to.eql(32);",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
 							"});",
 							"",
-							"pm.test(\"Main content is correct\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.title).to.eql('¿Quién se apunta?');",
-							"    pm.expect(jsonData.content.description).to.eql('Language Exchange 3');",
-							"});",
-							"",
-							"pm.test(\"Has creator\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.creator).not.eql(null);",
-							"    pm.expect(jsonData.content.creator.id).to.eql(4);",
-							"});",
-							"",
-							"pm.test(\"Current number of participants > 0\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.participants.length).to.be.above(0);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token_username1}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:8080/exchanges/32/join",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"exchanges",
-						"32",
-						"join"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Leave a language exchange Test",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "0d6a5b36-0b83-47ff-ba6b-cb39b8f0687e",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Content-Type is present\", function () {",
-							"    pm.response.to.have.header(\"Content-Type\");",
-							"});",
-							"",
-							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
-							" ",
-							"if (contentTypeHeaderExists) {",
-							"    tests[\"Content-Type is application/json\"] = ",
-							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
-							"}",
-							"",
-							"pm.test(\"Result is success\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.success).to.eql(true);",
-							"});",
-							"",
-							"pm.test(\"Result code Ok\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.code).to.eql(200);",
-							"});",
-							"",
-							"pm.test(\"Content id is 32\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.id).to.eql(32);",
-							"});",
-							"",
-							"pm.test(\"Main content is correct\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.title).to.eql('¿Quién se apunta?');",
-							"    pm.expect(jsonData.content.description).to.eql('Language Exchange 3');",
-							"});",
-							"",
-							"pm.test(\"Has creator\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.content.creator).not.eql(null);",
-							"    pm.expect(jsonData.content.creator.id).to.eql(4);",
-							"});",
 							""
 						],
 						"type": "text/javascript"
@@ -397,39 +229,77 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token_username1}}",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
+				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/exchanges/32/leave",
-					"protocol": "http",
+					"raw": "{{url_token_username1}}",
 					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"exchanges",
-						"32",
-						"leave"
+						"{{url_token_username1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Username2 Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cf6c918-11e4-40d0-9650-36446d0c6567",
+						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_username2\", tokenData.content);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_token_username2}}",
+					"host": [
+						"{{url_token_username2}}"
 					]
 				}
 			},
