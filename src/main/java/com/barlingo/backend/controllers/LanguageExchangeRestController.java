@@ -61,7 +61,7 @@ public class LanguageExchangeRestController extends AbstractRestController {
         // minus 24 hour till now for grant the users see exchanges of the last 24h and redeem their
         // discount
         if (moment != null)
-          moment.minusHours(24);
+          moment = moment.minusHours(24);
 
         exchanges = this.langExchangeMapper
             .entitysToDtos(langExchangeService.findAllByUserId(userId, moment));
@@ -70,8 +70,9 @@ public class LanguageExchangeRestController extends AbstractRestController {
             RestError.SIGNED_LANGUAGE_EXCHANGE_ESTABLISHMENT_NOT_EXISTS);
         exchanges =
             this.langExchangeMapper.entitysToDtos(langExchangeService.findByEstId(estId, moment));
-      } else
+      } else {
         exchanges = this.langExchangeMapper.entitysToDtos(langExchangeService.findAll(moment));
+      }
 
       result = this.createResponse(exchanges);
     } catch (Exception e) {
