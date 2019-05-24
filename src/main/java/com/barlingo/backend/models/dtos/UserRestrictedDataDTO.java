@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.dtos;
 
-import java.util.Collection;
 import lombok.Data;
 
 @Data

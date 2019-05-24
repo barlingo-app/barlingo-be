@@ -91,7 +91,7 @@ public class DataInitializer implements CommandLineRunner {
           .build());
 
       log.info("== Admin ==");
-      Admin admin = this.adminRepository.save(createAdmin("admin", "admin", "España", "Sevilla",
+      this.adminRepository.save(createAdmin("admin", "admin", "España", "Sevilla",
           "admin@barlingo.es", "admin", "admin"));
 
       log.info("== Users ==");
@@ -129,11 +129,11 @@ public class DataInitializer implements CommandLineRunner {
       log.info("== PayData ==");
       PayData payData1 = createPayData("Pago de Echate P'Alla Tapas", "1RV07592WN284744T",
           LocalDateTime.of(2019, 1, 1, 10, 00));
-      PayData payData2 = createPayData("Pago de MonteCristo", "1RV07592WN284744T",
+      PayData payData2 = createPayData("Pago de MonteCristo", "1RV07592WN284745T",
           LocalDateTime.of(2019, 1, 1, 10, 00));
-      PayData payData3 = createPayData("Pago de Ronda el Alamillo", "1RV07592WN284744T",
+      PayData payData3 = createPayData("Pago de Ronda el Alamillo", "1RV07592WN284746T",
           LocalDateTime.of(2019, 1, 1, 10, 00));
-      PayData payData4 = createPayData("Pago de Oneills", "1RV07592WN284744T",
+      PayData payData4 = createPayData("Pago de Oneills", "1RV07592WN284747T",
           LocalDateTime.of(2019, 1, 1, 10, 00));
 
       log.info("== Subscriptions ==");
@@ -163,7 +163,7 @@ public class DataInitializer implements CommandLineRunner {
           Arrays
               .asList("https://media-cdn.tripadvisor.com/media/photo-f/16/5e/b9/05/photo0jpg.jpg"),
           "https://media-cdn.tripadvisor.com/media/photo-f/16/5e/b9/05/photo0jpg.jpg",
-          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00",
+          "monday/06:00-23:30,tuesday/closed,wednesday/06:00-22:00,thursday/06:00-23:30,friday/06:00-23:30,saturday/06:00-23:30,sunday/closed,",
           "Cerveceza y tapa 1.50€", subscription1);
       Establishment establishment2 = createEstablishment("Juan Miguel", "Luza León", "España",
           "Sevilla", "establishment2@gmail.com", "establishment2", "establishment",
@@ -171,23 +171,23 @@ public class DataInitializer implements CommandLineRunner {
           Arrays
               .asList("https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024"),
           "https://lh3.ggpht.com/p/AF1QipNV-xAbmrfJuowSV7520cght4Fd6tZH-5uN5YYd=s1024",
-          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
-          subscription2);
+          "monday/06:00-23:30,tuesday/closed,wednesday/06:00-22:00,thursday/06:00-23:30,friday/06:00-23:30,saturday/06:00-23:30,sunday/closed,",
+          "Cerveceza 0.90€", subscription2);
       Establishment establishment3 = createEstablishment("Evaristo", "Ramírez Calvo", "España",
           "Sevilla", "establishment1@gmail.com", "establishment3", "establishment",
           "MONTECRISTO TERRAZA-BAR", "Calle Albareda, 16",
           Arrays.asList("http://media.tilllate.es/images/locations/ri_locbild1439178.jpg"),
           "http://media.tilllate.es/images/locations/ri_locbild1439178.jpg",
-          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
-          subscription3);
+          "monday/06:00-23:30,tuesday/closed,wednesday/06:00-22:00,thursday/06:00-23:30,friday/06:00-23:30,saturday/06:00-23:30,sunday/closed,",
+          "Cerveceza 0.90€", subscription3);
       Establishment establishment4 = createEstablishment("Eduardo", "Pérez Gonzalez", "España",
           "Sevilla", "establishment1@gmail.com", "establishment4", "establishment",
           "O'Neill's Irish Pub", "Calle Adriano, 34",
           Arrays.asList(
               "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8"),
           "https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10897916_894861150544946_4193659117013254471_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=50cf3bdfb9ec6e6632dd6842f4bbcbee&oe=5D442DD8",
-          "monday tuesday wednesday thursday friday saturday sunday,06:00-00:00", "Cerveceza 0.90€",
-          subscription4);
+          "monday/06:00-23:30,tuesday/closed,wednesday/06:00-22:00,thursday/06:00-23:30,friday/06:00-23:30,saturday/06:00-23:30,sunday/closed,",
+          "Cerveceza 0.90€", subscription4);
 
       log.info("== Language Exchanges ==");
       LanguageExchange langExchange1 = createLanguageExchange("Quedada en Los Palacios",
@@ -199,30 +199,24 @@ public class DataInitializer implements CommandLineRunner {
           Arrays.asList("es", "en"), establishment1, user3, Arrays.asList(user3, user2),
           Arrays.asList());
       LanguageExchange langExchange3 = createLanguageExchange("¿Quién se apunta?",
-          "Language Exchange 3", LocalDateTime.of(2019, 5, 21, 10, 00), ExchangeState.OPEN, 3,
+          "Language Exchange 3", LocalDateTime.of(2019, 6, 21, 10, 00), ExchangeState.OPEN, 3,
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2, user4),
           Arrays.asList());
 
       log.info("== User Discounts ==");
-      UserDiscount userDiscount1 =
-          createUserDiscount("20190121-WERW", true, true, user1, langExchange1);
-      UserDiscount userDiscount2 =
-          createUserDiscount("20190121-WERE", true, true, user2, langExchange1);
-      UserDiscount userDiscount3 =
-          createUserDiscount("20190121-WERA", true, false, user3, langExchange2);
-      UserDiscount userDiscount4 =
-          createUserDiscount("20190121-WERQ", true, false, user2, langExchange2);
-      UserDiscount userDiscount5 =
-          createUserDiscount("20190121-WERR", false, false, user1, langExchange3);
-      UserDiscount userDiscount6 =
-          createUserDiscount("20190121-WERF", false, false, user2, langExchange3);
-      UserDiscount userDiscount7 =
-          createUserDiscount("20190121-WERO", false, false, user3, langExchange3);
+      createUserDiscount("20190121-WERW", true, true, user1, langExchange1);
+      createUserDiscount("20190121-WERE", true, true, user2, langExchange1);
+      createUserDiscount("20190121-WERA", true, false, user3, langExchange2);
+      createUserDiscount("20190121-WERQ", true, false, user2, langExchange2);
+      createUserDiscount("20190121-WERR", false, false, user1, langExchange3);
+      createUserDiscount("20190121-WERF", false, false, user2, langExchange3);
+      createUserDiscount("20190121-WERO", false, false, user3, langExchange3);
 
       log.info("== User Notifications ==");
-      Notification notification =
-          createNotificationList("Alerta Seguridad", "Se ha producido un ataque al sistema",
-              Arrays.asList(user1, user2, user3, user4, user5), user1);
+      createNotificationList(
+          "Alerta Seguridad", "Se ha producido un ataque al sistema", Arrays.asList(user1, user2,
+              user3, user4, user5, establishment1, establishment2, establishment3, establishment4),
+          user1);
 
       log.info("=== Finalize Populate Database ===");
     }

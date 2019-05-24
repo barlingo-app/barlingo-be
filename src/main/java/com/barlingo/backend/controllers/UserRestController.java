@@ -3,7 +3,6 @@ package com.barlingo.backend.controllers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -161,10 +160,10 @@ public class UserRestController extends AbstractRestController {
       String image = this.uploadService.copy(file);
       if (imageType != null && imageType.equals("personal")) {
         user.setPersonalPic(
-            request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
+            request.getRequestURL().toString().split("users")[0] + "static/images/" + image);
       } else {
         user.setProfileBackPic(
-            request.getRequestURL().toString().split("users")[0] + "users/uploads/" + image);
+            request.getRequestURL().toString().split("users")[0] + "static/images/" + image);
       }
       result = this.createResponse(this.userMapper.entityToDetailsDto(
           this.userService.edit(principal, this.userMapper.entityToEditDTO(user))));
@@ -178,26 +177,21 @@ public class UserRestController extends AbstractRestController {
   @GetMapping(value = "/uploads/{filename:.+}")
   public ResponseEntity<Resource> seePhoto(@PathVariable String filename,
       HttpServletRequest request) {
-
-    Resource resource = null;
-
-    try {
-      resource = this.uploadService.load(filename);
-    } catch (MalformedURLException e) {
-      log.error(RestError.USER_USER_MALFORMED_URL);
-    }
+    ResponseEntity<Resource> result = null;
+    Resource resource = this.uploadService.load(filename);
 
     String contentType = null;
     try {
       contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+      result = ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+          .header(HttpHeaders.CONTENT_DISPOSITION,
+              "attachment; filename=\"" + resource.getFilename() + "\"")
+          .body(resource);
     } catch (IOException ex) {
       log.info(RestError.USER_USER_UNKNOWN_FILETYPE);
     }
 
-    return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-        .header(HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + resource.getFilename() + "\"")
-        .body(resource);
+    return result;
   }
 
   @PostMapping("/edit")
@@ -280,13 +274,13 @@ public class UserRestController extends AbstractRestController {
           IOUtils.copy(errorStream, response.getOutputStream());
           response.flushBuffer();
         } catch (IOException ex) {
-          ex.printStackTrace();
+          log.error(ex.getMessage());
         } finally {
           try {
             if (errorStream != null)
               errorStream.close();
           } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
           }
         }
       }
@@ -295,7 +289,7 @@ public class UserRestController extends AbstractRestController {
         if (targetStream != null)
           targetStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error(e.getMessage());
       }
     }
 
