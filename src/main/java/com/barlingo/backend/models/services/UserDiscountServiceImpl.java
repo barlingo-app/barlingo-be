@@ -1,5 +1,6 @@
 package com.barlingo.backend.models.services;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -193,7 +194,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
    */
   private String generateUniqueCode() {
     final SimpleDateFormat dt = new SimpleDateFormat("ddMMyyyy");
-    final Random r = new Random();
+    final Random r = new SecureRandom();
     StringBuilder randomLetter = new StringBuilder();
     String reference = "";
 
