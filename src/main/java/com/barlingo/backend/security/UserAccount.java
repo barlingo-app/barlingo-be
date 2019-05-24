@@ -3,21 +3,20 @@
  *
  * Copyright (C) 2017 Universidad de Sevilla
  *
- * The use of this project is hereby constrained to the conditions of the
- * TDG Licence, a copy of which you may download from
- * http://www.tdg-seville.info/License.html
+ * The use of this project is hereby constrained to the conditions of the TDG Licence, a copy of
+ * which you may download from http://www.tdg-seville.info/License.html
  */
 
 package com.barlingo.backend.security;
 
-import com.barlingo.backend.models.entities.DomainEntity;
-import com.barlingo.backend.models.entities.Role;
 import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import com.barlingo.backend.models.entities.DomainEntity;
+import com.barlingo.backend.models.entities.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,8 +34,6 @@ public class UserAccount extends DomainEntity {
 
   public UserAccount() {
     super();
-
-//		this.authorities = new ArrayList<Authority>();
   }
 
   // Attributes -------------------------------------------------------------

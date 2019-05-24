@@ -1,6 +1,5 @@
 package com.barlingo.backend.models.services;
 
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -107,15 +106,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setDescription(establishmentData.getDescription());
     establishment.setOffer(establishmentData.getOffer());
 
-    /*
-     * //Create pay data PayData payData = createPayData(establishmentData);
-     *
-     * //Create subscription data SubscriptionData subscriptionData =
-     * createSubscription(establishmentData,payData);
-     *
-     * establishment.setSubscription(subscriptionData);
-     */
-
     return save(establishment);
   }
 
@@ -167,7 +157,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     establishment.setUserAccount(new UserAccount());
     establishment.getUserAccount().setRoles(new ArrayList<>());
     establishment.getUserAccount().getRoles().add(Role.ROLE_ESTABLISHMENT);
-    // establishment.setNotifications(new ArrayList<>());
 
     return establishment;
   }
@@ -176,13 +165,14 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   public List<Establishment> findByDateGreater(LocalDateTime date) {
     Assert.notNull(date);
     List<Establishment> establishments = this.establishmentRepository.findByDateGreater(date);
+    List<Establishment> finalEstablishments = new ArrayList<>();
 
     for (Establishment est : establishments) {
-      if (!est.getUserAccount().getActive()) {
-        establishments.remove(est);
+      if (est.getUserAccount().getActive()) {
+        finalEstablishments.add(est);
       }
     }
-    return establishments;
+    return finalEstablishments;
   }
 
   @Override
@@ -224,7 +214,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
   @Override
   public EstablishmentExchangesDetailsDTO exportData(
       org.springframework.security.core.userdetails.User principal, Integer establishmentId) {
-    InputStream targetStream = null;
 
     EstablishmentDetailsDTO establishmentDetailsDTO =
         this.establishmentMapper.establishmentToDto(this.findById(establishmentId));
@@ -237,9 +226,6 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
       }
     }
 
-    // List<LanguageExchangeGenericDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
-    // .entitiesToDtosGeneric(languageExchangeService.findByEstId(establishmentId, null));
-
     List<LanguageExchangeRestrictedDTO> languageExchangeGenericDTOS = this.languageExchangeMapper
         .entitysToRestrictedDtos(languageExchangeService.findByEstId(establishmentId, null));
 
@@ -251,40 +237,5 @@ public class EstablishmentServiceImpl implements IEstablishmentService {
     return establishmentExchangesDetailsDTO;
 
   }
-
-  /*
-   * private SubscriptionData createSubscription(EstablishmentDetailsDTO establishmentData, PayData
-   * payData) { //Subscription data SubscriptionData subscriptionData = SubscriptionData.builder()
-   * // .initMoment(payData.getMoment()) //
-   * .subscriptionType(establishmentData.getSubscription().getSubscriptionType()) //
-   * .paydata(payData) // .price(calculateSubscriptionPrice(
-   * establishmentData.getSubscription().getSubscriptionType())) // .finishMoment(
-   * payData.getMoment().plusMonths(
-   * establishmentData.getSubscription().getSubscriptionType().getMonths())) // .build(); return
-   * this.subscriptionRepository.saveAndFlush(subscriptionData);
-   *
-   * }
-   *
-   *
-   * private PayData createPayData(EstablishmentDetailsDTO establishmentData) { //Pay data PayData
-   * paydata = PayData.builder() //
-   * .title(establishmentData.getSubscription().getPaydata().getTitle()) //
-   * .moment(establishmentData.getSubscription().getPaydata().getMoment()) //
-   * .payType(establishmentData.getSubscription().getPaydata().getPayType()) // .build();
-   *
-   * return this.paydataRepository.saveAndFlush(paydata); }
-   *
-   * private Double calculateSubscriptionPrice(SubscriptionType subscriptionType) { Configuration
-   * config = this.configRepository.findAll().get(0); Double price = 0.0;
-   *
-   * switch (subscriptionType) { case ANNUAL: price = config.getPriceMonthSubscription() -
-   * config.getPriceMonthSubscription() * config.getAnnualDiscount(); break; case TRIMESTRAL: price
-   * = config.getPriceMonthSubscription() - config.getPriceMonthSubscription() *
-   * config.getTrimestralDiscount(); break; default: price = config.getPriceMonthSubscription(); }
-   *
-   * return price;
-   *
-   * }
-   */
 
 }

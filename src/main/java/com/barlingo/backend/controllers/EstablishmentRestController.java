@@ -3,7 +3,6 @@ package com.barlingo.backend.controllers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -153,10 +152,10 @@ public class EstablishmentRestController extends AbstractRestController {
       String image = this.uploadService.copy(file);
       if (imageType.equals("background")) {
         est.setImages(Arrays.asList(request.getRequestURL().toString().split("establishments")[0]
-            + "establishments/uploads/" + image));
+            + "static/images/" + image));
       } else if (imageType.equals("profile")) {
         est.setImageProfile(request.getRequestURL().toString().split("establishments")[0]
-            + "establishments/uploads/" + image);
+            + "static/images/" + image);
       }
       EstablishmentDetailsDTO establishment =
           this.establishmentMapper.establishmentToDto(this.establishmentService.edit(principal,
@@ -171,26 +170,21 @@ public class EstablishmentRestController extends AbstractRestController {
   @GetMapping(value = "/uploads/{filename:.+}")
   public ResponseEntity<Resource> seePhoto(@PathVariable String filename,
       HttpServletRequest request) {
-
-    Resource resource = null;
-
-    try {
-      resource = this.uploadService.load(filename);
-    } catch (MalformedURLException e) {
-      log.error(e.getMessage());
-    }
+    ResponseEntity<Resource> result = null;
+    Resource resource = this.uploadService.load(filename);
 
     String contentType = null;
     try {
       contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+      result = ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+          .header(HttpHeaders.CONTENT_DISPOSITION,
+              "attachment; filename=\"" + resource.getFilename() + "\"")
+          .body(resource);
     } catch (IOException ex) {
       log.info(RestError.ESTABLISHMENT_ESTABLISHMENT_UNKNOWN_FILETYPE);
     }
 
-    return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-        .header(HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + resource.getFilename() + "\"")
-        .body(resource);
+    return result;
   }
 
   @PostMapping("/{id}/anonymize")
@@ -244,13 +238,13 @@ public class EstablishmentRestController extends AbstractRestController {
           IOUtils.copy(errorStream, response.getOutputStream());
           response.flushBuffer();
         } catch (IOException ex) {
-          ex.printStackTrace();
+          log.error(ex.getMessage());
         } finally {
           try {
             if (errorStream != null)
               errorStream.close();
           } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error(ex.getMessage());
           }
         }
       }
@@ -259,7 +253,7 @@ public class EstablishmentRestController extends AbstractRestController {
         if (targetStream != null)
           targetStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error(e.getMessage());
       }
     }
 

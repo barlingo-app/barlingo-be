@@ -1,0 +1,309 @@
+{
+	"info": {
+		"_postman_id": "f3bffb8e-8570-4edf-99cf-0a057ab76a81",
+		"name": "AuthenticationTestSuite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authenticate Establishment1 Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "65425154-6717-44cc-8098-a6f23f36d927",
+						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_establishment1\", tokenData.content);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_token_establishment1}}",
+					"host": [
+						"{{url_token_establishment1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Establishment2 Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "65425154-6717-44cc-8098-a6f23f36d927",
+						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_establishment2\", tokenData.content);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_token_establishment2}}",
+					"host": [
+						"{{url_token_establishment2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate admin Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "782bdaa8-39e9-4e95-bcca-0d775dc406b7",
+						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_admin\", tokenData.content);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_token_admin}}",
+					"host": [
+						"{{url_token_admin}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Username1 Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cf6c918-11e4-40d0-9650-36446d0c6567",
+						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_username1\", tokenData.content);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_token_username1}}",
+					"host": [
+						"{{url_token_username1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Username2 Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cf6c918-11e4-40d0-9650-36446d0c6567",
+						"exec": [
+							"var tokenData = pm.response.json();",
+							"pm.environment.set(\"token_username2\", tokenData.content);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_token_username2}}",
+					"host": [
+						"{{url_token_username2}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

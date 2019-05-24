@@ -1,0 +1,850 @@
+{
+	"info": {
+		"_postman_id": "30ccf841-4fd3-458a-9c12-7ca0f340523a",
+		"name": "UserTestSuite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authenticate User Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cf6c918-11e4-40d0-9650-36446d0c6567",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/signin?username=username1&password=username",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"signin"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "username1"
+						},
+						{
+							"key": "password",
+							"value": "username"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User List Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d2866659-89d6-49f5-8590-80ed47e373b3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by Id Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eecb3aa4-29e4-4bfb-a208-40badf00243a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content id is 4\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.id).to.eql(4);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by username Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eecb3aa4-29e4-4bfb-a208-40badf00243a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Username is username1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.userAccount.username).to.eql('username1');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/username/username1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"username",
+						"username1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check username Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ec01caf6-e018-44d3-90e7-76fa89a02c03",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Username is available\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).to.eql('username.available');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/checkUsername?username=username1xz@",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"checkUsername"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "username1xz@"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Download User Data Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6b02b792-9274-4d90-bf7a-661fd9aeba46",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is txt/plain\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"txt/plain\");",
+							"}",
+							"",
+							" tests[\"Content-disposition has attachment\"] = ",
+							"      responseHeaders[\"Content-disposition\"].has(\"attachment\");",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_username1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/4/download",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"4",
+						"download"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit User Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "47bfbd83-54dc-42da-bc80-25ee03b0c790",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content id is 4\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.id).to.eql(4);",
+							"});",
+							"",
+							"pm.test(\"Data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.name).to.eql('Pepe');",
+							"    pm.expect(jsonData.content.surname).to.eql('Lara');",
+							"    pm.expect(jsonData.content.country).to.eql('España');",
+							"    pm.expect(jsonData.content.city).to.eql('Sevilla');",
+							"    pm.expect(jsonData.content.email).to.eql('email@hotmail.es');",
+							"    pm.expect(jsonData.content.aboutMe).to.eql('Me gusta el cine y aprender idiomas');",
+							"    pm.expect(jsonData.content.speakLangs[0]).to.eql('es');",
+							"    pm.expect(jsonData.content.langsToLearn[0]).to.eql('en');",
+							"    pm.expect(jsonData.content.motherTongue).to.eql('es');",
+							"   ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_username1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 4,\r\n  \"name\": \"Pepe\",\r\n  \"surname\": \"Lara\",\r\n  \"email\": \"email@hotmail.es\",\r\n  \"birthdate\": \"2000-01-01T10:00:00\",\r\n  \"country\": \"España\",\r\n  \"city\": \"Sevilla\",\r\n  \"aboutMe\": \"Me gusta el cine y aprender idiomas\",\r\n  \"speakLanguages\": [\r\n    \"es\"\r\n  ],\r\n  \"learnLanguages\": [\r\n    \"en\"\r\n  ],\r\n  \"motherTongue\": \"es\"\r\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/users/edit",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "47bfbd83-54dc-42da-bc80-25ee03b0c790",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Data is created\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.name).to.eql('Rodrigo');",
+							"    pm.expect(jsonData.content.surname).to.eql('Campos Millán');",
+							"    pm.expect(jsonData.content.country).to.eql('España');",
+							"    pm.expect(jsonData.content.city).to.eql('Sevilla');",
+							"    pm.expect(jsonData.content.email).to.eql('email@hotmail.es');",
+							"    pm.expect(jsonData.content.aboutMe).to.eql('Me gusta el skate y el surf');",
+							"    pm.expect(jsonData.content.speakLanguages[0]).to.eql('es');",
+							"    pm.expect(jsonData.content.learnLanguages[0]).to.eql('en');",
+							"    pm.expect(jsonData.content.motherTongue).to.eql('es');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"username10\",\r\n  \"password\": \"username\",\r\n  \"name\": \"Rodrigo\",\r\n  \"surname\": \"Campos Millán\",\r\n  \"email\": \"email@hotmail.es\",\r\n  \"birthdate\": \"2000-01-01\",\r\n  \"country\": \"España\",\r\n  \"city\": \"Sevilla\",\r\n  \"aboutMe\": \"Me gusta el skate y el surf\",\r\n  \"speakLanguages\": [\r\n    \"es\"\r\n  ],\r\n  \"learnLanguages\": [\r\n    \"en\"\r\n  ],\r\n  \"motherTongue\": \"es\"\r\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/users/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Anonymize User Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "beda2210-374f-4abf-9d88-c8f5fba515cc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content id is 4\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.id).to.eql(4);",
+							"});",
+							"",
+							"pm.test(\"Data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.name).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.surname).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.country).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.city).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.aboutMe).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.userAccount.active).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_username1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/4/anonymize",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"4",
+						"anonymize"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Anonymize User Test",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/4/anonymize",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"4",
+								"anonymize"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 May 2019 12:27:35 GMT"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Ban User Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "beda2210-374f-4abf-9d88-c8f5fba515cc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Username is username1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.userAccount.username).to.eql('username1');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_admin}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/4/ban",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"4",
+						"ban"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Anonymize User Test",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/4/anonymize",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"4",
+								"anonymize"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 May 2019 12:27:35 GMT"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		}
+	]
+}

@@ -1,7 +1,6 @@
 package com.barlingo.backend.models.services;
 
 
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,6 @@ public class UserServiceImpl implements IUserService {
     user.getUserAccount().setRoles(new ArrayList<>());
     user.getUserAccount().getRoles().add(Role.ROLE_USER);
     user.setLangsExchanges(new ArrayList<>());
-    // user.setNotifications(new ArrayList<>());
 
     return user;
   }
@@ -116,7 +114,6 @@ public class UserServiceImpl implements IUserService {
           .authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
       UserAccount userAccount = userAccountRepository.findByUsername(username);
-      // Assert.isTrue(userAccount.getActive(), "User banned.");
       Actor actor = actorRepository.findByUserAccountId(userAccount.getId());
       return jwtTokenProvider.createToken(username, actor.getId(), userAccount.getRoles());
     } catch (AuthenticationException e) {
@@ -216,7 +213,6 @@ public class UserServiceImpl implements IUserService {
   @Override
   public UserExchangesDetailsDTO exportData(
       org.springframework.security.core.userdetails.User principal, Integer userId) {
-    InputStream targetStream = null;
 
     UserDetailsDTO userDTO = this.userMapper.entityToDetailsDto(this.findById(userId));
 

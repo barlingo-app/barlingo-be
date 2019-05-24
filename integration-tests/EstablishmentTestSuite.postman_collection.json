@@ -1,0 +1,751 @@
+{
+	"info": {
+		"_postman_id": "82d6aedc-4545-4c7f-8403-8668a62cdbe9",
+		"name": "EstablishmentTestSuite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get active subs establishment list Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0046f6cd-1c3f-40f6-be5a-6b3c3455491e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Number of establishments > 0\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.length).not.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/establishments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all establishment list Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0046f6cd-1c3f-40f6-be5a-6b3c3455491e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Number of establishments > 0\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.length).not.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/establishments?subAct=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments"
+					],
+					"query": [
+						{
+							"key": "subAct",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get establishment by Id Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b778a610-bc5d-4068-a722-fe6e15160535",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content id is 22\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.id).to.eql(22);",
+							"});",
+							"",
+							"pm.test(\"Content username is establishment1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.username).to.eql('establishment1');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/establishments/22",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments",
+						"22"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Establishment Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "65425154-6717-44cc-8098-a6f23f36d927",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Is token generated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content).not.eql(null);",
+							"    pm.expect(jsonData.content).not.eql('');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/signin?username=establishment1&password=establishment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"signin"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "establishment1"
+						},
+						{
+							"key": "password",
+							"value": "establishment"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit an establishment Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ed17e806-7b46-4349-abac-fc2a63217477",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content id is 22\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.id).to.eql(22);",
+							"});",
+							"",
+							"pm.test(\"Content username is establishment1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.username).to.eql('establishment1');",
+							"});",
+							"",
+							"pm.test(\"Data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.name).to.eql('Pepe');",
+							"    pm.expect(jsonData.content.surname).to.eql('García Lara');",
+							"    pm.expect(jsonData.content.country).to.eql('España');",
+							"    pm.expect(jsonData.content.city).to.eql('Sevilla');",
+							"    pm.expect(jsonData.content.email).to.eql('email@hotmail.es');",
+							"    pm.expect(jsonData.content.establishmentName).to.eql('El paseo');",
+							"    pm.expect(jsonData.content.description).to.eql('Bar-Cafetería');",
+							"    pm.expect(jsonData.content.address).to.eql('Ronda Triana 10');",
+							"    pm.expect(jsonData.content.offer).to.eql('10% descuento');",
+							"    pm.expect(jsonData.content.workingHours).to.eql('L-V: 06:00 - 00:00, S-D: 08:00 - 00:00');",
+							"   ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_establishment1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 22,\r\n  \"name\": \"Pepe\",\r\n  \"surname\": \"García Lara\",\r\n  \"email\": \"email@hotmail.es\",\r\n  \"birthdate\": \"2000/01/01\",\r\n  \"country\": \"España\",\r\n  \"city\": \"Sevilla\",\r\n  \"establishmentName\": \"El paseo\",\r\n  \"description\": \"Bar-Cafetería\",\r\n  \"address\": \"Ronda Triana 10\",\r\n  \"offer\": \"10% descuento\",\r\n  \"workingHours\": \"L-V: 06:00 - 00:00, S-D: 08:00 - 00:00\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/establishments/22",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments",
+						"22"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Edit an establishment",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pepe\",\r\n  \"surname\": \"Lara\",\r\n  \"email\": \"email@hotmail.es\",\r\n  \"birthdate\": \"2000/01/01\",\r\n  \"country\": \"Sevilla\",\r\n  \"city\": \"España\",\r\n  \"establishmentName\": \"El paseo\",\r\n  \"description\": \"Cafetería\",\r\n  \"address\": \"Ronda Triana 10\",\r\n  \"offer\": \"10% descuento\",\r\n  \"workingHours\": \"06:00 - 00:00\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/establishments/42",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"establishments",
+								"42"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 11 Apr 2019 11:04:41 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"timestamp\": \"2019-04-11T11:04:41.789+0000\",\n    \"status\": 401,\n    \"error\": \"Unauthorized\",\n    \"message\": \"Unauthorized\",\n    \"trace\": \"org.springframework.security.access.AccessDeniedException: Access is denied\\r\\n\\tat org.springframework.security.access.vote.AffirmativeBased.decide(AffirmativeBased.java:84)\\r\\n\\tat org.springframework.security.access.intercept.AbstractSecurityInterceptor.beforeInvocation(AbstractSecurityInterceptor.java:233)\\r\\n\\tat org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor.invoke(MethodSecurityInterceptor.java:65)\\r\\n\\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)\\r\\n\\tat org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688)\\r\\n\\tat com.barlingo.backend.controllers.EstablishmentRestController$$EnhancerBySpringCGLIB$$3db1949c.edit(<generated>)\\r\\n\\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\\r\\n\\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\\r\\n\\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\\r\\n\\tat java.lang.reflect.Method.invoke(Method.java:498)\\r\\n\\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:189)\\r\\n\\tat org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138)\\r\\n\\tat org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102)\\r\\n\\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)\\r\\n\\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:800)\\r\\n\\tat org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)\\r\\n\\tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1038)\\r\\n\\tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:942)\\r\\n\\tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1005)\\r\\n\\tat org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:919)\\r\\n\\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:663)\\r\\n\\tat org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:882)\\r\\n\\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:741)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320)\\r\\n\\tat org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127)\\r\\n\\tat org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:158)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat com.barlingo.backend.security.JwtTokenFilter.doFilterInternal(JwtTokenFilter.java:39)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:96)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\\r\\n\\tat org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)\\r\\n\\tat org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)\\r\\n\\tat org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)\\r\\n\\tat org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)\\r\\n\\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)\\r\\n\\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)\\r\\n\\tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)\\r\\n\\tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)\\r\\n\\tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)\\r\\n\\tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)\\r\\n\\tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)\\r\\n\\tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)\\r\\n\\tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)\\r\\n\\tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)\\r\\n\\tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)\\r\\n\\tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)\\r\\n\\tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)\\r\\n\\tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)\\r\\n\\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\\r\\n\\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\\r\\n\\tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)\\r\\n\\tat java.lang.Thread.run(Thread.java:748)\\r\\n\",\n    \"path\": \"/establishments/42\"\n}"
+				},
+				{
+					"name": "Edit an establishment Test",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 22,\r\n  \"name\": \"Pepe\",\r\n  \"surname\": \"García Lara\",\r\n  \"email\": \"email@hotmail.es\",\r\n  \"birthdate\": \"2000/01/01\",\r\n  \"country\": \"España\",\r\n  \"city\": \"Sevilla\",\r\n  \"establishmentName\": \"El paseo\",\r\n  \"description\": \"Bar-Cafetería\",\r\n  \"address\": \"Ronda Triana 10\",\r\n  \"offer\": \"10% descuento\",\r\n  \"workingHours\": \"L-V: 06:00 - 00:00, S-D: 08:00 - 00:00\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/establishments/22",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"establishments",
+								"22"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Basic realm=\"Realm\""
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 May 2019 13:19:58 GMT"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Download Establishment Data Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4acf786-b9a8-45ec-9894-6dbe6132fce9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is txt/plain\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"txt/plain\");",
+							"}",
+							"",
+							" tests[\"Content-disposition has attachment\"] = ",
+							"      responseHeaders[\"Content-disposition\"].has(\"attachment\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_establishment1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/establishments/22/download",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments",
+						"22",
+						"download"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Anonymize Establishment Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5a6f7653-1582-446f-80ac-4bff86054fcb",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content id is 22\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.id).to.eql(22);",
+							"});",
+							"",
+							"pm.test(\"Data is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.name).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.surname).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.country).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.city).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.establishmentName).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.description).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.address).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.offer).to.include('Anonymous_');",
+							"    pm.expect(jsonData.content.userAccount.active).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_establishment1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/establishments/22/anonymize",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments",
+						"22",
+						"anonymize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register an establishment Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1e5a11d-6301-4952-a3c2-32c63ff6ae97",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"var contentTypeHeaderExists = responseHeaders.hasOwnProperty(\"Content-Type\");",
+							" ",
+							"if (contentTypeHeaderExists) {",
+							"    tests[\"Content-Type is application/json\"] = ",
+							"      responseHeaders[\"Content-Type\"].has(\"application/json\");",
+							"}",
+							"",
+							"pm.test(\"Result is success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Result code Ok\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Content username is establishment24\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.username).to.eql('establishment24');",
+							"});",
+							"",
+							"pm.test(\"Data is created\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.content.name).to.eql('Antonio');",
+							"    pm.expect(jsonData.content.surname).to.eql('Guerrero');",
+							"    pm.expect(jsonData.content.country).to.eql('España');",
+							"    pm.expect(jsonData.content.city).to.eql('Sevilla');",
+							"    pm.expect(jsonData.content.email).to.eql('email@hotmail.es');",
+							"    pm.expect(jsonData.content.establishmentName).to.eql('La buena tarde');",
+							"    pm.expect(jsonData.content.description).to.eql('Cafetería');",
+							"    pm.expect(jsonData.content.address).to.eql('Ronda Triana 18');",
+							"    pm.expect(jsonData.content.offer).to.eql('15% descuento bebidas');",
+							"    pm.expect(jsonData.content.workingHours).to.eql('06:00 - 00:00');",
+							"    pm.expect(jsonData.content.userAccount.active).to.eql(true);",
+							"   ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"establishment24\",\r\n  \"password\": \"establishment\",\r\n  \"name\": \"Antonio\",\r\n  \"surname\": \"Guerrero\",\r\n  \"email\": \"email@hotmail.es\",\r\n  \"birthdate\": \"2000/01/01\",\r\n  \"country\": \"España\",\r\n  \"city\": \"Sevilla\",\r\n  \"establishmentName\": \"La buena tarde\",\r\n  \"description\": \"Cafetería\",\r\n  \"address\": \"Ronda Triana 18\",\r\n  \"offer\": \"15% descuento bebidas\",\r\n  \"workingHours\": \"06:00 - 00:00\",\r\n  \"subscription\":{\r\n    \"subscriptionType\": \"ANNUAL\",\r\n    \"paydata\": {\r\n      \"title\": \"Subscripcion La buena tarde\",\r\n      \"payType\": \"Paypal\",\r\n      \"moment\": \"2019-04-07T23:28:56.782Z\"\r\n    }\r\n  }\r\n\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/establishments/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"establishments",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

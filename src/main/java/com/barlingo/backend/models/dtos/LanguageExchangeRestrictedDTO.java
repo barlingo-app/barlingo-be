@@ -1,7 +1,6 @@
 package com.barlingo.backend.models.dtos;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import lombok.Data;
 
 @Data
