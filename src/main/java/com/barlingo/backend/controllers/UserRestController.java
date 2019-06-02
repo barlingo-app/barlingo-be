@@ -81,6 +81,10 @@ public class UserRestController extends AbstractRestController {
     ResponseEntity<ResponseBody> result;
     try {
       UserDetailsDTO user = this.userMapper.entityToDetailsDto(this.userService.findById(id));
+
+      Collection<Assessment> assessments = this.assessmentService.findByUserId(user.getId());
+      user.setAssessments(this.assessmentMapper.entitysToDtos(assessments));
+
       result = this.createResponse(user);
     } catch (Exception e) {
       result = this.createMessageException(e);
@@ -92,8 +96,13 @@ public class UserRestController extends AbstractRestController {
   public ResponseEntity<ResponseBody> findByUsername(@PathVariable String username) {
     ResponseEntity<ResponseBody> result;
     try {
-      result = this.createResponse(
-          this.userMapper.entityToDetailsDto(this.userService.findByUsername(username)));
+      UserDetailsDTO user =
+          this.userMapper.entityToDetailsDto(this.userService.findByUsername(username));
+
+      Collection<Assessment> assessments = this.assessmentService.findByUserId(user.getId());
+      user.setAssessments(this.assessmentMapper.entitysToDtos(assessments));
+
+      result = this.createResponse(user);
     } catch (Exception e) {
       result = this.createMessageException(e);
     }
