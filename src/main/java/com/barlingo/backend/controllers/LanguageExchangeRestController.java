@@ -1,6 +1,7 @@
 package com.barlingo.backend.controllers;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.barlingo.backend.models.dtos.LanguageExchangeCreateDTO;
 import com.barlingo.backend.models.dtos.LanguageExchangeDetailsDTO;
+import com.barlingo.backend.models.dtos.ParticipantDTO;
+import com.barlingo.backend.models.entities.Assessment;
 import com.barlingo.backend.models.entities.User;
+import com.barlingo.backend.models.mapper.AssessmentMapper;
 import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
 import com.barlingo.backend.models.services.EstablishmentServiceImpl;
+import com.barlingo.backend.models.services.IAssessmentService;
 import com.barlingo.backend.models.services.LanguageExchangeServiceImpl;
 import com.barlingo.backend.models.services.UserServiceImpl;
 import com.barlingo.backend.utilities.ResponseBody;
@@ -40,6 +45,10 @@ public class LanguageExchangeRestController extends AbstractRestController {
   private UserServiceImpl userService;
   @Autowired
   private EstablishmentServiceImpl establishmentService;
+  @Autowired
+  private IAssessmentService assessmentService;
+  @Autowired
+  private AssessmentMapper assessmentMapper;
 
   @GetMapping
   public ResponseEntity<ResponseBody> findExchange(
@@ -86,6 +95,10 @@ public class LanguageExchangeRestController extends AbstractRestController {
     try {
       LanguageExchangeDetailsDTO exchange =
           langExchangeMapper.entityToDto(langExchangeService.findById(id));
+      for (ParticipantDTO user : exchange.getParticipants()) {
+        Collection<Assessment> assessments = this.assessmentService.findByUserId(user.getId());
+        user.setAssessments(this.assessmentMapper.entitysToDtos(assessments));
+      }
       result = this.createResponse(exchange);
     } catch (Exception e) {
       result = this.createMessageException(e);

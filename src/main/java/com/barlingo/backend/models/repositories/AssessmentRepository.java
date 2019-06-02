@@ -8,4 +8,6 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Integer>
 
   Collection<Assessment> findByAssessedUserId(Integer userId);
 
+  Assessment findByUserIdAndAssessedUserId(Integer userId, Integer assessedUserId);
+
 }

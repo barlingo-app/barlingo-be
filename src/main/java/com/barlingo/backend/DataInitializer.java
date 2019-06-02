@@ -3,6 +3,7 @@ package com.barlingo.backend;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -205,28 +206,34 @@ public class DataInitializer implements CommandLineRunner {
           "Cerveceza 0.90€", subscription4);
 
       log.info("== Language Exchanges ==");
-      LanguageExchange langExchange1 = createLanguageExchange("Quedada en Los Palacios",
+      LanguageExchange exchange1 = createLanguageExchange("Quedada en Los Palacios",
           "Language Exchange 1", LocalDateTime.of(2019, 1, 21, 10, 00), ExchangeState.CLOSE, 3,
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2),
-          Arrays.asList());
-      LanguageExchange langExchange2 = createLanguageExchange("Intercambio Inglés/Español",
-          "Language Exchange 2", LocalDateTime.of(2019, 10, 5, 21, 00), ExchangeState.OPEN, 2,
-          Arrays.asList("es", "en"), establishment1, user3, Arrays.asList(user3, user2),
-          Arrays.asList());
-      LanguageExchange langExchange3 = createLanguageExchange("¿Quién se apunta?",
-          "Language Exchange 3", LocalDateTime.of(2019, 6, 21, 10, 00), ExchangeState.OPEN, 3,
-          Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2, user4),
-          Arrays.asList());
+          new ArrayList<>());
 
+      LanguageExchange exchange2 = createLanguageExchange("Intercambio Inglés/Español",
+          "Language Exchange 2", LocalDateTime.of(2019, 10, 5, 21, 00), ExchangeState.OPEN, 2,
+          Arrays.asList("es", "en"), establishment1, user3, Arrays.asList(user3, user4),
+          new ArrayList<>());
+
+      LanguageExchange exchange3 = createLanguageExchange("¿Quién se apunta?",
+          "Language Exchange 3", LocalDateTime.of(2019, 6, 21, 10, 00), ExchangeState.OPEN, 3,
+          Arrays.asList("es", "en"), establishment1, user5, Arrays.asList(user5),
+          new ArrayList<>());
+
+      log.info("== Participans join to exchanges ==");
+      this.joinToLangExchange(exchange1, Arrays.asList(user1, user2));
+      this.joinToLangExchange(exchange2, Arrays.asList(user3, user4));
+      this.joinToLangExchange(exchange3, Arrays.asList(user5));
 
       log.info("== User Discounts ==");
-      createUserDiscount("20190121-WERW", true, true, user1, langExchange1);
-      createUserDiscount("20190121-WERE", true, true, user2, langExchange1);
-      createUserDiscount("20190121-WERA", true, false, user3, langExchange2);
-      createUserDiscount("20190121-WERQ", true, false, user2, langExchange2);
-      createUserDiscount("20190121-WERR", false, false, user1, langExchange3);
-      createUserDiscount("20190121-WERF", false, false, user2, langExchange3);
-      createUserDiscount("20190121-WERO", false, false, user3, langExchange3);
+      createUserDiscount("20190121-WERW", true, true, user1, exchange1);
+      createUserDiscount("20190121-WERE", true, true, user2, exchange1);
+      createUserDiscount("20190121-WERA", true, false, user3, exchange2);
+      createUserDiscount("20190121-WERQ", true, false, user2, exchange2);
+      createUserDiscount("20190121-WERR", false, false, user1, exchange3);
+      createUserDiscount("20190121-WERF", false, false, user2, exchange3);
+      createUserDiscount("20190121-WERO", false, false, user3, exchange3);
 
       log.info("== User Notifications ==");
       createNotificationList(
@@ -287,7 +294,7 @@ public class DataInitializer implements CommandLineRunner {
     user.setSpeakLangs(speakLangs);
     user.setLangsToLearn(langsToLearn);
     user.setMotherTongue(motherTongue);
-    user.setLangsExchanges(Arrays.asList());
+    user.setLangsExchanges(new ArrayList<>());
     return this.userRepository.saveAndFlush(user);
   }
 
@@ -315,7 +322,7 @@ public class DataInitializer implements CommandLineRunner {
     establishment.setWorkingHours(workingHours);
     establishment.setOffer(offer);
     establishment.setSubscription(subscription);
-    establishment.setLangsExchange(Arrays.asList());
+    establishment.setLangsExchange(new ArrayList<>());
     return this.establishmentRepository.saveAndFlush(establishment);
   }
 
@@ -358,20 +365,16 @@ public class DataInitializer implements CommandLineRunner {
     langExchange.setParticipants(participants);
     langExchange.setUserDiscounts(userDiscounts);
 
-    LanguageExchange result = this.languageExchangeRepository.saveAndFlush(langExchange);
-    // this.joinToLangExchange(creator.getId(), result.getId());
-    // for (User user : participants) {
-    // this.joinToLangExchange(user.getId(), result.getId());
-    // }
-    return result;
+    return this.languageExchangeRepository.saveAndFlush(langExchange);
   }
 
-  private void joinToLangExchange(Integer userId, Integer langExchangeId) {
-    User user = this.userService.findById(userId);
-    Collection<LanguageExchange> langs = user.getLangsExchanges();
-    langs.add(this.languageExchangeService.findById(langExchangeId));
-    user.setLangsExchanges(langs);
-    this.userService.save(user);
+  private void joinToLangExchange(LanguageExchange exchange, Collection<User> users) {
+    for (User user : users) {
+      Collection<LanguageExchange> exchanges = user.getLangsExchanges();
+      exchanges.add(exchange);
+      user.setLangsExchanges(exchanges);
+      this.userService.save(user);
+    }
   }
 
   private UserDiscount createUserDiscount(String code, Boolean visible, Boolean exchanged,

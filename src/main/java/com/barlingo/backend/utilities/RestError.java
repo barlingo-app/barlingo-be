@@ -43,8 +43,6 @@ public final class RestError {
   public static final String SIGNED_ESTABLISHMENT_ERROR_LOADING_IMAGE =
       "Signed.Establishment.ErrorLoadingImage";
 
-
-
   // User controller and service errors
   public static final String ALL_USER_USERNAME_EMPTY = "All.User.UsernameEmpty";
   public static final String ALL_USER_USERNAME_EXISTS = "All.User.UsernameExists";
@@ -60,7 +58,6 @@ public final class RestError {
   public static final String USER_USER_CANNOT_ACCESS_OTHER_USERS_DATA =
       "User.User.CannotAccessOtherUsersData";
   public static final String USER_USER_SECRET_NOT_EMPTY = "User.User.SecretNotEmpty";
-
 
   // Upload file service service errors
   public static final String ALL_UPLOADFILE_CANNOT_LOAD_IMAGE = "All.UploadFile.CannotLoadImage";
@@ -94,8 +91,6 @@ public final class RestError {
   public static final String USER_LANGUAGE_EXCHANGE_IS_FULL = "User.LanguageExchange.IsFull";
   public static final String USER_LANGUAGE_EXCHANGE_ERROR_SAVING_EXCHANGE =
       "User.LanguageExchange.ErrorSavingExchange";
-
-
 
   // Payment controller and service errors
   public static final String ESTABLISHMENT_PAYMENT_IO = "Establishment.Payment.IO";
@@ -156,7 +151,6 @@ public final class RestError {
   public static final String ESTABLISHMENT_USERDISCOUNT_ERROR_UPDATING_DISCOUNT =
       "Establishment.UserDiscount.ErrorUpdatingDiscount";
 
-
   // UserAccount service errors
   public static final String SIGNED_USERACCOUNT_NOT_NULL = "Signed.UserAccount.NotNull";
   public static final String SIGNED_USERACCOUNT_SECRET_EMPTY = "Signed.UserAccount.SecretEmpty";
@@ -164,6 +158,14 @@ public final class RestError {
   public static final String SIGNED_USERACCOUNT_ERROR_DECODING = "Signed.UserAccount.ErrorDecoding";
   public static final String SIGNED_USERACCOUNT_ERROR_SAVING_ACCOUNT =
       "Signed.UserAccount.ErrorSavingAccount";
+
+  // Assessment service errors
+  public static final String SIGNED_ASSESSMENT_USER_OR_ASSESSEDUSER_NOT_MATCH_IN_SAME_EXCHANGE =
+      "Signed.Assessment.UserAndAssseduserNotMatchInSameExchange";
+  public static final String SIGNED_ASSESSMENT_EXCHANGE_MOMENT_NOT_PAST =
+      "Signed.Assessment.ExchangeMomentIsNotPast";
+  public static final String SIGNED_ASSESSMENT_USER_AND_ASSESSEDUSER_MUST_NOT_BE_SAME =
+      "Signed.Assessment.UserAndAssessedUserNotBeSame";
 
 
 }
