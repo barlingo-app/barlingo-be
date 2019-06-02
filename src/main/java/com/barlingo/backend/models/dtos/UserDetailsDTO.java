@@ -21,5 +21,6 @@ public class UserDetailsDTO {
   private Collection<String> langsToLearn;
   private String motherTongue;
   private UserAccountGenericDTO userAccount;
+  private Collection<AssessmentDTO> assessments;
 
 }

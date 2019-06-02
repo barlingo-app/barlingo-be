@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.barlingo.backend.models.entities.Actor;
 import com.barlingo.backend.models.entities.Admin;
+import com.barlingo.backend.models.entities.Assessment;
 import com.barlingo.backend.models.entities.Configuration;
 import com.barlingo.backend.models.entities.Establishment;
 import com.barlingo.backend.models.entities.ExchangeState;
@@ -26,7 +27,9 @@ import com.barlingo.backend.models.entities.SubscriptionData;
 import com.barlingo.backend.models.entities.SubscriptionType;
 import com.barlingo.backend.models.entities.User;
 import com.barlingo.backend.models.entities.UserDiscount;
+import com.barlingo.backend.models.mapper.LanguageExchangeMapper;
 import com.barlingo.backend.models.repositories.AdminRepository;
+import com.barlingo.backend.models.repositories.AssessmentRepository;
 import com.barlingo.backend.models.repositories.ConfigurationRepository;
 import com.barlingo.backend.models.repositories.EstablishmentRepository;
 import com.barlingo.backend.models.repositories.LanguageExchangeRepository;
@@ -35,7 +38,10 @@ import com.barlingo.backend.models.repositories.PayDataRepository;
 import com.barlingo.backend.models.repositories.SubscriptionDataRepository;
 import com.barlingo.backend.models.repositories.UserDiscountRepository;
 import com.barlingo.backend.models.repositories.UserRepository;
+import com.barlingo.backend.models.services.IAssessmentService;
+import com.barlingo.backend.models.services.ILanguageExchangeService;
 import com.barlingo.backend.models.services.IUploadFileService;
+import com.barlingo.backend.models.services.IUserService;
 import com.barlingo.backend.security.UserAccount;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,23 +58,32 @@ public class DataInitializer implements CommandLineRunner {
   @Autowired
   UserRepository userRepository;
   @Autowired
+  IUserService userService;
+  @Autowired
   PayDataRepository paydataRepository;
   @Autowired
   SubscriptionDataRepository subscriptionRepository;
   @Autowired
   EstablishmentRepository establishmentRepository;
   @Autowired
+  ILanguageExchangeService languageExchangeService;
+  @Autowired
   LanguageExchangeRepository languageExchangeRepository;
   @Autowired
+  LanguageExchangeMapper langExchangeMapper;
+  @Autowired
   UserDiscountRepository userDiscountRepository;
-
   @Autowired
   NotificationRepository notificationRepository;
-
   @Autowired
   PasswordEncoder passwordEncoder;
   @Autowired
   IUploadFileService uploadFileService;
+  @Autowired
+  IAssessmentService assesmentService;
+  @Autowired
+  AssessmentRepository assesmentRepository;
+
 
   @Override
   public void run(String... args) throws Exception {
@@ -84,9 +99,9 @@ public class DataInitializer implements CommandLineRunner {
           .priceMonthSubscription(6.99) //
           .trimestralDiscount(0.1) //
           .annualDiscount(0.25) //
-          .timeJoinUserToExchange(10) //
-          .timeShowBeforeDiscount(4) //
-          .timeShowAfterDiscount(24) //
+          .timeJoinUserToExchange(30) // minutes
+          .timeShowBeforeDiscount(30) // minutes
+          .timeShowAfterDiscount(1440) // minutes, 24 hours
           .paypalVendorId("AG3N8JTUR4SNA") //
           .build());
 
@@ -203,6 +218,7 @@ public class DataInitializer implements CommandLineRunner {
           Arrays.asList("es", "en"), establishment1, user1, Arrays.asList(user1, user2, user4),
           Arrays.asList());
 
+
       log.info("== User Discounts ==");
       createUserDiscount("20190121-WERW", true, true, user1, langExchange1);
       createUserDiscount("20190121-WERE", true, true, user2, langExchange1);
@@ -217,6 +233,13 @@ public class DataInitializer implements CommandLineRunner {
           "Alerta Seguridad", "Se ha producido un ataque al sistema", Arrays.asList(user1, user2,
               user3, user4, user5, establishment1, establishment2, establishment3, establishment4),
           user1);
+
+      log.info("== Assessments ==");
+      createAssessment(true, user1, user2);
+      createAssessment(false, user1, user3);
+      createAssessment(true, user2, user1);
+      createAssessment(true, user3, user1);
+
 
       log.info("=== Finalize Populate Database ===");
     }
@@ -334,7 +357,21 @@ public class DataInitializer implements CommandLineRunner {
     langExchange.setCreator(creator);
     langExchange.setParticipants(participants);
     langExchange.setUserDiscounts(userDiscounts);
-    return this.languageExchangeRepository.saveAndFlush(langExchange);
+
+    LanguageExchange result = this.languageExchangeRepository.saveAndFlush(langExchange);
+    // this.joinToLangExchange(creator.getId(), result.getId());
+    // for (User user : participants) {
+    // this.joinToLangExchange(user.getId(), result.getId());
+    // }
+    return result;
+  }
+
+  private void joinToLangExchange(Integer userId, Integer langExchangeId) {
+    User user = this.userService.findById(userId);
+    Collection<LanguageExchange> langs = user.getLangsExchanges();
+    langs.add(this.languageExchangeService.findById(langExchangeId));
+    user.setLangsExchanges(langs);
+    this.userService.save(user);
   }
 
   private UserDiscount createUserDiscount(String code, Boolean visible, Boolean exchanged,
@@ -360,9 +397,18 @@ public class DataInitializer implements CommandLineRunner {
     for (Actor receiver : receivers) {
       notification.addReceiver(receiver);
     }
-
     return this.notificationRepository.saveAndFlush(notification);
   }
+
+  private Assessment createAssessment(Boolean like, User user, User userAssessed) {
+    Assessment assessment = new Assessment();
+    assessment.setAlike(like);
+    assessment.setUser(user);
+    assessment.setAssessedUser(userAssessed);
+
+    return this.assesmentRepository.saveAndFlush(assessment);
+  }
+
 
 }
 
