@@ -3,6 +3,7 @@ package com.barlingo.backend.controllers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +29,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.barlingo.backend.models.dtos.UserDetailsDTO;
 import com.barlingo.backend.models.dtos.UserEditDTO;
 import com.barlingo.backend.models.dtos.UserSigninDTO;
+import com.barlingo.backend.models.entities.Assessment;
 import com.barlingo.backend.models.entities.User;
-import com.barlingo.backend.models.mapper.UserAccountMapper;
+import com.barlingo.backend.models.mapper.AssessmentMapper;
 import com.barlingo.backend.models.mapper.UserMapper;
+import com.barlingo.backend.models.services.IAssessmentService;
 import com.barlingo.backend.models.services.IUploadFileService;
 import com.barlingo.backend.models.services.IUserService;
 import com.barlingo.backend.security.UserAccountSecurityService;
@@ -40,7 +42,6 @@ import com.barlingo.backend.utilities.RestError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/users")
 @Slf4j
@@ -48,7 +49,6 @@ public class UserRestController extends AbstractRestController {
 
   @Autowired
   private IUserService userService;
-
   @Autowired
   private UserAccountSecurityService userAccountService;
   @Autowired
@@ -56,13 +56,19 @@ public class UserRestController extends AbstractRestController {
   @Autowired
   private UserMapper userMapper;
   @Autowired
-  UserAccountMapper userAccountMapper;
+  private IAssessmentService assessmentService;
+  @Autowired
+  private AssessmentMapper assessmentMapper;
 
-  @GetMapping("")
+  @GetMapping
   public ResponseEntity<ResponseBody> findUser() {
     ResponseEntity<ResponseBody> result;
     try {
       List<UserDetailsDTO> users = this.userMapper.entitysToDetailsDtos(userService.findAll());
+      for (UserDetailsDTO userDet : users) {
+        Collection<Assessment> assessments = this.assessmentService.findByUserId(userDet.getId());
+        userDet.setAssessments(this.assessmentMapper.entitysToDtos(assessments));
+      }
       result = this.createResponse(users);
     } catch (Exception e) {
       result = this.createMessageException(e);
