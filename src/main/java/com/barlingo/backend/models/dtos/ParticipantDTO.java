@@ -1,5 +1,6 @@
 package com.barlingo.backend.models.dtos;
 
+import java.util.Collection;
 import lombok.Data;
 
 @Data
@@ -12,4 +13,5 @@ public class ParticipantDTO {
   private String city;
   private String personalPic;
   private String profileBackPic;
+  private Collection<AssessmentDTO> assessments;
 }

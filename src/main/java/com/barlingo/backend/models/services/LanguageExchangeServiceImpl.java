@@ -122,7 +122,6 @@ public class LanguageExchangeServiceImpl implements ILanguageExchangeService {
     Assert.isTrue(langExchange.getParticipants().size() < langExchange.getNumberMaxParticipants(),
         RestError.USER_LANGUAGE_EXCHANGE_IS_FULL);
 
-
     if (langExchange.getMoment().isAfter(LocalDateTime.now())) {
       Collection<LanguageExchange> userExchanges = user.getLangsExchanges();
       Assert.isTrue(!user.getLangsExchanges().contains(langExchange),

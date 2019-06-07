@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @Access(AccessType.FIELD)
 @EqualsAndHashCode(callSuper = false)
 public class PayData extends DomainEntity {
-  // TODO: revisar esta clase con los métodos de pago
 
   ////////////////
   // Attributes //
