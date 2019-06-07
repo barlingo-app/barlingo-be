@@ -29,6 +29,8 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   private ILanguageExchangeService languageExchangeService;
   @Autowired
   private IEstablishmentService establishmentService;
+  @Autowired
+  private IConfigurationService configurationService;
 
   @Override
   public List<UserDiscount> findAll() {
@@ -39,8 +41,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   public UserDiscount createAndSave(Integer userId, Integer langExchangeId) {
     UserDiscount udSaved;
 
-    // TODO: Catch principal
-    // User user = this.userService.findByPrincipal();
     User user = this.userService.findById(userId);
     Assert.notNull(user, RestError.SIGNED_USERDISCOUNT_USER_NOT_NULL);
 
@@ -155,8 +155,9 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   public UserDiscount redeem(org.springframework.security.core.userdetails.User principal,
       UserDiscount userDiscount) {
     UserDiscount saved;
-
-    Assert.isTrue(userDiscount.getLangExchange().getMoment().isBefore(LocalDateTime.now()),
+    Integer time = this.configurationService.find().getTimeShowBeforeDiscount();
+    Assert.isTrue(
+        userDiscount.getLangExchange().getMoment().minusMinutes(time).isBefore(LocalDateTime.now()),
         RestError.ESTABLISHMENT_USERDISCOUNT_LANGUAGE_EXCHANGE_NOT_STARTED_YET);
     Assert.isTrue(this.isValid(principal, userDiscount),
         RestError.ESTABLISHMENT_USERDISCOUNT_CANNOT_BE_EXCHANGED);
@@ -175,17 +176,6 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   ///////////////////////
   // Auxiliary Methods //
   ///////////////////////
-
-  // public void checkPrincipal(final UserDiscount userDiscount) {
-  // final Actor principal = this.actorService.findByPrincipal();
-  // User userPrincipal = null;
-  // if (principal instanceof User) {
-  // userPrincipal = (User) principal;
-  // Assert.isTrue(userDiscount.getUser().equals(userPrincipal), "");
-  // } else {
-  // Assert.isTrue(Boolean.TRUE, "Usuario no válido.");
-  // }
-  // }
 
   /**
    * Generate an unique reference
@@ -226,6 +216,7 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
   public Boolean isValid(org.springframework.security.core.userdetails.User principal,
       UserDiscount userDiscount) {
     Actor current;
+    Boolean result = true;
 
     Assert.notNull(userDiscount, RestError.SIGNED_USERDISCOUNT_CODE_NOT_EXISTS);
 
@@ -239,12 +230,13 @@ public class UserDiscountServiceImpl implements IUserDiscountService {
           RestError.SIGNED_USERDISCOUNT_ACCESS_FORBIDDEN);
     }
 
-    if (userDiscount.getExchanged() || !userDiscount.getVisible()
-        || userDiscount.getLangExchange().getMoment().plusHours(48).isBefore(LocalDateTime.now())) {
-      return false;
+    Integer timeAfter = this.configurationService.find().getTimeShowAfterDiscount();
+    if (userDiscount.getExchanged() || !userDiscount.getVisible() || userDiscount.getLangExchange()
+        .getMoment().plusMinutes(timeAfter).isBefore(LocalDateTime.now())) {
+      result = false;
     }
 
-    return true;
+    return result;
 
   }
 }
